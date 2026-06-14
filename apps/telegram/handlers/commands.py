@@ -1,8 +1,7 @@
-from apps.telegram._types import ReplyParameters
 from apps.telegram.decorator import sponsor_required
 from apps.telegram.handlers.base_handlers import BaseHandler
 from apps.telegram.telegram import Telegram
-from apps.telegram.telegram_models import Update
+from apps.telegram.telegram_models import ReplyParameters, Update
 from utils.utils import update_object
 
 

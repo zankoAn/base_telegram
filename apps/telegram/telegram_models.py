@@ -1,566 +1,246 @@
-from __future__ import annotations
-
-from typing import List, Literal, Optional, Union
-
-from pydantic import BaseModel, ConfigDict, Field, field_validator
-
-
-class User(BaseModel):
-    id: int = Field(..., alias="id")
-    is_bot: bool = Field(..., alias="is_bot")
-    first_name: str = Field(..., alias="first_name")
-    last_name: Optional[str] = Field(None, alias="last_name")
-    username: Optional[str] = Field(None, alias="username")
-    language_code: Optional[str] = Field(None, alias="language_code")
-    is_premium: Optional[bool] = Field(None, alias="is_premium")
-    added_to_attachment_menu: Optional[bool] = Field(None, alias="added_to_attachment_menu")
-    can_join_groups: Optional[bool] = Field(None, alias="can_join_groups")
-    can_read_all_group_messages: Optional[bool] = Field(None, alias="can_read_all_group_messages")
-    supports_inline_queries: Optional[bool] = Field(None, alias="supports_inline_queries")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ChatPhoto(BaseModel):
-    small_file_id: str = Field(..., alias="small_file_id")
-    small_file_unique_id: str = Field(..., alias="small_file_unique_id")
-    big_file_id: str = Field(..., alias="big_file_id")
-    big_file_unique_id: str = Field(..., alias="big_file_unique_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ChatPermissions(BaseModel):
-    can_send_messages: Optional[bool] = Field(None, alias="can_send_messages")
-    can_send_media_messages: Optional[bool] = Field(None, alias="can_send_media_messages")
-    can_send_polls: Optional[bool] = Field(None, alias="can_send_polls")
-    can_send_other_messages: Optional[bool] = Field(None, alias="can_send_other_messages")
-    can_add_web_page_previews: Optional[bool] = Field(None, alias="can_add_web_page_previews")
-    can_change_info: Optional[bool] = Field(None, alias="can_change_info")
-    can_invite_users: Optional[bool] = Field(None, alias="can_invite_users")
-    can_pin_messages: Optional[bool] = Field(None, alias="can_pin_messages")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ChatLocation(BaseModel):
-    location: Location = Field(..., alias="location")
-    address: str = Field(..., alias="address")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Chat(BaseModel):
-    id: int = Field(..., alias="id")
-    type: str = Field(..., alias="type")
-    title: Optional[str] = Field(None, alias="title")
-    username: Optional[str] = Field(None, alias="username")
-    first_name: Optional[str] = Field(None, alias="first_name")
-    last_name: Optional[str] = Field(None, alias="last_name")
-    is_forum: Optional[bool] = Field(None, alias="is_forum")
-    photo: Optional[ChatPhoto] = Field(None, alias="photo")
-    active_usernames: Optional[List[str]] = Field(None, alias="active_usernames")
-    emoji_status_custom_emoji_id: Optional[str] = Field(None, alias="emoji_status_custom_emoji_id")
-    bio: Optional[str] = Field(None, alias="bio")
-    has_private_forwards: Optional[bool] = Field(None, alias="has_private_forwards")
-    has_restricted_voice_and_video_messages: Optional[bool] = Field(None, alias="has_restricted_voice_and_video_messages")
-    join_to_send_messages: Optional[bool] = Field(None, alias="join_to_send_messages")
-    join_by_request: Optional[bool] = Field(None, alias="join_by_request")
-    description: Optional[str] = Field(None, alias="description")
-    invite_link: Optional[str] = Field(None, alias="invite_link")
-    pinned_message: Optional[Message] = Field(None, alias="pinned_message")
-    permissions: Optional[ChatPermissions] = Field(None, alias="permissions")
-    slow_mode_delay: Optional[int] = Field(None, alias="slow_mode_delay")
-    message_auto_delete_time: Optional[int] = Field(None, alias="message_auto_delete_time")
-    has_protected_content: Optional[bool] = Field(None, alias="has_protected_content")
-    sticker_set_name: Optional[str] = Field(None, alias="sticker_set_name")
-    can_set_sticker_set: Optional[bool] = Field(None, alias="can_set_sticker_set")
-    linked_chat_id: Optional[int] = Field(None, alias="linked_chat_id")
-    location: Optional[ChatLocation] = Field(None, alias="location")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class MessageEntity(BaseModel):
-    type: str = Field(..., alias="type")
-    offset: int = Field(..., alias="offset")
-    length: int = Field(..., alias="length")
-    url: Optional[str] = Field(None, alias="url")
-    user: Optional[User] = Field(None, alias="user")
-    language: Optional[str] = Field(None, alias="language")
-    custom_emoji_id: Optional[str] = Field(None, alias="custom_emoji_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class PhotoSize(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    width: int = Field(..., alias="width")
-    height: int = Field(..., alias="height")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class MaskPosition(BaseModel):
-    point: str = Field(..., alias="point")
-    x_shift: float = Field(..., alias="x_shift")
-    y_shift: float = Field(..., alias="y_shift")
-    scale: float = Field(..., alias="scale")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Animation(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    width: int = Field(..., alias="width")
-    height: int = Field(..., alias="height")
-    duration: int = Field(..., alias="duration")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-    file_name: Optional[str] = Field(None, alias="file_name")
-    mime_type: Optional[str] = Field(None, alias="mime_type")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Audio(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    duration: int = Field(..., alias="duration")
-    performer: Optional[str] = Field(None, alias="performer")
-    title: Optional[str] = Field(None, alias="title")
-    file_name: Optional[str] = Field(None, alias="file_name")
-    mime_type: Optional[str] = Field(None, alias="mime_type")
-    file_size: Optional[int] = Field(None, alias="file_size")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Document(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-    file_name: Optional[str] = Field(None, alias="file_name")
-    mime_type: Optional[str] = Field(None, alias="mime_type")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Sticker(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    type: str = Field(..., alias="type")
-    width: int = Field(..., alias="width")
-    height: int = Field(..., alias="height")
-    is_animated: bool = Field(..., alias="is_animated")
-    is_video: bool = Field(..., alias="is_video")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-    emoji: Optional[str] = Field(None, alias="emoji")
-    set_name: Optional[str] = Field(None, alias="set_name")
-    mask_position: Optional[MaskPosition] = Field(None, alias="mask_position")
-    custom_emoji_id: Optional[str] = Field(None, alias="custom_emoji_id")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Video(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    width: int = Field(..., alias="width")
-    height: int = Field(..., alias="height")
-    duration: int = Field(..., alias="duration")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-    file_name: Optional[str] = Field(None, alias="file_name")
-    mime_type: Optional[str] = Field(None, alias="mime_type")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Voice(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    duration: int = Field(..., alias="duration")
-    mime_type: Optional[str] = Field(None, alias="mime_type")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class VideoNote(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    length: int = Field(..., alias="length")
-    duration: int = Field(..., alias="duration")
-    thumb: Optional[PhotoSize] = Field(None, alias="thumb")
-    file_size: Optional[int] = Field(None, alias="file_size")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Contact(BaseModel):
-    phone_number: str = Field(..., alias="phone_number")
-    first_name: str = Field(..., alias="first_name")
-    last_name: Optional[str] = Field(None, alias="last_name")
-    user_id: Optional[int] = Field(None, alias="user_id")
-    vcard: Optional[str] = Field(None, alias="vcard")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Dice(BaseModel):
-    emoji: str = Field(..., alias="emoji")
-    value: int = Field(..., alias="value")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class PollOption(BaseModel):
-    text: str = Field(..., alias="text")
-    voter_count: int = Field(..., alias="voter_count")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class PollAnswer(BaseModel):
-    poll_id: str = Field(..., alias="poll_id")
-    user: User = Field(..., alias="user")
-    option_ids: List[int] = Field(..., alias="option_ids")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Poll(BaseModel):
-    id: str = Field(..., alias="id")
-    question: str = Field(..., alias="question")
-    options: List[PollOption] = Field(..., alias="options")
-    total_voter_count: int = Field(..., alias="total_voter_count")
-    is_closed: bool = Field(..., alias="is_closed")
-    is_anonymous: bool = Field(..., alias="is_anonymous")
-    type: str = Field(..., alias="type")
-    allows_multiple_answers: bool = Field(..., alias="allows_multiple_answers")
-    correct_option_id: Optional[int] = Field(None, alias="correct_option_id")
-    explanation: Optional[str] = Field(None, alias="explanation")
-    explanation_entities: Optional[List[MessageEntity]] = Field(None, alias="explanation_entities")
-    open_period: Optional[int] = Field(None, alias="open_period")
-    close_date: Optional[int] = Field(None, alias="close_date")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Location(BaseModel):
-    longitude: float = Field(..., alias="longitude")
-    latitude: float = Field(..., alias="latitude")
-    horizontal_accuracy: Optional[float] = Field(None, alias="horizontal_accuracy")
-    live_period: Optional[int] = Field(None, alias="live_period")
-    heading: Optional[int] = Field(None, alias="heading")
-    proximity_alert_radius: Optional[int] = Field(None, alias="proximity_alert_radius")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Venue(BaseModel):
-    location: Location = Field(..., alias="location")
-    title: str = Field(..., alias="title")
-    address: str = Field(..., alias="address")
-    foursquare_id: Optional[str] = Field(None, alias="foursquare_id")
-    foursquare_type: Optional[str] = Field(None, alias="foursquare_type")
-    google_place_id: Optional[str] = Field(None, alias="google_place_id")
-    google_place_type: Optional[str] = Field(None, alias="google_place_type")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class Invoice(BaseModel):
-    title: str = Field(..., alias="title")
-    description: str = Field(..., alias="description")
-    start_parameter: str = Field(..., alias="start_parameter")
-    currency: str = Field(..., alias="currency")
-    total_amount: int = Field(..., alias="total_amount")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class OrderInfo(BaseModel):
-    name: Optional[str] = Field(None, alias="name")
-    phone_number: Optional[str] = Field(None, alias="phone_number")
-    email: Optional[str] = Field(None, alias="email")
-    shipping_address: Optional[ShippingAddress] = Field(None, alias="shipping_address")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ShippingAddress(BaseModel):
-    country_code: str = Field(..., alias="country_code")
-    state: str = Field(..., alias="state")
-    city: str = Field(..., alias="city")
-    street_line1: str = Field(..., alias="street_line1")
-    street_line2: str = Field(..., alias="street_line2")
-    post_code: str = Field(..., alias="post_code")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class SuccessfulPayment(BaseModel):
-    currency: str = Field(..., alias="currency")
-    total_amount: int = Field(..., alias="total_amount")
-    invoice_payload: str = Field(..., alias="invoice_payload")
-    shipping_option_id: Optional[str] = Field(None, alias="shipping_option_id")
-    order_info: Optional[OrderInfo] = Field(None, alias="order_info")
-    telegram_payment_charge_id: str = Field(..., alias="telegram_payment_charge_id")
-    provider_payment_charge_id: str = Field(..., alias="provider_payment_charge_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class PassportFile(BaseModel):
-    file_id: str = Field(..., alias="file_id")
-    file_unique_id: str = Field(..., alias="file_unique_id")
-    file_size: int = Field(..., alias="file_size")
-    file_date: int = Field(..., alias="file_date")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class EncryptedPassportElement(BaseModel):
-    type: str = Field(..., alias="type")
-    data: Optional[str] = Field(None, alias="data")
-    phone_number: Optional[str] = Field(None, alias="phone_number")
-    email: Optional[str] = Field(None, alias="email")
-    files: Optional[List[PassportFile]] = Field(None, alias="files")
-    front_side: Optional[PassportFile] = Field(None, alias="front_side")
-    reverse_side: Optional[PassportFile] = Field(None, alias="reverse_side")
-    selfie: Optional[PassportFile] = Field(None, alias="selfie")
-    translation: Optional[List[PassportFile]] = Field(None, alias="translation")
-    hash: str = Field(..., alias="hash")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class EncryptedCredentials(BaseModel):
-    data: str = Field(..., alias="data")
-    hash: str = Field(..., alias="hash")
-    secret: str = Field(..., alias="secret")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class PassportData(BaseModel):
-    data: List[EncryptedPassportElement] = Field(..., alias="data")
-    credentials: EncryptedCredentials = Field(..., alias="credentials")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ProximityAlertTriggered(BaseModel):
-    traveler: User = Field(..., alias="traveler")
-    watcher: User = Field(..., alias="watcher")
-    distance: int = Field(..., alias="distance")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class MessageAutoDeleteTimerChanged(BaseModel):
-    message_auto_delete_time: int = Field(..., alias="message_auto_delete_time")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class VoiceChatScheduled(BaseModel):
-    start_date: int = Field(..., alias="start_date")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class VoiceChatStarted(BaseModel):
-    pass
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class VoiceChatEnded(BaseModel):
-    duration: int = Field(..., alias="duration")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class VoiceChatParticipantsInvited(BaseModel):
-    users: List[User] = Field(..., alias="users")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ForumTopicCreated(BaseModel):
-    message_thread_id: int = Field(..., alias="message_thread_id")
-    name: str = Field(..., alias="name")
-    icon_color: int = Field(..., alias="icon_color")
-    icon_custom_emoji_id: Optional[str] = Field(None, alias="icon_custom_emoji_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ForumTopicClosed(BaseModel):
-    message_thread_id: int = Field(..., alias="message_thread_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class ForumTopicReopened(BaseModel):
-    message_thread_id: int = Field(..., alias="message_thread_id")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class GeneralForumTopicHidden(BaseModel):
-    pass
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class GeneralForumTopicUnhidden(BaseModel):
-    pass
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class LoginUrl(BaseModel):
-    url: str = Field(..., alias="url")
-    forward_text: Optional[str] = Field(None, alias="forward_text")
-    bot_username: Optional[str] = Field(None, alias="bot_username")
-    request_write_access: Optional[bool] = Field(None, alias="request_write_access")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class CallbackGame(BaseModel):
-    pass
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class WebAppInfo(BaseModel):
-    url: str = Field(..., alias="url")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class InlineKeyboardButton(BaseModel):
-    text: str = Field(..., alias="text")
-    url: Optional[str] = Field(None, alias="url")
-    login_url: Optional[LoginUrl] = Field(None, alias="login_url")
-    callback_data: Optional[str] = Field(None, alias="callback_data")
-    switch_inline_query: Optional[str] = Field(None, alias="switch_inline_query")
-    switch_inline_query_current_chat: Optional[str] = Field(None, alias="switch_inline_query_current_chat")
-    callback_game: Optional[CallbackGame] = Field(None, alias="callback_game")
-    pay: Optional[bool] = Field(None, alias="pay")
-    web_app: Optional[WebAppInfo] = Field(None, alias="web_app")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class InlineKeyboardMarkup(BaseModel):
-    inline_keyboard: List[List[InlineKeyboardButton]] = Field(..., alias="inline_keyboard")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-
-class WebAppData(BaseModel):
-    data: str = Field(..., alias="data")
-    button_text: str = Field(..., alias="button_text")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
-
-class Game(BaseModel):
-    title: str
-    description: str
-    photo: List[PhotoSize]
-    text: Optional[str] = None
-    text_entities: Optional[List[MessageEntity]] = None
-    animation: Optional[Animation] = None
-
-
-class Message(BaseModel):
-    message_id: int = Field(..., alias="message_id")
+from typing import Annotated, List, Literal, Optional
+
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Discriminator,
+    Field,
+    PositiveInt,
+    TypeAdapter,
+    field_validator,
+    model_validator,
+)
+
+
+class _BaseModel(BaseModel):
+    model_config = ConfigDict(
+        populate_by_name=True,
+        extra="allow",
+    )
+
+    def to_dict(self, **kwargs):
+        return self.model_dump(exclude_none=True, **kwargs)
+
+
+class Update(_BaseModel):
+    update_id: int
+    message: Optional["Message"] = None
+    edited_message: Optional["Message"] = None
+    channel_post: Optional["Message"] = None
+    edited_channel_post: Optional["Message"] = None
+    business_connection: Optional["BusinessConnection"] = None
+    business_message: Optional["Message"] = None
+    edited_business_message: Optional["Message"] = None
+    deleted_business_messages: Optional["BusinessMessagesDeleted"] = None
+    message_reaction: Optional["MessageReactionUpdated"] = None
+    message_reaction_count: Optional["MessageReactionCountUpdated"] = None
+    inline_query: Optional["InlineQuery"] = None
+    chosen_inline_result: Optional["ChosenInlineResult"] = None
+    callback_query: Optional["CallbackQuery"] = None
+    shipping_query: Optional["ShippingQuery"] = None
+    pre_checkout_query: Optional["PreCheckoutQuery"] = None
+    purchased_paid_media: Optional["PaidMediaPurchased"] = None
+    poll: Optional["Poll"] = None
+    poll_answer: Optional["PollAnswer"] = None
+    my_chat_member: Optional["ChatMemberUpdated"] = None
+    chat_member: Optional["ChatMemberUpdated"] = None
+    chat_join_request: Optional["ChatJoinRequest"] = None
+    chat_boost: Optional["ChatBoostUpdated"] = None
+    removed_chat_boost: Optional["ChatBoostRemoved"] = None
+
+
+class User(_BaseModel):
+    id: int
+    is_bot: bool
+    first_name: str
+    last_name: str | None = None
+    username: str | None = None
+    language_code: str | None = None
+    is_premium: bool | None = None
+    added_to_attachment_menu: bool | None = None
+    can_join_groups: bool | None = None
+    can_read_all_group_messages: bool | None = None
+    supports_inline_queries: bool | None = None
+    can_connect_to_business: bool | None = None
+    has_main_web_app: bool | None = None
+    has_topics_enabled: bool | None = None
+
+
+class Chat(_BaseModel):
+    id: int
+    type: str
+    title: str | None = None
+    username: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    is_forum: str | None = None
+    is_direct_messages: str | None = None
+
+
+class ChatFullInfo(_BaseModel):
+    id: int
+    type: str
+    title: str | None = None
+    username: str | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    is_forum: bool | None = None
+    is_direct_messages: bool | None = None
+    accent_color_id: int
+    max_reaction_count: int
+    photo: Optional["ChatPhoto"] = None
+    active_usernames: List[str] | None = None
+    birthdate: Optional["Birthdate"] = None
+    business_intro: Optional["BusinessIntro"] = None
+    business_location: Optional["BusinessLocation"] = None
+    business_opening_hours: Optional["BusinessOpeningHours"] = None
+    personal_chat: Chat | None = None
+    parent_chat: Chat | None = None
+    available_reactions: List["ReactionType"] | None = None
+    background_custom_emoji_id: str | None = None
+    profile_accent_color_id: int | None = None
+    profile_background_custom_emoji_id: str | None = None
+    emoji_status_custom_emoji_id: str | None = None
+    emoji_status_expiration_date: int | None = None
+    bio: str | None = None
+    has_private_forwards: bool | None = None
+    has_restricted_voice_and_video_messages: bool | None = None
+    join_to_send_messages: bool | None = None
+    join_by_request: bool | None = None
+    description: str | None = None
+    invite_link: str | None = None
+    pinned_message: Optional["Message"] = None
+    permissions: Optional["ChatPermissions"] = None
+    accepted_gift_types: "AcceptedGiftTypes"
+    can_send_paid_media: bool | None = None
+    slow_mode_delay: int | None = None
+    unrestrict_boost_count: int | None = None
+    message_auto_delete_time: int | None = None
+    has_aggressive_anti_spam_enabled: bool | None = None
+    has_hidden_members: bool | None = None
+    has_protected_content: bool | None = None
+    has_visible_history: bool | None = None
+    sticker_set_name: str | None = None
+    can_set_sticker_set: bool | None = None
+    custom_emoji_sticker_set_name: str | None = None
+    linked_chat_id: int | None = None
+    location: Optional["ChatLocation"] = None
+    rating: Optional["UserRating"] | None = None
+    unique_gift_colors: Optional["UniqueGiftColors"] = None
+    paid_message_star_count: int | None = None
+
+
+class Message(_BaseModel):
+    """Telegram Message object representation."""
+
+    message_id: int = Field(..., alias="id")
+    date: PositiveInt
+    chat: Chat
+
+    # Fields requiring different alias
     from_user: Optional[User] = Field(None, alias="from")
-    sender_chat: Optional[Chat] = Field(None, alias="sender_chat")
-    date: int = Field(..., alias="date")
-    chat: Chat = Field(..., alias="chat")
-    forward_from: Optional[User] = Field(None, alias="forward_from")
-    forward_from_chat: Optional[Chat] = Field(None, alias="forward_from_chat")
-    forward_from_message_id: Optional[int] = Field(None, alias="forward_from_message_id")
-    forward_signature: Optional[str] = Field(None, alias="forward_signature")
-    forward_sender_name: Optional[str] = Field(None, alias="forward_sender_name")
-    forward_date: Optional[int] = Field(None, alias="forward_date")
-    is_topic_message: Optional[bool] = Field(None, alias="is_topic_message")
-    is_automatic_forward: Optional[bool] = Field(None, alias="is_automatic_forward")
-    reply_to_message: Optional[Message] = Field(None, alias="reply_to_message")
-    via_bot: Optional[User] = Field(None, alias="via_bot")
-    edit_date: Optional[int] = Field(None, alias="edit_date")
-    has_protected_content: Optional[bool] = Field(None, alias="has_protected_content")
-    media_group_id: Optional[str] = Field(None, alias="media_group_id")
-    author_signature: Optional[str] = Field(None, alias="author_signature")
-    text: Optional[str] = Field(None, alias="text")
-    entities: Optional[List[MessageEntity]] = Field(None, alias="entities")
-    animation: Optional[Animation] = Field(None, alias="animation")
-    audio: Optional[Audio] = Field(None, alias="audio")
-    document: Optional[Document] = Field(None, alias="document")
-    photo: Optional[List[PhotoSize]] = Field(None, alias="photo")
-    sticker: Optional[Sticker] = Field(None, alias="sticker")
-    video: Optional[Video] = Field(None, alias="video")
-    video_note: Optional[VideoNote] = Field(None, alias="video_note")
-    voice: Optional[Voice] = Field(None, alias="voice")
-    caption: Optional[str] = Field(None, alias="caption")
-    caption_entities: Optional[List[MessageEntity]] = Field(None, alias="caption_entities")
-    contact: Optional[Contact] = Field(None, alias="contact")
-    dice: Optional[Dice] = Field(None, alias="dice")
-    game: Optional[Game] = Field(None, alias="game")
-    poll: Optional[Poll] = Field(None, alias="poll")
-    venue: Optional[Venue] = Field(None, alias="venue")
-    location: Optional[Location] = Field(None, alias="location")
-    new_chat_members: Optional[List[User]] = Field(None, alias="new_chat_members")
-    left_chat_member: Optional[User] = Field(None, alias="left_chat_member")
-    new_chat_title: Optional[str] = Field(None, alias="new_chat_title")
-    new_chat_photo: Optional[List[PhotoSize]] = Field(None, alias="new_chat_photo")
-    delete_chat_photo: Optional[bool] = Field(None, alias="delete_chat_photo")
-    group_chat_created: Optional[bool] = Field(None, alias="group_chat_created")
-    supergroup_chat_created: Optional[bool] = Field(None, alias="supergroup_chat_created")
-    channel_chat_created: Optional[bool] = Field(None, alias="channel_chat_created")
-    message_auto_delete_timer_changed: Optional[MessageAutoDeleteTimerChanged] = Field(None, alias="message_auto_delete_timer_changed")
-    migrate_to_chat_id: Optional[int] = Field(None, alias="migrate_to_chat_id")
-    migrate_from_chat_id: Optional[int] = Field(None, alias="migrate_from_chat_id")
-    pinned_message: Optional[Message] = Field(None, alias="pinned_message")
-    invoice: Optional[Invoice] = Field(None, alias="invoice")
-    successful_payment: Optional[SuccessfulPayment] = Field(None, alias="successful_payment")
-    connected_website: Optional[str] = Field(None, alias="connected_website")
-    passport_data: Optional[PassportData] = Field(None, alias="passport_data")
-    proximity_alert_triggered: Optional[ProximityAlertTriggered] = Field(None, alias="proximity_alert_triggered")
-    forum_topic_created: Optional[ForumTopicCreated] = Field(None, alias="forum_topic_created")
-    forum_topic_closed: Optional[ForumTopicClosed] = Field(None, alias="forum_topic_closed")
-    forum_topic_reopened: Optional[ForumTopicReopened] = Field(None, alias="forum_topic_reopened")
-    general_forum_topic_hidden: Optional[GeneralForumTopicHidden] = Field(None, alias="general_forum_topic_hidden")
-    general_forum_topic_unhidden: Optional[GeneralForumTopicUnhidden] = Field(None, alias="general_forum_topic_unhidden")
-    voice_chat_scheduled: Optional[VoiceChatScheduled] = Field(None, alias="voice_chat_scheduled")
-    voice_chat_started: Optional[VoiceChatStarted] = Field(None, alias="voice_chat_started")
-    voice_chat_ended: Optional[VoiceChatEnded] = Field(None, alias="voice_chat_ended")
-    voice_chat_participants_invited: Optional[VoiceChatParticipantsInvited] = Field(None, alias="voice_chat_participants_invited")
-    reply_markup: Optional[InlineKeyboardMarkup] = Field(None, alias="reply_markup")
-    web_app_data: Optional[WebAppData] = Field(None, alias="web_app_data")
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+    # Forward information
+    forward_from: Optional[User] = None
+    forward_from_chat: Optional[Chat] = None
+    forward_from_message_id: Optional[int] = None
+    forward_signature: Optional[str] = None
+    forward_sender_name: Optional[str] = None
+    forward_date: int | None = None
+
+    # Reply / Edit / Bot related
+    reply_to_message: "Message" | None = None
+    edit_date: int | None = None
+    via_bot: Optional[User] = None
+
+    # Sender chat (channel or anonymous group admin)
+    sender_chat: Optional[Chat] = None
+
+    # Text content
+    text: str | None = None
+    entities: List["MessageEntity"] | None = None
+
+    # Caption (for media)
+    caption: str | None = None
+    caption_entities: List["MessageEntity"] | None = None
+
+    # Media types
+    animation: Optional["Animation"] = None
+    audio: Optional["Audio"] = None
+    document: Optional["Document"] = None
+    photo: List["PhotoSize"] | None = None
+    sticker: Optional["Sticker"] = None
+    video: Optional["Video"] = None
+    video_note: Optional["VideoNote"] = None
+    voice: Optional["Voice"] = None
+
+    # Additional message metadata
+    media_group_id: str | None = None
+    author_signature: str | None = None
+    has_protected_content: bool | None = None
+    is_topic_message: bool | None = None
+    is_automatic_forward: bool | None = None
+
+    # Service messages - member changes
+    new_chat_members: List[User] | None = None
+    left_chat_member: Optional[User] = None
+
+    # Service messages - chat changes
+    new_chat_title: str | None = None
+    new_chat_photo: List["PhotoSize"] | None = None
+    delete_chat_photo: bool | None = None
+    group_chat_created: bool | None = None
+    supergroup_chat_created: bool | None = None
+    channel_chat_created: bool | None = None
+    migrate_to_chat_id: int | None = None
+    migrate_from_chat_id: int | None = None
+
+    # Special content types
+    contact: Optional["Contact"] = None
+    dice: Optional["Dice"] = None
+    game: Optional["Game"] = None
+    poll: Optional["Poll"] = None
+    venue: Optional["Venue"] = None
+    location: Optional["Location"] = None
+    invoice: Optional["Invoice"] = None
+    successful_payment: Optional["SuccessfulPayment"] = None
+    passport_data: Optional["PassportData"] = None
+    proximity_alert_triggered: Optional["ProximityAlertTriggered"] = None
+
+    # Inline / WebApp / Reply markup
+    reply_markup: Optional["InlineKeyboardMarkup"] = None
+    web_app_data: Optional["WebAppData"] = None
+
+    # Forum topic actions
+    forum_topic_created: Optional["ForumTopicCreated"] = None
+    forum_topic_closed: Optional["ForumTopicClosed"] = None
+    forum_topic_reopened: Optional["ForumTopicReopened"] = None
+    general_forum_topic_hidden: Optional["GeneralForumTopicHidden"] = None
+    general_forum_topic_unhidden: Optional["GeneralForumTopicUnhidden"] = None
+
+    # Legacy video chat (old name, still supported)
+    video_chat_scheduled: Optional["VideoChatScheduled"] = None
+    video_chat_started: Optional["VideoChatStarted"] = None
+    video_chat_ended: Optional["VideoChatEnded"] = None
+    video_chat_participants_invited: Optional["VideoChatParticipantsInvited"] = None
+
+    # Other service messages
+    message_auto_delete_timer_changed: Optional["MessageAutoDeleteTimerChanged"] = None
+    pinned_message: Optional["Message"] = None
+
+    @property
+    def id(self) -> int:
+        return self.message_id
 
     @staticmethod
     def convert_unicode(text: str) -> str:
         """
-        Converts Persian digits to English digits.
+        Converts Persian/Arabic digits to English/Latin digits.
         """
-        trans_table = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
-        return text.translate(trans_table)
+        persian_to_english = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
+        arabic_to_english = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
+        text = text.translate(persian_to_english)
+        return text.translate(arabic_to_english)
 
     @field_validator("text", mode="before", check_fields=True)
     def normalize_text(cls, v):
@@ -568,202 +248,2273 @@ class Message(BaseModel):
             return cls.convert_unicode(v)
         return v
 
-class InlineQuery(BaseModel):
-    id: str = Field(..., alias="id")
+
+class MessageId(_BaseModel):
+    message_id: int
+
+
+class InaccessibleMessage(_BaseModel):
+    chat: Chat
+    message_id: int
+    date: Literal[0] = 0
+
+
+class MessageEntity(_BaseModel):
+    type: str
+    offset: int
+    length: int
+    url: str | None = None
+    user: Optional[User] = None
+    language: str | None = None
+    custom_emoji_id: str | None = None
+
+
+class TextQuote(_BaseModel):
+    text: str
+    entities: List[MessageEntity] | None = None
+    position: int
+    is_manual: bool
+
+
+class ExternalReplyInfo(_BaseModel):
+    origin: Optional["MessageOrigin"]
+    chat: Chat | None = None
+    message_id: int | None = None
+    link_preview_options: Optional["LinkPreviewOptions"] = None
+    animation: Optional["Animation"] = None
+    audio: Optional["Audio"] = None
+    document: Optional["Document"] = None
+    paid_media: Optional["PaidMediaInfo"] = None
+    photo: list["PhotoSize"] | None = None
+    sticker: Optional["Sticker"] = None
+    story: Optional["Story"] = None
+    video: Optional["Video"] = None
+    video_note: Optional["VideoNote"] = None
+    voice: Optional["Voice"] = None
+    has_media_spoiler: bool | None = None
+    checklist: Optional["Checklist"] = None
+    contact: Optional["Contact"] = None
+    dice: Optional["Dice"] = None
+    game: Optional["Game"] = None
+    giveaway: Optional["Giveaway"] = None
+    giveaway_winners: Optional["GiveawayWinners"] = None
+    invoice: Optional["Invoice"] = None
+    location: Optional["Location"] = None
+    poll: Optional["Poll"] = None
+    venue: Optional["Venue"] = None
+
+
+class ReplyParameters(_BaseModel):
+    message_id: int
+    chat_id: int | str | None = None
+    allow_sending_without_reply: bool | None = None
+    quote: str | None = None
+    quote_parse_mode: str | None = None
+    quote_entities: List[MessageEntity] | None = None
+    quote_position: int | None = None
+    checklist_task_id: int | None = None
+
+
+class MessageOriginUser(_BaseModel):
+    type: Literal["user"] = "user"
+    date: int
+    sender_user: User
+
+
+class MessageOriginHiddenUser(_BaseModel):
+    type: Literal["hidden_user"] = "hidden_user"
+    date: int
+    sender_user_name: str
+
+
+class MessageOriginChat(_BaseModel):
+    type: Literal["chat"] = "chat"
+    date: int
+    sender_chat: Chat
+    author_signature: str | None = None
+
+
+class MessageOriginChannel(_BaseModel):
+    type: Literal["channel"] = "channel"
+    date: int
+    chat: Chat
+    message_id: int
+    author_signature: str | None = None
+
+
+class PhotoSize(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    file_size: int | None = None
+
+
+class Animation(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    duration: int
+    thumbnail: PhotoSize | None = None
+    file_name: str | None = None
+    mime_type: str | None = None
+    file_size: int | None = None
+
+
+class Audio(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    duration: int
+    performer: str | None = None
+    title: str | None = None
+    file_name: str | None = None
+    mime_type: str | None = None
+    file_size: int | None = None
+    thumbnail: PhotoSize | None = None
+
+
+class Document(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    thumbnail: PhotoSize | None = None
+    file_name: str | None = None
+    mime_type: str | None = None
+    file_size: int | None = None
+
+
+class Story(_BaseModel):
+    chat: Chat
+    id: int
+
+
+class Video(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    duration: int
+    thumbnail: PhotoSize | None = None
+    cover: list[PhotoSize] | None = None
+    start_timestamp: int | None = None
+    file_name: str | None = None
+    mime_type: str | None = None
+    file_size: int | None = None
+
+
+class VideoNote(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    length: int
+    duration: int
+    thumbnail: PhotoSize | None = None
+    file_size: int | None = None
+
+
+class MaskPosition(_BaseModel):
+    point: str
+    x_shift: float
+    y_shift: float
+    scale: float
+
+
+class File(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    file_size: int | None = None
+    file_path: str | None = None
+
+
+class Sticker(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    type: str  # regular | mask | custom_emoji
+    width: int
+    height: int
+    is_animated: bool
+    is_video: bool
+    thumbnail: PhotoSize | None = None
+    emoji: str | None = None
+    set_name: str | None = None
+    premium_animation: File | None = None
+    mask_position: MaskPosition | None = None
+    custom_emoji_id: str | None = None
+    needs_repainting: bool | None = None
+    file_size: int | None = None
+
+
+class StickerSet(_BaseModel):
+    name: str
+    title: str
+    sticker_type: str  # "regular", "mask", "custom_emoji"
+    stickers: List[Sticker]
+    thumbnail: PhotoSize | None = None
+
+
+class InputSticker(_BaseModel):
+    sticker: str
+    format_: str = Field(..., alias="format")  # "static", "animated", "video"
+    emoji_list: list[str]
+    mask_position: MaskPosition | None = None
+    keywords: list[str] | None = None
+
+
+class Voice(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    duration: int
+    mime_type: str | None = None
+    file_size: int | None = None
+
+
+class PaidMedia(_BaseModel):
+    type: str
+
+
+class PaidMediaInfo(_BaseModel):
+    star_count: int
+    paid_media: list[PaidMedia]
+
+
+class PaidMediaPreview(_BaseModel):
+    type: str = "preview"
+    width: int | None = None
+    height: int | None = None
+    duration: int | None = None
+
+
+class PaidMediaPhoto(_BaseModel):
+    type: str = "photo"
+    photo: list[PhotoSize]
+
+
+class PaidMediaVideo(_BaseModel):
+    type: str = "video"
+    video: Video
+
+
+class Contact(_BaseModel):
+    phone_number: str
+    first_name: str
+    last_name: str | None = None
+    user_id: int | None = None
+    vcard: str | None = None
+
+
+class Dice(_BaseModel):
+    emoji: str
+    value: int
+
+
+class PollOption(_BaseModel):
+    text: str
+    text_entities: list[MessageEntity] | None = None
+    voter_count: int
+
+
+class InputPollOption(_BaseModel):
+    text: str
+    text_parse_mode: str | None = None
+    text_entities: list[MessageEntity] | None = None
+
+
+class PollAnswer(_BaseModel):
+    poll_id: str
+    voter_chat: Chat | None = None
+    user: User | None = None
+    option_ids: list[int]
+
+
+class Poll(_BaseModel):
+    id: str
+    question: str
+    question_entities: list[MessageEntity] | None = None
+    options: list[PollOption]
+    total_voter_count: int
+    is_closed: bool
+    is_anonymous: bool
+    type: str
+    allows_multiple_answers: bool
+    correct_option_id: int | None = None
+    explanation: str | None = None
+    explanation_entities: list[MessageEntity] | None = None
+    open_period: int | None = None
+    close_date: int | None = None
+
+
+class ChecklistTask(_BaseModel):
+    id: int
+    text: str
+    text_entities: list[MessageEntity] | None = None
+    completed_by_user: User | None = None
+    completed_by_chat: Chat | None = None
+    completion_date: int | None = None
+
+
+class Checklist(_BaseModel):
+    title: str
+    title_entities: list[MessageEntity] | None = None
+    tasks: list[ChecklistTask]
+    others_can_add_tasks: bool | None = None
+    others_can_mark_tasks_as_done: bool | None = None
+
+
+class InputChecklistTask(_BaseModel):
+    id: int
+    text: str
+    parse_mode: str | None = None
+    text_entities: list[MessageEntity] | None = None
+
+
+class InputChecklist(_BaseModel):
+    title: str
+    parse_mode: str | None = None
+    title_entities: list[MessageEntity] | None = None
+    tasks: list[InputChecklistTask]
+    others_can_add_tasks: bool | None = None
+    others_can_mark_tasks_as_done: bool | None = None
+
+
+class ChecklistTasksDone(_BaseModel):
+    checklist_message: Message | None = None
+    marked_as_done_task_ids: list[int] | None = None
+    marked_as_not_done_task_ids: list[int] | None = None
+
+
+class ChecklistTasksAdded(_BaseModel):
+    checklist_message: Message | None = None
+    tasks: list[ChecklistTask]
+
+
+class Location(_BaseModel):
+    latitude: float
+    longitude: float
+    horizontal_accuracy: float | None = None
+    live_period: int | None = None
+    heading: int | None = None
+    proximity_alert_radius: int | None = None
+
+
+class Venue(_BaseModel):
+    location: Location
+    title: str
+    address: str
+    foursquare_id: str | None = None
+    foursquare_type: str | None = None
+    google_place_id: str | None = None
+    google_place_type: str | None = None
+
+
+class WebAppData(_BaseModel):
+    data: str
+    button_text: str
+
+
+class ProximityAlertTriggered(_BaseModel):
+    traveler: User
+    watcher: User
+    distance: int
+
+
+class MessageAutoDeleteTimerChanged(_BaseModel):
+    message_auto_delete_time: int
+
+
+class ChatBoostAdded(_BaseModel):
+    boost_count: int
+
+
+class BackgroundFill(_BaseModel):
+    type: str
+
+
+class BackgroundFillSolid(_BaseModel):
+    type: Literal["solid"] = "solid"
+    color: int
+
+
+class BackgroundFillGradient(_BaseModel):
+    type: Literal["gradient"] = "gradient"
+    top_color: int
+    bottom_color: int
+    rotation_angle: int
+
+
+class BackgroundFillFreeformGradient(_BaseModel):
+    type: Literal["freeform_gradient"] = "freeform_gradient"
+    colors: list[int]
+
+
+class BackgroundType(_BaseModel):
+    type: str
+
+
+class BackgroundTypeFill(_BaseModel):
+    type: Literal["fill"] = "fill"
+    fill: BackgroundFill
+    dark_theme_dimming: int
+
+
+class BackgroundTypeWallpaper(_BaseModel):
+    type: Literal["wallpaper"] = "wallpaper"
+    document: Document
+    dark_theme_dimming: int
+    is_blurred: bool | None = None
+    is_moving: bool | None = None
+
+
+class BackgroundTypePattern(_BaseModel):
+    type: Literal["pattern"] = "pattern"
+    document: Document
+    fill: BackgroundFill
+    intensity: int
+    is_inverted: bool | None = None
+    is_moving: bool | None = None
+
+
+class BackgroundTypeChatTheme(_BaseModel):
+    type: Literal["chat_theme"] = "chat_theme"
+    theme_name: str
+
+
+class ChatBackground(_BaseModel):
+    type: BackgroundType
+
+
+class ForumTopicCreated(_BaseModel):
+    name: str
+    icon_color: int
+    icon_custom_emoji_id: str | None = None
+    is_name_implicit: bool | None = None
+
+
+class ForumTopicClosed(_BaseModel):
+    pass
+
+
+class ForumTopicEdited(_BaseModel):
+    name: str | None = None
+    icon_custom_emoji_id: str | None = None
+
+
+class ForumTopicReopened(_BaseModel):
+    pass
+
+
+class GeneralForumTopicHidden(_BaseModel):
+    pass
+
+
+class GeneralForumTopicUnhidden(_BaseModel):
+    pass
+
+
+class SharedUser(_BaseModel):
+    user_id: int
+    first_name: str | None = None
+    last_name: str | None = None
+    username: str | None = None
+    photo: list[PhotoSize] | None = None
+
+
+class UsersShared(_BaseModel):
+    request_id: int
+    users: list[SharedUser]
+
+
+class ChatShared(_BaseModel):
+    request_id: int
+    chat_id: int
+    title: str | None = None
+    username: str | None = None
+    photo: list[PhotoSize] | None = None
+
+
+class WriteAccessAllowed(_BaseModel):
+    from_request: bool | None = None
+    web_app_name: str | None = None
+    from_attachment_menu: bool | None = None
+
+
+class VideoChatScheduled(_BaseModel):
+    start_date: int
+
+
+class VideoChatStarted(_BaseModel):
+    pass
+
+
+class VideoChatEnded(_BaseModel):
+    duration: int
+
+
+class VideoChatParticipantsInvited(_BaseModel):
+    users: list[User]
+
+
+class PaidMessagePriceChanged(_BaseModel):
+    paid_message_star_count: int
+
+
+class DirectMessagePriceChanged(_BaseModel):
+    are_direct_messages_enabled: bool
+    direct_message_star_count: int | None = None
+
+
+class GiveawayCreated(_BaseModel):
+    prize_star_count: int | None = None
+
+
+class Giveaway(_BaseModel):
+    chats: list[Chat]
+    winners_selection_date: int
+    winner_count: int
+    only_new_members: bool | None = None
+    has_public_winners: bool | None = None
+    prize_description: str | None = None
+    country_codes: list[str] | None = None
+    prize_star_count: int | None = None
+    premium_subscription_month_count: int | None = None
+
+
+class GiveawayWinners(_BaseModel):
+    chat: Chat
+    giveaway_message_id: int
+    winners_selection_date: int
+    winner_count: int
+    winners: list[User]
+    additional_chat_count: int | None = None
+    prize_star_count: int | None = None
+    premium_subscription_month_count: int | None = None
+    unclaimed_prize_count: int | None = None
+    only_new_members: bool | None = None
+    was_refunded: bool | None = None
+    prize_description: str | None = None
+
+
+class GiveawayCompleted(_BaseModel):
+    winner_count: int
+    unclaimed_prize_count: int | None = None
+    giveaway_message: Message | None = None
+    is_star_giveaway: bool | None = None
+
+
+class LinkPreviewOptions(_BaseModel):
+    is_disabled: bool | None = None
+    url: str | None = None
+    prefer_small_media: bool | None = None
+    prefer_large_media: bool | None = None
+    show_above_text: bool | None = None
+
+
+class DirectMessagesTopic(_BaseModel):
+    topic_id: int
+    user: User | None = None
+
+
+class UserProfilePhotos(_BaseModel):
+    total_count: int
+    photos: list[list[PhotoSize]]
+
+
+class WebAppInfo(_BaseModel):
+    url: str
+
+
+class SentWebAppMessage(_BaseModel):
+    web_app_query_id: str
+    result: "InlineQueryResult"
+
+
+class CopyTextButton(_BaseModel):
+    text: str
+
+
+class CallbackGame(_BaseModel):
+    pass
+
+
+class Game(_BaseModel):
+    title: str
+    description: str
+    photo: list[PhotoSize]
+    text: str | None = None
+    text_entities: list[MessageEntity] | None = None
+    animation: Animation | None = None
+
+
+class GameHighScore(_BaseModel):
+    position: int
+    user: User
+    score: int
+
+
+class ChatInviteLink(_BaseModel):
+    invite_link: str
+    creator: User
+    creates_join_request: bool
+    is_primary: bool
+    is_revoked: bool
+    name: str | None = None
+    expire_date: int | None = None
+    member_limit: int | None = None
+    pending_join_request_count: int | None = None
+    subscription_period: int | None = None
+    subscription_price: int | None = None
+
+
+class ChatAdministratorRights(_BaseModel):
+    is_anonymous: bool
+    can_manage_chat: bool
+    can_delete_messages: bool
+    can_manage_video_chats: bool
+    can_restrict_members: bool
+    can_promote_members: bool
+    can_change_info: bool
+    can_invite_users: bool
+    can_post_stories: bool
+    can_edit_stories: bool
+    can_delete_stories: bool
+    can_post_messages: bool | None = None
+    can_edit_messages: bool | None = None
+    can_pin_messages: bool | None = None
+    can_manage_topics: bool | None = None
+    can_manage_direct_messages: bool | None = None
+
+
+class ChatMemberUpdated(_BaseModel):
+    chat: Chat
     from_user: User = Field(..., alias="from")
-    query: str = Field(..., alias="query")
-    offset: str = Field(..., alias="offset")
-    chat_type: Optional[str] = Field(None, alias="chat_type")
-    location: Optional[Location] = Field(None, alias="location")
+    date: int
+    old_chat_member: "ChatMember"
+    new_chat_member: "ChatMember"
+    invite_link: ChatInviteLink | None = None
+    via_join_request: bool | None = None
+    via_chat_folder_invite_link: bool | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+class ChatMemberOwner(_BaseModel):
+    status: Literal["creator"] = "creator"
+    user: User
+    is_anonymous: bool
+    custom_title: str | None = None
 
 
-class ChosenInlineResult(BaseModel):
-    result_id: str = Field(..., alias="result_id")
+class ChatMemberAdministrator(_BaseModel):
+    status: Literal["administrator"] = "administrator"
+    user: User
+    can_be_edited: bool
+    is_anonymous: bool
+    can_manage_chat: bool
+    can_delete_messages: bool
+    can_manage_video_chats: bool
+    can_restrict_members: bool
+    can_promote_members: bool
+    can_change_info: bool
+    can_invite_users: bool
+    can_post_stories: bool
+    can_edit_stories: bool
+    can_delete_stories: bool
+    can_post_messages: bool | None = None
+    can_edit_messages: bool | None = None
+    can_pin_messages: bool | None = None
+    can_manage_topics: bool | None = None
+    can_manage_direct_messages: bool | None = None
+    custom_title: str | None = None
+
+
+class ChatMemberMember(_BaseModel):
+    status: Literal["member"] = "member"
+    user: User
+    until_date: int | None = None
+
+
+class ChatMemberRestricted(_BaseModel):
+    status: Literal["restricted"] = "restricted"
+    user: User
+    is_member: bool
+    can_send_messages: bool
+    can_send_audios: bool
+    can_send_documents: bool
+    can_send_photos: bool
+    can_send_videos: bool
+    can_send_video_notes: bool
+    can_send_voice_notes: bool
+    can_send_polls: bool
+    can_send_other_messages: bool
+    can_add_web_page_previews: bool
+    can_change_info: bool
+    can_invite_users: bool
+    can_pin_messages: bool
+    can_manage_topics: bool
+    until_date: int
+
+
+class ChatMemberLeft(_BaseModel):
+    status: Literal["left"] = "left"
+    user: User
+
+
+class ChatMemberBanned(_BaseModel):
+    status: Literal["kicked"] = "kicked"
+    user: User
+    until_date: int
+
+
+class ChatJoinRequest(_BaseModel):
+    chat: Chat
     from_user: User = Field(..., alias="from")
-    location: Optional[Location] = Field(None, alias="location")
-    inline_message_id: Optional[str] = Field(None, alias="inline_message_id")
-    query: str = Field(..., alias="query")
+    user_chat_id: int
+    date: int
+    bio: str | None = None
+    invite_link: ChatInviteLink | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+
+class ChatPermissions(_BaseModel):
+    can_send_messages: bool | None = None
+    can_send_audios: bool | None = None
+    can_send_documents: bool | None = None
+    can_send_photos: bool | None = None
+    can_send_videos: bool | None = None
+    can_send_video_notes: bool | None = None
+    can_send_voice_notes: bool | None = None
+    can_send_polls: bool | None = None
+    can_send_other_messages: bool | None = None
+    can_add_web_page_previews: bool | None = None
+    can_change_info: bool | None = None
+    can_invite_users: bool | None = None
+    can_pin_messages: bool | None = None
+    can_manage_topics: bool | None = None
 
 
-class CallbackQuery(BaseModel):
-    id: str = Field(..., alias="id")
+class ChatPhoto(_BaseModel):
+    small_file_id: str
+    small_file_unique_id: str
+    big_file_id: str
+    big_file_unique_id: str
+
+
+class ChatLocation(_BaseModel):
+    location: Location
+    address: str
+
+
+class PreparedInlineMessage(_BaseModel):
+    id: str
+    expiration_date: int
+
+
+class KeyboardButtonRequestUsers(_BaseModel):
+    request_id: int
+    user_is_bot: bool | None = None
+    user_is_premium: bool | None = None
+    max_quantity: int | None = None
+    request_name: bool | None = None
+    request_username: bool | None = None
+    request_photo: bool | None = None
+
+
+class KeyboardButtonRequestChat(_BaseModel):
+    request_id: int
+    chat_is_channel: bool
+    chat_is_forum: bool | None = None
+    chat_has_username: bool | None = None
+    chat_is_created: bool | None = None
+    user_administrator_rights: Optional[ChatAdministratorRights] = None
+    bot_administrator_rights: Optional[ChatAdministratorRights] = None
+    bot_is_member: bool | None = None
+    request_title: bool | None = None
+    request_username: bool | None = None
+    request_photo: bool | None = None
+
+
+class KeyboardButtonPollType(_BaseModel):
+    type: str | None = None
+
+
+class KeyboardButton(_BaseModel):
+    text: str
+    request_users: KeyboardButtonRequestUsers | None = None
+    request_chat: KeyboardButtonRequestChat | None = None
+    request_contact: bool | None = None
+    request_location: bool | None = None
+    request_poll: KeyboardButtonPollType | None = None
+    web_app: WebAppInfo | None = None
+
+
+class ReplyKeyboardMarkup(_BaseModel):
+    keyboard: list[list[KeyboardButton]]
+    is_persistent: bool | None = None
+    resize_keyboard: bool | None = None
+    one_time_keyboard: bool | None = None
+    input_field_placeholder: str | None = None
+    selective: bool | None = None
+
+
+class ReplyKeyboardRemove(_BaseModel):
+    remove_keyboard: bool
+    selective: bool | None = None
+
+
+class SwitchInlineQueryChosenChat(_BaseModel):
+    query: str | None = None
+    allow_user_chats: bool | None = None
+    allow_bot_chats: bool | None = None
+    allow_group_chats: bool | None = None
+    allow_channel_chats: bool | None = None
+
+
+class LoginUrl(_BaseModel):
+    url: str
+    forward_text: str | None = None
+    bot_username: str | None = None
+    request_write_access: bool | None = None
+
+
+class InlineKeyboardButton(_BaseModel):
+    text: str
+    url: str | None = None
+    callback_data: str | None = None
+    web_app: WebAppInfo | None = None
+    login_url: LoginUrl | None = None
+    switch_inline_query: str | None = None
+    switch_inline_query_current_chat: str | None = None
+    switch_inline_query_chosen_chat: SwitchInlineQueryChosenChat | None = None
+    copy_text: CopyTextButton | None = None
+    callback_game: CallbackGame | None = None
+    pay: bool | None = None
+
+
+class InlineKeyboardMarkup(_BaseModel):
+    inline_keyboard: list[list[InlineKeyboardButton]]
+
+
+class InlineQueryResultsButton(_BaseModel):
+    text: str
+    web_app: WebAppInfo | None = None
+    start_parameter: str | None = None
+
+    @model_validator(mode="after")
+    def validate_field_exists(self) -> "InlineQueryResultsButton":
+        if not self.web_app and not self.start_parameter:
+            raise ValueError("Either 'web_app' or 'start_parameter' must be provided.")
+
+        return self
+
+
+class InlineQuery(_BaseModel):
+    id: str
+    from_user: User
+    query: str
+    offset: str
+    chat_type: str | None = None
+    location: Location | None = None
+
+
+class ChosenInlineResult(_BaseModel):
+    result_id: str
+    from_user: User
+    location: Location | None = None
+    inline_message_id: str | None = None
+    query: str
+
+
+class InlineQueryResultArticle(_BaseModel):
+    type: str = "article"
+    id: str
+    title: str
+    input_message_content: "InputMessageContent"
+    reply_markup: InlineKeyboardMarkup | None = None
+    url: str | None = None
+    description: str | None = None
+    thumbnail_url: str | None = None
+    thumbnail_width: int | None = None
+    thumbnail_height: int | None = None
+
+
+class InlineQueryResultPhoto(_BaseModel):
+    type: str = "photo"
+    id: str
+    photo_url: str
+    thumbnail_url: str
+    photo_width: int | None = None
+    photo_height: int | None = None
+    title: str | None = None
+    description: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultGif(_BaseModel):
+    type: str = "gif"
+    id: str
+    gif_url: str
+    gif_width: int | None = None
+    gif_height: int | None = None
+    gif_duration: int | None = None
+    thumbnail_url: str
+    thumbnail_mime_type: str | None = None
+    title: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultMpeg4Gif(_BaseModel):
+    type: str = "mpeg4_gif"
+    id: str
+    mpeg4_url: str
+    mpeg4_width: int | None = None
+    mpeg4_height: int | None = None
+    mpeg4_duration: int | None = None
+    thumbnail_url: str
+    thumbnail_mime_type: str | None = None
+    title: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultVideo(_BaseModel):
+    type: str = "video"
+    id: str
+    video_url: str
+    mime_type: Literal["text/html", "video/mp4"]
+    thumbnail_url: str
+    title: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    video_width: int | None = None
+    video_height: int | None = None
+    video_duration: int | None = None
+    description: str | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+    @model_validator(mode="before")
+    def validate_content_exists_in_text_mime_type(self) -> "InlineQueryResultVideo":
+        if self.mime_type == "text/html" and not self.input_message_content:
+            raise ValueError(
+                "input_message_content is required when mime_type is 'text/html' (e.g., YouTube)"
+            )
+
+        return self
+
+
+class InlineQueryResultAudio(_BaseModel):
+    type: str = "audio"
+    id: str
+    audio_url: str
+    title: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    performer: str | None = None
+    audio_duration: int | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultVoice(_BaseModel):
+    type: str = "voice"
+    id: str
+    voice_url: str
+    title: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    voice_duration: int | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultDocument(_BaseModel):
+    type: str = "document"
+    id: str
+    title: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    document_url: str
+    mime_type: Literal["application/pdf", "application/zip"]
+    description: str | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+    thumbnail_url: str | None = None
+    thumbnail_width: int | None = None
+    thumbnail_height: int | None = None
+
+
+class InlineQueryResultLocation(_BaseModel):
+    type: str = "location"
+    id: str
+    latitude: float
+    longitude: float
+    title: str
+    horizontal_accuracy: float | None = None
+    live_period: int | None = None
+    heading: int | None = None
+    proximity_alert_radius: int | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+    thumbnail_url: str | None = None
+    thumbnail_width: int | None = None
+    thumbnail_height: int | None = None
+
+
+class InlineQueryResultVenue(_BaseModel):
+    type: str = "venue"
+    id: str
+    latitude: float
+    longitude: float
+    title: str
+    address: str
+    foursquare_id: str | None = None
+    foursquare_type: str | None = None
+    google_place_id: str | None = None
+    google_place_type: str | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+    thumbnail_url: str | None = None
+    thumbnail_width: int | None = None
+    thumbnail_height: int | None = None
+
+
+class InlineQueryResultContact(_BaseModel):
+    type: str = "contact"
+    id: str
+    phone_number: str
+    first_name: str
+    last_name: str | None = None
+    vcard: str | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+    thumbnail_url: str | None = None
+    thumbnail_width: int | None = None
+    thumbnail_height: int | None = None
+
+
+class InlineQueryResultGame(_BaseModel):
+    type: str = "game"
+    id: str
+    game_short_name: str
+    reply_markup: InlineKeyboardMarkup | None = None
+
+
+class InlineQueryResultCachedPhoto(_BaseModel):
+    type: str = "photo"
+    id: str
+    photo_file_id: str
+    title: str | None = None
+    description: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedGif(_BaseModel):
+    type: str = "gif"
+    id: str
+    gif_file_id: str
+    title: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedMpeg4Gif(_BaseModel):
+    type: str = "mpeg4_gif"
+    id: str
+    mpeg4_file_id: str
+    title: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedSticker(_BaseModel):
+    type: str = "sticker"
+    id: str
+    sticker_file_id: str
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedDocument(_BaseModel):
+    type: str = "document"
+    id: str
+    title: str
+    document_file_id: str
+    description: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedVideo(_BaseModel):
+    type: str = "video"
+    id: str
+    video_file_id: str
+    title: str
+    description: str | None = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedVoice(_BaseModel):
+    type: str = "voice"
+    id: str
+    voice_file_id: str
+    title: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class InlineQueryResultCachedAudio(_BaseModel):
+    type: str = "audio"
+    id: str
+    audio_file_id: str
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: list[MessageEntity] | None = None
+    reply_markup: InlineKeyboardMarkup | None = None
+    input_message_content: Optional["InputMessageContent"] = None
+
+
+class AnswerInlineQuery(_BaseModel):
+    inline_query_id: str
+    results: list["InlineQueryResult"]
+    cache_time: int | None = 300
+    is_personal: bool | None = None
+    next_offset: str | None = None
+    button: InlineQueryResultsButton | None = None
+
+
+class CallbackQuery(_BaseModel):
+    id: str
     from_user: User = Field(..., alias="from")
-    message: Optional[Message] = Field(None, alias="message")
-    inline_message_id: Optional[str] = Field(None, alias="inline_message_id")
-    chat_instance: str = Field(..., alias="chat_instance")
-    data: Optional[str] = Field(None, alias="data")
-    game_short_name: Optional[str] = Field(None, alias="game_short_name")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+    message: Optional["MaybeInaccessibleMessage"] = None
+    inline_message_id: str | None = None
+    chat_instance: str
+    data: str | None = None
+    game_short_name: str | None = None
 
 
-class ShippingQuery(BaseModel):
-    id: str = Field(..., alias="id")
-    from_user: User = Field(..., alias="from")
-    invoice_payload: str = Field(..., alias="invoice_payload")
-    shipping_address: ShippingAddress = Field(..., alias="shipping_address")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+class ForceReply(_BaseModel):
+    force_reply: bool
+    input_field_placeholder: str | None = None
+    selective: bool | None = None
 
 
-class PreCheckoutQuery(BaseModel):
-    id: str = Field(..., alias="id")
-    from_user: User = Field(..., alias="from")
-    currency: str = Field(..., alias="currency")
-    total_amount: int = Field(..., alias="total_amount")
-    invoice_payload: str = Field(..., alias="invoice_payload")
-    shipping_option_id: Optional[str] = Field(None, alias="shipping_option_id")
-    order_info: Optional[OrderInfo] = Field(None, alias="order_info")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+class Birthdate(_BaseModel):
+    day: int
+    month: int
+    year: int | None = None
 
 
-class ChatInviteLink(BaseModel):
-    invite_link: str = Field(..., alias="invite_link")
-    creator: User = Field(..., alias="creator")
-    creates_join_request: bool = Field(..., alias="creates_join_request")
-    is_primary: bool = Field(..., alias="is_primary")
-    is_revoked: bool = Field(..., alias="is_revoked")
-    name: Optional[str] = Field(None, alias="name")
-    expire_date: Optional[int] = Field(None, alias="expire_date")
-    member_limit: Optional[int] = Field(None, alias="member_limit")
-    pending_join_request_count: Optional[int] = Field(None, alias="pending_join_request_count")
+class BusinessIntro(_BaseModel):
+    title: str | None = None
+    message: str | None = None
+    sticker: Sticker | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberOwner(BaseModel):
-    status: Literal["creator"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
-    is_anonymous: bool = Field(..., alias="is_anonymous")
-    custom_title: Optional[str] = Field(None, alias="custom_title")
+class BusinessLocation(_BaseModel):
+    address: str
+    location: Location | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberAdministrator(BaseModel):
-    status: Literal["administrator"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
-    can_be_edited: bool = Field(..., alias="can_be_edited")
-    is_anonymous: bool = Field(..., alias="is_anonymous")
-    can_manage_chat: bool = Field(..., alias="can_manage_chat")
-    can_delete_messages: bool = Field(..., alias="can_delete_messages")
-    can_manage_video_chats: bool = Field(..., alias="can_manage_video_chats")
-    can_restrict_members: bool = Field(..., alias="can_restrict_members")
-    can_promote_members: bool = Field(..., alias="can_promote_members")
-    can_change_info: bool = Field(..., alias="can_change_info")
-    can_invite_users: bool = Field(..., alias="can_invite_users")
-    can_post_messages: Optional[bool] = Field(None, alias="can_post_messages")
-    can_edit_messages: Optional[bool] = Field(None, alias="can_edit_messages")
-    can_pin_messages: Optional[bool] = Field(None, alias="can_pin_messages")
-    can_manage_topics: Optional[bool] = Field(None, alias="can_manage_topics")
-    custom_title: Optional[str] = Field(None, alias="custom_title")
+class BusinessOpeningHoursInterval(_BaseModel):
+    opening_minute: int
+    closing_minute: int
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberMember(BaseModel):
-    status: Literal["member"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
+class BusinessOpeningHours(_BaseModel):
+    time_zone_name: str
+    opening_hours: list[BusinessOpeningHoursInterval]
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberRestricted(BaseModel):
-    status: Literal["restricted"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
-    is_member: bool = Field(..., alias="is_member")
-    can_send_messages: Optional[bool] = Field(None, alias="can_send_messages")
-    can_send_media_messages: Optional[bool] = Field(None, alias="can_send_media_messages")
-    can_send_polls: Optional[bool] = Field(None, alias="can_send_polls")
-    can_send_other_messages: Optional[bool] = Field(None, alias="can_send_other_messages")
-    can_add_web_page_previews: Optional[bool] = Field(None, alias="can_add_web_page_previews")
-    can_change_info: Optional[bool] = Field(None, alias="can_change_info")
-    can_invite_users: Optional[bool] = Field(None, alias="can_invite_users")
-    can_pin_messages: Optional[bool] = Field(None, alias="can_pin_messages")
-    can_manage_topics: Optional[bool] = Field(None, alias="can_manage_topics")
-    until_date: int = Field(..., alias="until_date")
+class UserRating(_BaseModel):
+    level: int
+    rating: int
+    current_level_rating: int
+    next_level_rating: int | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberLeft(BaseModel):
-    status: Literal["left"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
+class StoryAreaPosition(_BaseModel):
+    x_percentage: float
+    y_percentage: float
+    width_percentage: float
+    height_percentage: float
+    rotation_angle: float
+    corner_radius_percentage: float
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-class ChatMemberBanned(BaseModel):
-    status: Literal["kicked"] = Field(..., alias="status")
-    user: User = Field(..., alias="user")
-    until_date: int = Field(..., alias="until_date")
+class LocationAddress(_BaseModel):
+    country_code: str
+    state: str | None = None
+    city: str | None = None
+    street: str | None = None
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
 
-ChatMember = Union[
-    ChatMemberOwner,
-    ChatMemberAdministrator,
-    ChatMemberMember,
-    ChatMemberRestricted,
-    ChatMemberLeft,
-    ChatMemberBanned,
+class ReactionTypeEmoji(_BaseModel):
+    type: Literal["emoji"] = "emoji"
+    emoji: str
+
+
+class ReactionTypeCustomEmoji(_BaseModel):
+    type: Literal["custom_emoji"] = "custom_emoji"
+    custom_emoji_id: str
+
+
+class ReactionTypePaid(_BaseModel):
+    type: Literal["paid"] = "paid"
+
+
+class ReactionCount(_BaseModel):
+    type: "ReactionType"
+    total_count: int
+
+
+class StoryAreaTypeLocation(_BaseModel):
+    type: Literal["location"] = "location"
+    latitude: float
+    longitude: float
+    address: LocationAddress | None = None
+
+
+class StoryAreaTypeSuggestedReaction(_BaseModel):
+    type: Literal["suggested_reaction"] = "suggested_reaction"
+    reaction_type: "ReactionType"
+    is_dark: bool | None = None
+    is_flipped: bool | None = None
+
+
+class StoryAreaTypeLink(_BaseModel):
+    type: Literal["link"] = "link"
+    url: str
+
+
+class StoryAreaTypeWeather(_BaseModel):
+    type: Literal["weather"] = "weather"
+    temperature: float
+    emoji: str
+    background_color: int
+
+
+class StoryAreaTypeUniqueGift(_BaseModel):
+    type: Literal["unique_gift"] = "unique_gift"
+    name: str
+
+
+class StoryArea(_BaseModel):
+    position: StoryAreaPosition
+    type: "StoryAreaType"
+
+
+class MessageReactionUpdated(_BaseModel):
+    chat: Chat
+    message_id: int
+    user: User | None = None
+    actor_chat: Chat | None = None
+    date: int
+    old_reaction: list["ReactionType"]
+    new_reaction: list["ReactionType"]
+
+
+class MessageReactionCountUpdated(_BaseModel):
+    chat: Chat
+    message_id: int
+    date: int
+    reactions: list[ReactionCount]
+
+
+class ForumTopic(_BaseModel):
+    message_thread_id: int
+    name: str
+    icon_color: int
+    icon_custom_emoji_id: str | None = None
+    is_name_implicit: bool | None = None
+
+
+class GiftBackground(_BaseModel):
+    center_color: int
+    edge_color: int
+    text_color: int
+
+
+class Gift(_BaseModel):
+    id: str
+    sticker: Sticker
+    star_count: int
+    upgrade_star_count: int | None = None
+    is_premium: bool | None = None
+    has_colors: bool | None = None
+    total_count: int | None = None
+    remaining_count: int | None = None
+    personal_total_count: int | None = None
+    personal_remaining_count: int | None = None
+    background: GiftBackground | None = None
+    unique_gift_variant_count: int | None = None
+    publisher_chat: Chat | None = None
+
+
+class Gifts(_BaseModel):
+    gifts: list[Gift]
+
+
+class UniqueGiftModel(_BaseModel):
+    name: str
+    sticker: Sticker
+    rarity_per_mille: int
+
+
+class UniqueGiftSymbol(_BaseModel):
+    name: str
+    sticker: Sticker
+    rarity_per_mille: int
+
+
+class UniqueGiftBackdropColors(_BaseModel):
+    center_color: int
+    edge_color: int
+    symbol_color: int
+    text_color: int
+
+
+class UniqueGiftBackdrop(_BaseModel):
+    name: str
+    colors: UniqueGiftBackdropColors
+    rarity_per_mille: int
+
+
+class UniqueGiftColors(_BaseModel):
+    model_custom_emoji_id: str
+    symbol_custom_emoji_id: str
+    light_theme_main_color: int
+    light_theme_other_colors: list[int]
+    dark_theme_main_color: int
+    dark_theme_other_colors: list[int]
+
+
+class UniqueGift(_BaseModel):
+    gift_id: str
+    base_name: str
+    name: str
+    number: int
+    model: UniqueGiftModel
+    symbol: UniqueGiftSymbol
+    backdrop: UniqueGiftBackdrop
+    is_premium: bool | None = None
+    is_from_blockchain: bool | None = None
+    colors: UniqueGiftColors | None = None
+    publisher_chat: Chat | None = None
+
+
+class GiftInfo(_BaseModel):
+    gift: Gift
+    owned_gift_id: str | None = None
+    convert_star_count: int | None = None
+    prepaid_upgrade_star_count: int | None = None
+    is_upgrade_separate: bool | None = None
+    can_be_upgraded: bool | None = None
+    text: str | None = None
+    entities: list[MessageEntity] | None = None
+    is_private: bool | None = None
+    unique_gift_number: int | None = None
+
+
+class UniqueGiftInfo(_BaseModel):
+    gift: UniqueGift
+    origin: str
+    last_resale_currency: str | None = None
+    last_resale_amount: int | None = None
+    owned_gift_id: str | None = None
+    transfer_star_count: int | None = None
+    next_transfer_date: int | None = None
+
+
+class OwnedGiftRegular(_BaseModel):
+    type: Literal["regular"] = "regular"
+    gift: Gift
+    owned_gift_id: str | None = None
+    sender_user: User | None = None
+    send_date: int
+    text: str | None = None
+    entities: list[MessageEntity] | None = None
+    is_private: bool | None = None
+    is_saved: bool | None = None
+    can_be_upgraded: bool | None = None
+    was_refunded: bool | None = None
+    convert_star_count: int | None = None
+    prepaid_upgrade_star_count: int | None = None
+    is_upgrade_separate: bool | None = None
+    unique_gift_number: int | None = None
+
+
+class OwnedGiftUnique(_BaseModel):
+    type: Literal["unique"] = "unique"
+    gift: UniqueGift
+    owned_gift_id: str | None = None
+    sender_user: User | None = None
+    send_date: int
+    is_saved: bool | None = None
+    can_be_transferred: bool | None = None
+    transfer_star_count: int | None = None
+    next_transfer_date: int | None = None
+
+
+class OwnedGifts(_BaseModel):
+    total_count: int
+    gifts: list["OwnedGift"]  # OwnedGift can be OwnedGiftRegular or OwnedGiftUnique
+    next_offset: str | None = None
+
+
+class AcceptedGiftTypes(_BaseModel):
+    unlimited_gifts: bool
+    limited_gifts: bool
+    unique_gifts: bool
+    premium_subscription: bool
+    gifts_from_channels: bool
+
+
+class BotCommand(_BaseModel):
+    command: str
+    description: str
+
+
+class BotCommandScopeDefault(_BaseModel):
+    type: Literal["default"] = "default"
+
+
+class BotCommandScopeAllPrivateChats(_BaseModel):
+    type: Literal["all_private_chats"] = "all_private_chats"
+
+
+class BotCommandScopeAllGroupChats(_BaseModel):
+    type: Literal["all_group_chats"] = "all_group_chats"
+
+
+class BotCommandScopeAllChatAdministrators(_BaseModel):
+    type: Literal["all_chat_administrators"] = "all_chat_administrators"
+
+
+class BotCommandScopeChat(_BaseModel):
+    type: Literal["chat"] = "chat"
+    chat_id: int | str  # chat ID or @supergroupusername
+
+
+class BotCommandScopeChatAdministrators(_BaseModel):
+    type: Literal["chat_administrators"] = "chat_administrators"
+    chat_id: int | str  # chat ID or @supergroupusername
+
+
+class BotCommandScopeChatMember(_BaseModel):
+    type: Literal["chat_member"] = "chat_member"
+    chat_id: int | str  # chat ID or @supergroupusername
+    user_id: int  # target user ID
+
+
+class BotName(_BaseModel):
+    name: str
+
+
+class BotDescription(_BaseModel):
+    description: str
+
+
+class BotShortDescription(_BaseModel):
+    short_description: str
+
+
+class MenuButtonCommands(_BaseModel):
+    type: Literal["commands"] = "commands"
+
+
+class MenuButtonWebApp(_BaseModel):
+    type: Literal["web_app"] = "web_app"
+    text: str
+    web_app: WebAppInfo  # description of the Web App to launch
+
+
+class MenuButtonDefault(_BaseModel):
+    type: Literal["default"] = "default"
+
+
+class ChatBoostSourcePremium(_BaseModel):
+    source: Literal["premium"] = "premium"
+    user: User
+
+
+class ChatBoostSourceGiftCode(_BaseModel):
+    source: Literal["gift_code"] = "gift_code"
+    user: User
+
+
+class ChatBoostSourceGiveaway(_BaseModel):
+    source: Literal["giveaway"] = "giveaway"
+    giveaway_message_id: int
+    user: Optional[User] = None
+    prize_star_count: Optional[int] = None
+    is_unclaimed: Optional[bool] = None
+
+
+class ChatBoost(_BaseModel):
+    boost_id: str
+    add_date: int
+    expiration_date: int
+    source: "ChatBoostSource"
+
+
+class ChatBoostUpdated(_BaseModel):
+    chat: Chat
+    boost: ChatBoost
+
+
+class ChatBoostRemoved(_BaseModel):
+    chat: Chat
+    boost_id: str
+    remove_date: int
+    source: "ChatBoostSource"
+
+
+class UserChatBoosts(_BaseModel):
+    boosts: list[ChatBoost]
+
+
+class BusinessBotRights(_BaseModel):
+    can_reply: Optional[bool] = None
+    can_read_messages: Optional[bool] = None
+    can_delete_sent_messages: Optional[bool] = None
+    can_delete_all_messages: Optional[bool] = None
+    can_edit_name: Optional[bool] = None
+    can_edit_bio: Optional[bool] = None
+    can_edit_profile_photo: Optional[bool] = None
+    can_edit_username: Optional[bool] = None
+    can_change_gift_settings: Optional[bool] = None
+    can_view_gifts_and_stars: Optional[bool] = None
+    can_convert_gifts_to_stars: Optional[bool] = None
+    can_transfer_and_upgrade_gifts: Optional[bool] = None
+    can_transfer_stars: Optional[bool] = None
+    can_manage_stories: Optional[bool] = None
+
+
+class BusinessConnection(_BaseModel):
+    id: str
+    user: User
+    user_chat_id: int
+    date: int
+    rights: Optional[BusinessBotRights] = None
+    is_enabled: bool
+
+
+class BusinessMessagesDeleted(_BaseModel):
+    business_connection_id: str
+    chat: Chat
+    message_ids: list[int]
+
+
+class ResponseParameters(_BaseModel):
+    migrate_to_chat_id: Optional[int] = None
+    retry_after: Optional[int] = None
+
+
+class InputMediaPhoto(_BaseModel):
+    type: Literal["photo"] = "photo"
+    media: str
+    caption: Optional[str] = None
+    parse_mode: Optional[str] = None
+    caption_entities: Optional[List[MessageEntity]] = None
+    show_caption_above_media: Optional[bool] = None
+    has_spoiler: Optional[bool] = None
+
+
+class InputMediaVideo(_BaseModel):
+    type: Literal["video"] = "video"
+    media: str
+    thumbnail: Optional[str] = None
+    cover: Optional[str] = None
+    start_timestamp: Optional[int] = None
+    caption: Optional[str] = None
+    parse_mode: Optional[str] = None
+    caption_entities: Optional[List[MessageEntity]] = None
+    show_caption_above_media: Optional[bool] = None
+    width: Optional[int] = None
+    height: Optional[int] = None
+    duration: Optional[int] = None
+    supports_streaming: Optional[bool] = None
+    has_spoiler: Optional[bool] = None
+
+
+class InputMediaAnimation(_BaseModel):
+    type: Literal["animation"] = "animation"
+    media: str
+    thumbnail: Optional[str] = None
+    caption: Optional[str] = None
+    parse_mode: Optional[str] = None
+    caption_entities: Optional[List[MessageEntity]] = None
+    show_caption_above_media: Optional[bool] = None
+    width: Optional[int] = None
+    height: Optional[int] = None
+    duration: Optional[int] = None
+    has_spoiler: Optional[bool] = None
+
+
+class InputMediaAudio(_BaseModel):
+    type: Literal["audio"] = "audio"
+    media: str
+    thumbnail: Optional[str] = None
+    caption: Optional[str] = None
+    parse_mode: Optional[str] = None
+    caption_entities: Optional[List[MessageEntity]] = None
+    duration: Optional[int] = None
+    performer: Optional[str] = None
+    title: Optional[str] = None
+
+
+class InputMediaDocument(_BaseModel):
+    type: Literal["document"] = "document"
+    media: str
+    thumbnail: Optional[str] = None
+    caption: Optional[str] = None
+    parse_mode: Optional[str] = None
+    caption_entities: Optional[List[MessageEntity]] = None
+    disable_content_type_detection: Optional[bool] = None
+
+
+class InputFile(_BaseModel):
+    pass
+
+
+class InputPaidMediaPhoto(_BaseModel):
+    type: Literal["photo"] = "photo"
+    media: str
+
+
+class InputPaidMediaVideo(_BaseModel):
+    type: Literal["video"] = "video"
+    media: str
+    thumbnail: Optional[str] = None
+    cover: Optional[str] = None
+    start_timestamp: Optional[int] = None
+    width: Optional[int] = None
+    height: Optional[int] = None
+    duration: Optional[int] = None
+    supports_streaming: Optional[bool] = None
+
+
+class InputProfilePhotoStatic:
+    type: Literal["static"] = "static"
+    photo: str
+
+
+class InputProfilePhotoAnimated:
+    type: Literal["animated"] = "animated"
+    animation: str
+    main_frame_timestamp: float = 0.0
+
+
+class InputStoryContentPhoto:
+    type: Literal["photo"] = "photo"
+    photo: str  # "attach://<file_attach_name>" or file path
+
+
+class InputStoryContentVideo:
+    type: Literal["video"] = "video"
+    video: str  # "attach://<file_attach_name>" or file path
+    duration: float = 0.0  # optional, 0-60 seconds
+    cover_frame_timestamp: float = 0.0  # optional, default 0.0
+    is_animation: bool = False  # optional, True if no sound
+
+
+class Invoice(_BaseModel):
+    title: str
+    description: str
+    start_parameter: str
+    currency: str
+    total_amount: int
+
+
+class LabeledPrice(_BaseModel):
+    label: str
+    amount: int
+
+
+class ShippingAddress(_BaseModel):
+    country_code: str
+    state: str
+    city: str
+    street_line1: str
+    street_line2: str
+    post_code: str
+
+
+class ShippingQuery(_BaseModel):
+    id: str
+    from_user: User
+    invoice_payload: str
+    shipping_address: ShippingAddress
+
+
+class ShippingOption(_BaseModel):
+    id: str
+    title: str
+    prices: list[LabeledPrice]
+
+
+class RefundedPayment(_BaseModel):
+    currency: str  # ISO 4217 code, currently always "XTR"
+    total_amount: int
+    invoice_payload: str
+    telegram_payment_charge_id: str
+    provider_payment_charge_id: str | None = None
+
+
+class OrderInfo(_BaseModel):
+    name: str | None = None
+    phone_number: str | None = None
+    email: str | None = None
+    shipping_address: ShippingAddress | None = None
+
+
+class SuccessfulPayment(_BaseModel):
+    currency: str
+    total_amount: int
+    invoice_payload: str
+    subscription_expiration_date: int | None = None
+    is_recurring: bool | None = None
+    is_first_recurring: bool | None = None
+    shipping_option_id: str | None = None
+    order_info: OrderInfo | None = None
+    telegram_payment_charge_id: str
+    provider_payment_charge_id: str
+
+
+class PassportElementErrorDataField(_BaseModel):
+    source: Literal["data"] = "data"
+    type: str  # "personal_details", "passport", "driver_license", "identity_card", "internal_passport", "address"
+    field_name: str
+    data_hash: str
+    message: str
+
+
+class PassportElementErrorFrontSide(_BaseModel):
+    source: Literal["front_side"] = "front_side"
+    type: str  # "passport", "driver_license", "identity_card", "internal_passport"
+    file_hash: str
+    message: str
+
+
+class PassportElementErrorReverseSide(_BaseModel):
+    source: Literal["reverse_side"] = "reverse_side"
+    type: str  # "driver_license", "identity_card"
+    file_hash: str
+    message: str
+
+
+class PassportElementErrorSelfie(_BaseModel):
+    source: Literal["selfie"] = "selfie"
+    type: str  # "passport", "driver_license", "identity_card", "internal_passport"
+    file_hash: str
+    message: str
+
+
+class PassportElementErrorFile(_BaseModel):
+    source: Literal["file"] = "file"
+    type: str  # "utility_bill", "bank_statement", "rental_agreement", "passport_registration", "temporary_registration"
+    file_hash: str
+    message: str
+
+
+class PassportElementErrorFiles(_BaseModel):
+    source: Literal["files"] = "files"
+    type: str  # "utility_bill", "bank_statement", "rental_agreement", "passport_registration", "temporary_registration"
+    file_hashes: list[str]
+    message: str
+
+
+class PassportElementErrorTranslationFile(_BaseModel):
+    source: Literal["translation_file"] = "translation_file"
+    type: str  # "passport", "driver_license", "identity_card", "internal_passport",
+    # "utility_bill", "bank_statement", "rental_agreement",
+    # "passport_registration", "temporary_registration"
+    file_hash: str
+    message: str
+
+
+class PassportElementErrorTranslationFiles(_BaseModel):
+    source: Literal["translation_files"] = "translation_files"
+    type: str  # same as above
+    file_hashes: list[str]
+    message: str
+
+
+class PassportElementErrorUnspecified(_BaseModel):
+    source: Literal["unspecified"] = "unspecified"
+    type: str
+    element_hash: str
+    message: str
+
+
+class PreCheckoutQuery(_BaseModel):
+    id: str
+    from_user: User
+    currency: str
+    total_amount: int
+    invoice_payload: str
+    shipping_option_id: str | None = None
+    order_info: OrderInfo | None = None
+
+
+class PaidMediaPurchased(_BaseModel):
+    from_user: User
+    paid_media_payload: str
+
+
+class RevenueWithdrawalStatePending(_BaseModel):
+    type: Literal["pending"] = "pending"
+
+
+class RevenueWithdrawalStateSucceeded(_BaseModel):
+    type: Literal["succeeded"] = "succeeded"
+    date: int
+    url: str
+
+
+class RevenueWithdrawalStateFailed(_BaseModel):
+    type: Literal["failed"] = "failed"
+
+
+class AffiliateInfo(_BaseModel):
+    amount: int
+    commission_per_mille: int
+    affiliate_user: User | None = None
+    affiliate_chat: User | None = None
+    nanostar_amount: int | None = None
+
+
+class TransactionPartnerUser(_BaseModel):
+    type: Literal["user"] = "user"
+    transaction_type: str  # "invoice_payment", "paid_media_payment", "gift_purchase", "premium_purchase", "business_account_transfer"
+    user: User
+    affiliate: AffiliateInfo | None = None
+    invoice_payload: str | None = None
+    subscription_period: int | None = None
+    paid_media: list[PaidMedia] | None = None
+    paid_media_payload: str | None = None
+    gift: Gift | None = None
+    premium_subscription_duration: int | None = None
+
+
+class TransactionPartnerChat(_BaseModel):
+    type: Literal["chat"] = "chat"
+    chat: Chat
+    gift: Gift | None = None
+
+
+class TransactionPartnerAffiliateProgram(_BaseModel):
+    type: Literal["affiliate_program"] = "affiliate_program"
+    sponsor_user: User | None = None
+    commission_per_mille: int
+
+
+class TransactionPartnerFragment(_BaseModel):
+    type: Literal["fragment"] = "fragment"
+    withdrawal_state: Optional["RevenueWithdrawalState"] = None
+
+
+class TransactionPartnerTelegramAds(_BaseModel):
+    type: Literal["telegram_ads"] = "telegram_ads"
+
+
+class TransactionPartnerTelegramApi(_BaseModel):
+    type: Literal["telegram_api"] = "telegram_api"
+    request_count: int
+
+
+class TransactionPartnerOther(_BaseModel):
+    type: Literal["other"] = "other"
+
+
+class StarAmount(_BaseModel):
+    amount: int
+    nanostar_amount: int | None = None
+
+
+class StarTransaction(_BaseModel):
+    id: str
+    amount: int
+    nanostar_amount: int | None = None
+    date: int
+    source: Optional["TransactionPartner"] = None
+    receiver: Optional["TransactionPartner"] = None
+
+
+class StarTransactions(_BaseModel):
+    offset: int | None = None
+    limit: int | None = None
+
+
+class SuggestedPostPrice(_BaseModel):
+    currency: str
+    amount: int
+
+
+class SuggestedPostInfo(_BaseModel):
+    state: str
+    price: SuggestedPostPrice | None = None
+    send_date: int | None = None
+
+
+class SuggestedPostParameters(_BaseModel):
+    price: SuggestedPostPrice | None = None
+    send_date: int | None = None
+
+
+class SuggestedPostApproved(_BaseModel):
+    suggested_post_message: Message | None = None
+    price: SuggestedPostPrice | None = None
+    send_date: int
+
+
+class SuggestedPostApprovalFailed(_BaseModel):
+    suggested_post_message: Message | None = None
+    price: SuggestedPostPrice
+
+
+class SuggestedPostDeclined(_BaseModel):
+    suggested_post_message: Message | None = None
+    comment: str | None = None
+
+
+class SuggestedPostPaid(_BaseModel):
+    suggested_post_message: Message | None = None
+    currency: str
+    amount: int | None = None
+    star_amount: StarAmount | None = None
+
+
+class SuggestedPostRefunded(_BaseModel):
+    suggested_post_message: Message | None = None
+    reason: str
+
+
+class PassportFile(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    file_size: int
+    file_date: int
+
+
+class EncryptedPassportElement(_BaseModel):
+    type: str
+    data: str | None = None
+    phone_number: str | None = None
+    email: str | None = None
+    files: list[PassportFile] | None = None
+    front_side: PassportFile | None = None
+    reverse_side: PassportFile | None = None
+    selfie: PassportFile | None = None
+    translation: list[PassportFile] | None = None
+    hash: str
+
+
+class EncryptedCredentials(_BaseModel):
+    data: str
+    hash: str
+    secret: str
+
+
+class PassportData(_BaseModel):
+    data: list[EncryptedPassportElement]
+    credentials: EncryptedCredentials
+
+
+class InputTextMessageContent(_BaseModel):
+    message_text: str
+    parse_mode: str | None = None
+    entities: list[MessageEntity] | None = None
+    link_preview_options: LinkPreviewOptions | None = None
+
+
+class InputLocationMessageContent(_BaseModel):
+    latitude: float
+    longitude: float
+    horizontal_accuracy: float | None = None
+    live_period: int | None = None
+    heading: int | None = None
+    proximity_alert_radius: int | None = None
+
+
+class InputVenueMessageContent(_BaseModel):
+    latitude: float
+    longitude: float
+    title: str
+    address: str
+    foursquare_id: str | None = None
+    foursquare_type: str | None = None
+    google_place_id: str | None = None
+    google_place_type: str | None = None
+
+
+class InputContactMessageContent(_BaseModel):
+    phone_number: str
+    first_name: str
+    last_name: str | None = None
+    vcard: str | None = None
+
+
+class InputInvoiceMessageContent(_BaseModel):
+    title: str
+    description: str
+    payload: str
+    provider_token: str | None = None
+    currency: str
+    prices: list[LabeledPrice]
+    max_tip_amount: int | None = None
+    suggested_tip_amounts: list[int] | None = None
+    provider_data: str | None = None
+    photo_url: str | None = None
+    photo_size: int | None = None
+    photo_width: int | None = None
+    photo_height: int | None = None
+    need_name: bool | None = None
+    need_phone_number: bool | None = None
+    need_email: bool | None = None
+    need_shipping_address: bool | None = None
+    send_phone_number_to_provider: bool | None = None
+    send_email_to_provider: bool | None = None
+    is_flexible: bool | None = None
+
+    @model_validator(mode="after")
+    def validate_xtr_currency_rules(self) -> "InputInvoiceMessageContent":
+        if self.currency == "XTR" and self.provider_token != "":
+            raise ValueError(
+                "For payments in Telegram Stars (XTR), provider_token must be an empty string."
+            )
+        return self
+
+
+# ─── Discriminated Unions ──────────────────────────────────────
+ChatMember = Annotated[
+    ChatMemberOwner
+    | ChatMemberAdministrator
+    | ChatMemberMember
+    | ChatMemberRestricted
+    | ChatMemberLeft
+    | ChatMemberBanned,
+    Discriminator("status"),
 ]
 
-class ChatMemberUpdated(BaseModel):
-    chat: Chat = Field(..., alias="chat")
-    from_user: User = Field(..., alias="from")
-    date: int = Field(..., alias="date")
-    old_chat_member: ChatMember = Field(..., alias="old_chat_member")
-    new_chat_member: ChatMember = Field(..., alias="new_chat_member")
-    invite_link: Optional[ChatInviteLink] = Field(None, alias="invite_link")
+ReactionType = Annotated[
+    ReactionTypeEmoji | ReactionTypeCustomEmoji | ReactionTypePaid,
+    Discriminator("type"),
+]
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+MessageOrigin = Annotated[
+    MessageOriginUser
+    | MessageOriginHiddenUser
+    | MessageOriginChat
+    | MessageOriginChannel,
+    Discriminator("type"),
+]
+
+StoryAreaType = Annotated[
+    StoryAreaTypeLocation
+    | StoryAreaTypeSuggestedReaction
+    | StoryAreaTypeLink
+    | StoryAreaTypeWeather
+    | StoryAreaTypeUniqueGift,
+    Discriminator("type"),
+]
+
+OwnedGift = Annotated[OwnedGiftRegular | OwnedGiftUnique, Discriminator("type")]
+
+BotCommandScope = Annotated[
+    BotCommandScopeDefault
+    | BotCommandScopeAllPrivateChats
+    | BotCommandScopeAllGroupChats
+    | BotCommandScopeAllChatAdministrators
+    | BotCommandScopeChat
+    | BotCommandScopeChatAdministrators
+    | BotCommandScopeChatMember,
+    Discriminator("type"),
+]
+
+MenuButton = Annotated[
+    MenuButtonCommands | MenuButtonWebApp | MenuButtonDefault,
+    Discriminator("type"),
+]
+
+ChatBoostSource = Annotated[
+    ChatBoostSourcePremium | ChatBoostSourceGiftCode | ChatBoostSourceGiveaway,
+    Discriminator("source"),
+]
+
+InputMedia = Annotated[
+    InputMediaAnimation
+    | InputMediaDocument
+    | InputMediaAudio
+    | InputMediaPhoto
+    | InputMediaVideo,
+    Discriminator("type"),
+]
+
+InputPaidMedia = Annotated[
+    InputPaidMediaPhoto | InputPaidMediaVideo, Discriminator("type")
+]
+
+InputProfilePhoto = Annotated[
+    InputProfilePhotoStatic | InputProfilePhotoAnimated, Discriminator("type")
+]
+
+InputStoryContent = Annotated[
+    InputStoryContentPhoto | InputStoryContentVideo, Discriminator("type")
+]
+
+RevenueWithdrawalState = Annotated[
+    RevenueWithdrawalStatePending
+    | RevenueWithdrawalStateSucceeded
+    | RevenueWithdrawalStateFailed,
+    Discriminator("type"),
+]
+
+TransactionPartner = Annotated[
+    TransactionPartnerUser
+    | TransactionPartnerChat
+    | TransactionPartnerAffiliateProgram
+    | TransactionPartnerFragment
+    | TransactionPartnerTelegramAds
+    | TransactionPartnerTelegramApi
+    | TransactionPartnerOther,
+    Discriminator("type"),
+]
+
+PassportElementError = Annotated[
+    PassportElementErrorDataField
+    | PassportElementErrorFrontSide
+    | PassportElementErrorReverseSide
+    | PassportElementErrorSelfie
+    | PassportElementErrorFile
+    | PassportElementErrorFiles
+    | PassportElementErrorTranslationFile
+    | PassportElementErrorTranslationFiles
+    | PassportElementErrorUnspecified,
+    Discriminator("source"),
+]
 
 
-class ChatJoinRequest(BaseModel):
-    chat: Chat = Field(..., alias="chat")
-    from_user: User = Field(..., alias="from")
-    date: int = Field(..., alias="date")
-    bio: Optional[str] = Field(None, alias="bio")
-    invite_link: Optional[ChatInviteLink] = Field(None, alias="invite_link")
+# ─── Simple Unions ─────────────────────────────────────────────
+InlineQueryResult = (
+    InlineQueryResultArticle
+    | InlineQueryResultPhoto
+    | InlineQueryResultGif
+    | InlineQueryResultMpeg4Gif
+    | InlineQueryResultVideo
+    | InlineQueryResultAudio
+    | InlineQueryResultVoice
+    | InlineQueryResultDocument
+    | InlineQueryResultLocation
+    | InlineQueryResultVenue
+    | InlineQueryResultContact
+    | InlineQueryResultGame
+    | InlineQueryResultCachedPhoto
+    | InlineQueryResultCachedGif
+    | InlineQueryResultCachedMpeg4Gif
+    | InlineQueryResultCachedSticker
+    | InlineQueryResultCachedDocument
+    | InlineQueryResultCachedVideo
+    | InlineQueryResultCachedVoice
+    | InlineQueryResultCachedAudio
+)
 
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+ReplyMarkup = (
+    InlineKeyboardMarkup | ReplyKeyboardMarkup | ReplyKeyboardRemove | ForceReply
+)
+
+InputMessageContent = (
+    InputTextMessageContent
+    | InputLocationMessageContent
+    | InputVenueMessageContent
+    | InputContactMessageContent
+    | InputInvoiceMessageContent
+)
+
+MaybeInaccessibleMessage = Message | InaccessibleMessage
 
 
-class Update(BaseModel):
-    update_id: int = Field(..., alias="update_id")
-    message: Optional[Message] = Field(None, alias="message")
-    edited_message: Optional[Message] = Field(None, alias="edited_message")
-    channel_post: Optional[Message] = Field(None, alias="channel_post")
-    edited_channel_post: Optional[Message] = Field(None, alias="edited_channel_post")
-    inline_query: Optional[InlineQuery] = Field(None, alias="inline_query")
-    chosen_inline_result: Optional[ChosenInlineResult] = Field(None, alias="chosen_inline_result")
-    callback_query: Optional[CallbackQuery] = Field(None, alias="callback_query")
-    shipping_query: Optional[ShippingQuery] = Field(None, alias="shipping_query")
-    pre_checkout_query: Optional[PreCheckoutQuery] = Field(None, alias="pre_checkout_query")
-    poll: Optional[Poll] = Field(None, alias="poll")
-    poll_answer: Optional[PollAnswer] = Field(None, alias="poll_answer")
-    my_chat_member: Optional[ChatMemberUpdated] = Field(None, alias="my_chat_member")
-    chat_member: Optional[ChatMemberUpdated] = Field(None, alias="chat_member")
-    chat_join_request: Optional[ChatJoinRequest] = Field(None, alias="chat_join_request")
-
-    model_config = ConfigDict(populate_by_name=True, extra="allow")
+# ─── Type Adapters ─────────────────────────────────────────────
+MessageIdList = TypeAdapter(List[MessageId])
+StickerList = TypeAdapter(List[Sticker])
+BotCommandList = TypeAdapter(List[BotCommand])
+ChatMemberAdapter = TypeAdapter(ChatMember)
+OwnedGiftAdapter = TypeAdapter(OwnedGift)
+MenuButtonAdapter = TypeAdapter(MenuButton)
 
 
 # Resolve forward references
-InlineQuery.model_rebuild()
-ChosenInlineResult.model_rebuild()
-CallbackQuery.model_rebuild()
-ShippingQuery.model_rebuild()
-PreCheckoutQuery.model_rebuild()
-ChatInviteLink.model_rebuild()
-ChatMemberUpdated.model_rebuild()
-ChatJoinRequest.model_rebuild()
 Update.model_rebuild()
-Chat.model_rebuild()
+ChatFullInfo.model_rebuild()
 Message.model_rebuild()
-ChatMemberOwner.model_rebuild()
-ChatMemberAdministrator.model_rebuild()
-ChatMemberMember.model_rebuild()
-ChatMemberRestricted.model_rebuild()
-ChatMemberLeft.model_rebuild()
-ChatMemberBanned.model_rebuild()
+ExternalReplyInfo.model_rebuild()
+SentWebAppMessage.model_rebuild()
+InlineQueryResultArticle.model_rebuild()
+InlineQueryResultPhoto.model_rebuild()
+InlineQueryResultGif.model_rebuild()
+InlineQueryResultMpeg4Gif.model_rebuild()
+InlineQueryResultVideo.model_rebuild()
+InlineQueryResultAudio.model_rebuild()
+InlineQueryResultVoice.model_rebuild()
+InlineQueryResultDocument.model_rebuild()
+InlineQueryResultLocation.model_rebuild()
+InlineQueryResultVenue.model_rebuild()
+InlineQueryResultContact.model_rebuild()
+InlineQueryResultCachedPhoto.model_rebuild()
+InlineQueryResultCachedGif.model_rebuild()
+InlineQueryResultCachedMpeg4Gif.model_rebuild()
+InlineQueryResultCachedSticker.model_rebuild()
+InlineQueryResultCachedDocument.model_rebuild()
+InlineQueryResultCachedVideo.model_rebuild()
+InlineQueryResultCachedVoice.model_rebuild()
+InlineQueryResultCachedAudio.model_rebuild()
+AnswerInlineQuery.model_rebuild()
+CallbackQuery.model_rebuild()
+ChatMemberUpdated.model_rebuild()
+ReactionCount.model_rebuild()
+StoryAreaTypeSuggestedReaction.model_rebuild()
+StoryArea.model_rebuild()
+MessageReactionUpdated.model_rebuild()
+OwnedGifts.model_rebuild()
+ChatBoost.model_rebuild()
+ChatBoostRemoved.model_rebuild()
+TransactionPartnerFragment.model_rebuild()
+StarTransaction.model_rebuild()
