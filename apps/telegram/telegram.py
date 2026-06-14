@@ -75,13 +75,21 @@ class Telegram:
     HEADERS: Dict[str, str] = {"Cache-Control": "no-cache"}
 
     def __init__(self):
+        self._validate_config()
         self.token = env.get("TOKEN")
-        if not self.token:
-            raise ValueError("TOKEN is required in environment variables.")
+        self.webhook = env.get("TM_WEBHOOK_URL")
 
         self.proxy = self._setup_proxy()
         self._session = requests.Session()
         self._session.headers.update(self.HEADERS)
+
+    def _validate_config(self):
+        """Ensure all required environment variables are present."""
+        if not env.get("TOKEN"):
+            raise ValueError("TOKEN is required in environment variables.")
+
+        if not env.get("TM_WEBHOOK_URL"):
+            raise ValueError("TM_WEBHOOK_URL is required in environment variables.")
 
     def _setup_proxy(self) -> Optional[Dict[str, str]]:
         """Configure SOCKS5 proxy if provided."""
