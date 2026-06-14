@@ -139,6 +139,7 @@ FORCE_SCRIPT_NAME=/blind/
 | Key                 | Description                                                                 |
 |---------------------|-----------------------------------------------------------------------------|
 | `FORCE_SCRIPT_NAME` | Used when deploying the project under a sub-path (e.g., $/blind/$).         |
+| `TM_WEBHOOK_URL`    | The base URL for the Telegram API. Use https://api.telegram.org for the official server or your local Bot API server (TDLib) address.
 
 ---
 
