@@ -137,101 +137,110 @@ class Message(_BaseModel):
     """Telegram Message object representation."""
 
     message_id: int = Field(..., alias="id")
-    date: PositiveInt
-    chat: Chat
-
-    # Fields requiring different alias
+    message_thread_id: int | None = None
+    direct_messages_topic: Optional["DirectMessagesTopic"] = None
     from_user: Optional[User] = Field(None, alias="from")
-
-    # Forward information
-    forward_from: Optional[User] = None
-    forward_from_chat: Optional[Chat] = None
-    forward_from_message_id: Optional[int] = None
-    forward_signature: Optional[str] = None
-    forward_sender_name: Optional[str] = None
-    forward_date: int | None = None
-
-    # Reply / Edit / Bot related
-    reply_to_message: Optional["Message"] = None
-    edit_date: int | None = None
-    via_bot: Optional[User] = None
-
-    # Sender chat (channel or anonymous group admin)
     sender_chat: Optional[Chat] = None
-
-    # Text content
+    sender_boost_count: int | None = None
+    sender_business_bot: User | None = None
+    date: PositiveInt
+    business_connection_id: str | None = None
+    chat: Chat
+    forward_origin: Optional["MessageOrigin"] | None = None
+    is_topic_message: bool | None = None
+    is_automatic_forward: bool | None = None
+    reply_to_message: Optional["Message"] = None
+    external_reply: Optional["ExternalReplyInfo"] = None
+    quote: Optional["TextQuote"] = None
+    reply_to_story: Optional["Story"] = None
+    reply_to_checklist_task_id: int | None = None
+    via_bot: Optional[User] = None
+    edit_date: int | None = None
+    has_protected_content: bool | None = None
+    is_from_offline: bool | None = None
+    is_paid_post: bool | None = None
+    media_group_id: str | None = None
+    author_signature: str | None = None
+    paid_star_count: int | None = None
     text: str | None = None
     entities: List["MessageEntity"] | None = None
-
-    # Caption (for media)
-    caption: str | None = None
-    caption_entities: List["MessageEntity"] | None = None
-
-    # Media types
+    link_preview_options: Optional["LinkPreviewOptions"] = None
+    suggested_post_info: Optional["SuggestedPostInfo"] = None
+    effect_id: str | None = None
     animation: Optional["Animation"] = None
     audio: Optional["Audio"] = None
     document: Optional["Document"] = None
+    paid_media: Optional["PaidMediaInfo"] = None
     photo: List["PhotoSize"] | None = None
     sticker: Optional["Sticker"] = None
+    story: Optional["Story"] = None
     video: Optional["Video"] = None
     video_note: Optional["VideoNote"] = None
     voice: Optional["Voice"] = None
-
-    # Additional message metadata
-    media_group_id: str | None = None
-    author_signature: str | None = None
-    has_protected_content: bool | None = None
-    is_topic_message: bool | None = None
-    is_automatic_forward: bool | None = None
-
-    # Service messages - member changes
-    new_chat_members: List[User] | None = None
-    left_chat_member: Optional[User] = None
-    chat_owner_left: Optional["ChatOwnerLeft"] = None
-    chat_owner_changed: Optional["ChatOwnerChanged"] = None
-
-    # Service messages - chat changes
-    new_chat_title: str | None = None
-    new_chat_photo: List["PhotoSize"] | None = None
-    delete_chat_photo: bool | None = None
-    group_chat_created: bool | None = None
-    supergroup_chat_created: bool | None = None
-    channel_chat_created: bool | None = None
-    migrate_to_chat_id: int | None = None
-    migrate_from_chat_id: int | None = None
-
-    # Special content types
+    caption: str | None = None
+    caption_entities: List["MessageEntity"] | None = None
+    show_caption_above_media: bool | None = None
+    has_media_spoiler: bool | None = None
+    checklist: Optional["Checklist"] = None
     contact: Optional["Contact"] = None
     dice: Optional["Dice"] = None
     game: Optional["Game"] = None
     poll: Optional["Poll"] = None
     venue: Optional["Venue"] = None
     location: Optional["Location"] = None
+    new_chat_members: List[User] | None = None
+    left_chat_member: Optional[User] = None
+    chat_owner_left: Optional["ChatOwnerLeft"] = None
+    chat_owner_changed: Optional["ChatOwnerChanged"] = None
+    new_chat_title: str | None = None
+    new_chat_photo: List["PhotoSize"] | None = None
+    delete_chat_photo: bool | None = None
+    group_chat_created: bool | None = None
+    supergroup_chat_created: bool | None = None
+    channel_chat_created: bool | None = None
+    message_auto_delete_timer_changed: Optional["MessageAutoDeleteTimerChanged"] = None
+    migrate_to_chat_id: int | None = None
+    migrate_from_chat_id: int | None = None
+    pinned_message: Optional["Message"] = None
     invoice: Optional["Invoice"] = None
     successful_payment: Optional["SuccessfulPayment"] = None
+    refunded_payment: Optional["RefundedPayment"] = None
+    users_shared: Optional["UsersShared"] = None
+    chat_shared: Optional["ChatShared"] = None
+    gift: Optional["Gift"] = None
+    unique_gift: Optional["UniqueGift"] = None
+    gift_upgrade_sent: Optional["GiftInfo"] = None
+    connected_website: str | None = None
+    write_access_allowed: Optional["WriteAccessAllowed"] = None
     passport_data: Optional["PassportData"] = None
     proximity_alert_triggered: Optional["ProximityAlertTriggered"] = None
-
-    # Inline / WebApp / Reply markup
-    reply_markup: Optional["InlineKeyboardMarkup"] = None
-    web_app_data: Optional["WebAppData"] = None
-
-    # Forum topic actions
+    boost_added: Optional["ChatBoostAdded"] = None
+    chat_background_set: Optional["ChatBackground"] = None
+    checklist_tasks_done: Optional["ChecklistTasksDone"] = None
+    checklist_tasks_added: Optional["ChecklistTasksAdded"] = None
+    direct_message_price_changed: Optional["DirectMessagePriceChanged"] = None
     forum_topic_created: Optional["ForumTopicCreated"] = None
+    forum_topic_edited: Optional["ForumTopicEdited"] = None
     forum_topic_closed: Optional["ForumTopicClosed"] = None
     forum_topic_reopened: Optional["ForumTopicReopened"] = None
     general_forum_topic_hidden: Optional["GeneralForumTopicHidden"] = None
     general_forum_topic_unhidden: Optional["GeneralForumTopicUnhidden"] = None
-
-    # Legacy video chat (old name, still supported)
+    giveaway_created: Optional["GiveawayCreated"] = None
+    giveaway: Optional["Giveaway"] = None
+    giveaway_winners: Optional["GiveawayWinners"] = None
+    giveaway_completed: Optional["GiveawayCompleted"] = None
+    paid_message_price_changed: Optional["PaidMessagePriceChanged"] = None
+    suggested_post_approved: Optional["SuggestedPostApproved"] = None
+    suggested_post_approval_failed: Optional["SuggestedPostApprovalFailed"] = None
+    suggested_post_declined: Optional["SuggestedPostDeclined"] = None
+    suggested_post_paid: Optional["SuggestedPostPaid"] = None
+    suggested_post_refunded: Optional["SuggestedPostRefunded"] = None
     video_chat_scheduled: Optional["VideoChatScheduled"] = None
     video_chat_started: Optional["VideoChatStarted"] = None
     video_chat_ended: Optional["VideoChatEnded"] = None
     video_chat_participants_invited: Optional["VideoChatParticipantsInvited"] = None
-
-    # Other service messages
-    message_auto_delete_timer_changed: Optional["MessageAutoDeleteTimerChanged"] = None
-    pinned_message: Optional["Message"] = None
+    web_app_data: Optional["WebAppData"] = None
+    reply_markup: Optional["InlineKeyboardMarkup"] = None
 
     @property
     def id(self) -> int:
