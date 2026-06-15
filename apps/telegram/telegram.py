@@ -1659,6 +1659,21 @@ class Telegram:
         response = self._make_request("getFile", method="GET", params=payload)
         return File.model_validate(response)
 
+    def set_chat_member_tag(self, chat_id: int | str, user_id: int, tag: str):
+        """
+        Use this method to set a tag for a regular member in a group or a supergroup.
+        The bot must be an administrator in the chat for this to work and must
+        have the can_manage_tags administrator right.
+
+        :param chat_id: Unique identifier for the target chat or username of the target supergroup in the format @username
+        :param user_id: Unique identifier of the target user.
+        :param tag: New tag for the member; 0-16 characters, emoji are not allowed.
+        :return: True on success.
+        """
+        payload = {"chat_id": chat_id, "user_id": user_id, "tag": tag}
+        response = self._make_request("setChatMemberTag", method="POST", data=payload)
+        return bool(response)
+
     def ban_chat_member(
         self,
         chat_id: int | str,
@@ -1767,6 +1782,7 @@ class Telegram:
         can_pin_messages: bool | None = None,
         can_manage_topics: bool | None = None,
         can_manage_direct_messages: bool | None = None,
+        can_manage_tags: bool | None = None,
     ) -> bool:
         """
         Promote or demote a user in a supergroup or channel.
@@ -1792,6 +1808,7 @@ class Telegram:
         :param can_pin_messages: True if the admin can pin messages (supergroups only).
         :param can_manage_topics: True if the admin can create, rename, close, and reopen forum topics (supergroups only).
         :param can_manage_direct_messages: True if the admin can manage direct messages of the channel and decline suggested posts (channels only).
+        :param can_manage_tags:Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
         :return: True on success.
         """
         payload = {
@@ -1813,6 +1830,7 @@ class Telegram:
             "can_pin_messages": can_pin_messages,
             "can_manage_topics": can_manage_topics,
             "can_manage_direct_messages": can_manage_direct_messages,
+            "can_manage_tags": can_manage_tags,
         }
         response = self._make_request("promoteChatMember", method="POST", data=payload)
         return bool(response)

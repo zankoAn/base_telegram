@@ -143,6 +143,7 @@ class Message(_BaseModel):
     sender_chat: Optional[Chat] = None
     sender_boost_count: int | None = None
     sender_business_bot: User | None = None
+    sender_tag: str | None = None
     date: PositiveInt
     business_connection_id: str | None = None
     chat: Chat
@@ -281,6 +282,7 @@ class MessageEntity(_BaseModel):
     user: Optional[User] = None
     language: str | None = None
     custom_emoji_id: str | None = None
+    date_time_format: str | None = None
 
 
 class TextQuote(_BaseModel):
@@ -909,6 +911,7 @@ class ChatAdministratorRights(_BaseModel):
     can_pin_messages: bool | None = None
     can_manage_topics: bool | None = None
     can_manage_direct_messages: bool | None = None
+    can_manage_tags: bool | None = None
 
 
 class ChatMemberUpdated(_BaseModel):
@@ -949,17 +952,20 @@ class ChatMemberAdministrator(_BaseModel):
     can_pin_messages: bool | None = None
     can_manage_topics: bool | None = None
     can_manage_direct_messages: bool | None = None
+    can_manage_tags: bool | None = None
     custom_title: str | None = None
 
 
 class ChatMemberMember(_BaseModel):
     status: Literal["member"] = "member"
+    tag: str | None = None
     user: User
     until_date: int | None = None
 
 
 class ChatMemberRestricted(_BaseModel):
     status: Literal["restricted"] = "restricted"
+    tag: str | None = None
     user: User
     is_member: bool
     can_send_messages: bool
@@ -972,6 +978,7 @@ class ChatMemberRestricted(_BaseModel):
     can_send_polls: bool
     can_send_other_messages: bool
     can_add_web_page_previews: bool
+    can_edit_tag: bool
     can_change_info: bool
     can_invite_users: bool
     can_pin_messages: bool
@@ -1010,6 +1017,7 @@ class ChatPermissions(_BaseModel):
     can_send_polls: bool | None = None
     can_send_other_messages: bool | None = None
     can_add_web_page_previews: bool | None = None
+    can_edit_tag: bool | None = None
     can_change_info: bool | None = None
     can_invite_users: bool | None = None
     can_pin_messages: bool | None = None
