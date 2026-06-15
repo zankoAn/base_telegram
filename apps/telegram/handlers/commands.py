@@ -6,7 +6,6 @@ from utils.utils import update_object
 
 
 class CommandHandler(BaseHandler):
-
     def __init__(self, update: Update, bot: Telegram):
         super().__init__(update, bot)
         self.bot = bot
@@ -30,18 +29,18 @@ class CommandHandler(BaseHandler):
             text="Home",
             reply_markup=self.reply_keyboard.home_keyboard(),
             reply_parameters=ReplyParameters(
-                chat_id=self.chat_id,
                 message_id=self.update.message.message_id
-            )
+            ).to_dict(),
         )
 
     def help_handler(self):
         return self.bot.send_message(chat_id=self.chat_id, text="Help Command")
 
     def handle(self):
-        if self.is_update_mode():return  # noqa: E701
-        if self.is_user_block():return  # noqa: E701
-
+        if self.is_update_mode():
+            return  # noqa: E701
+        if self.is_user_block():
+            return  # noqa: E701
 
         if self.update.message.text.startswith("/start"):
             self.start_handler()
