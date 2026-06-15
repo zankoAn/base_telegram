@@ -30,6 +30,7 @@ from apps.telegram.telegram_models import (
     InputMedia,
     InputPaidMedia,
     InputPollOption,
+    InputProfilePhoto,
     InputSticker,
     InputStoryContent,
     LabeledPrice,
@@ -60,6 +61,7 @@ from apps.telegram.telegram_models import (
     SuggestedPostParameters,
     User,
     UserChatBoosts,
+    UserProfileAudios,
     UserProfilePhotos,
 )
 from utils.load_env import env
@@ -1602,6 +1604,27 @@ class Telegram:
         )
         return UserProfilePhotos.model_validate(response)
 
+    def get_user_profile_audios(
+        self, user_id: int, offset: int | None = None, limit: int | None = None
+    ) -> UserProfileAudios:
+        """
+        Use this method to get a list of profile audios for a user.
+
+        :param user_id: Unique identifier of the target user.
+        :param offset: Sequential number of the first photo to return. Defaults to 0 (all photos).
+        :param limit: Limits the number of photos to retrieve (1–100). Defaults to 100.
+        :return: A UserProfileAudios object.
+        """
+        payload = {
+            "user_id": user_id,
+            "offset": offset,
+            "limit": limit,
+        }
+        response = self._make_request(
+            "getUserProfileAudios", method="GET", params=payload
+        )
+        return UserProfileAudios.model_validate(response)
+
     def set_user_emoji_status(
         self,
         user_id: int,
@@ -2739,6 +2762,26 @@ class Telegram:
             "getMyShortDescription", method="GET", params=payload
         )
         return BotShortDescription.model_validate(response)
+
+    def set_my_profile_photo(self, photo: InputProfilePhoto) -> bool:
+        """
+        Changes the profile photo of the bot.
+
+        :param photo: The new profile photo to set.
+        :return: True on success.
+        """
+        payload = {"photo": photo}
+        response = self._make_request("setMyProfilePhoto", method="POST", data=payload)
+        return bool(response)
+
+    def remove_my_profile_photo(self) -> bool:
+        """
+        Removes the profile photo of the bot. Requires no parameters.
+
+        :return: True on success.
+        """
+        response = self._make_request("removeMyProfilePhoto", method="POST")
+        return bool(response)
 
     def set_chat_menu_button(
         self,

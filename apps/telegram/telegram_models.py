@@ -64,6 +64,8 @@ class User(_BaseModel):
     can_connect_to_business: bool | None = None
     has_main_web_app: bool | None = None
     has_topics_enabled: bool | None = None
+    supports_guest_queries: bool | None = None
+    allows_users_to_create_topics: bool | None = None
 
 
 class Chat(_BaseModel):
@@ -126,6 +128,7 @@ class ChatFullInfo(_BaseModel):
     linked_chat_id: int | None = None
     location: Optional["ChatLocation"] = None
     rating: Optional["UserRating"] | None = None
+    first_profile_audio: Optional["Audio"] | None = None
     unique_gift_colors: Optional["UniqueGiftColors"] = None
     paid_message_star_count: int | None = None
 
@@ -149,7 +152,7 @@ class Message(_BaseModel):
     forward_date: int | None = None
 
     # Reply / Edit / Bot related
-    reply_to_message: "Message" | None = None
+    reply_to_message: Optional["Message"] = None
     edit_date: int | None = None
     via_bot: Optional[User] = None
 
@@ -184,6 +187,8 @@ class Message(_BaseModel):
     # Service messages - member changes
     new_chat_members: List[User] | None = None
     left_chat_member: Optional[User] = None
+    chat_owner_left: Optional["ChatOwnerLeft"] = None
+    chat_owner_changed: Optional["ChatOwnerChanged"] = None
 
     # Service messages - chat changes
     new_chat_title: str | None = None
@@ -388,6 +393,15 @@ class Story(_BaseModel):
     id: int
 
 
+class VideoQuality(_BaseModel):
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    codec: str
+    file_size: int | None = None
+
+
 class Video(_BaseModel):
     file_id: str
     file_unique_id: str
@@ -397,6 +411,7 @@ class Video(_BaseModel):
     thumbnail: PhotoSize | None = None
     cover: list[PhotoSize] | None = None
     start_timestamp: int | None = None
+    qualities: list[VideoQuality] | None = None
     file_name: str | None = None
     mime_type: str | None = None
     file_size: int | None = None
@@ -817,6 +832,11 @@ class UserProfilePhotos(_BaseModel):
     photos: list[list[PhotoSize]]
 
 
+class UserProfileAudios(_BaseModel):
+    total_count: int
+    audios: list[Audio]
+
+
 class WebAppInfo(_BaseModel):
     url: str
 
@@ -1034,6 +1054,8 @@ class KeyboardButtonPollType(_BaseModel):
 
 class KeyboardButton(_BaseModel):
     text: str
+    icon_custom_emoji_id: str | None = None
+    style: str | None = None  # Must be one of "danger", "success" or "primary" or None
     request_users: KeyboardButtonRequestUsers | None = None
     request_chat: KeyboardButtonRequestChat | None = None
     request_contact: bool | None = None
@@ -1073,6 +1095,8 @@ class LoginUrl(_BaseModel):
 
 class InlineKeyboardButton(_BaseModel):
     text: str
+    icon_custom_emoji_id: str | None = None
+    style: str | None = None  # Must be one of "danger", "success" or "primary" or None
     url: str | None = None
     callback_data: str | None = None
     web_app: WebAppInfo | None = None
@@ -1596,6 +1620,7 @@ class UniqueGiftModel(_BaseModel):
     name: str
     sticker: Sticker
     rarity_per_mille: int
+    rarity: str  # Currently, can be "uncommon", "rare", "epic", or "legendary".
 
 
 class UniqueGiftSymbol(_BaseModel):
@@ -1635,6 +1660,7 @@ class UniqueGift(_BaseModel):
     symbol: UniqueGiftSymbol
     backdrop: UniqueGiftBackdrop
     is_premium: bool | None = None
+    is_burned: bool | None = None
     is_from_blockchain: bool | None = None
     colors: UniqueGiftColors | None = None
     publisher_chat: Chat | None = None
@@ -1805,6 +1831,14 @@ class ChatBoostRemoved(_BaseModel):
     boost_id: str
     remove_date: int
     source: "ChatBoostSource"
+
+
+class ChatOwnerLeft(_BaseModel):
+    new_owner: User | None = None
+
+
+class ChatOwnerChanged(_BaseModel):
+    new_owner: User
 
 
 class UserChatBoosts(_BaseModel):
