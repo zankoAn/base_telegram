@@ -47,6 +47,7 @@ class Update(_BaseModel):
     chat_join_request: Optional["ChatJoinRequest"] = None
     chat_boost: Optional["ChatBoostUpdated"] = None
     removed_chat_boost: Optional["ChatBoostRemoved"] = None
+    managed_bot: Optional["ManagedBotUpdated"] = None
 
 
 class User(_BaseModel):
@@ -64,8 +65,8 @@ class User(_BaseModel):
     can_connect_to_business: bool | None = None
     has_main_web_app: bool | None = None
     has_topics_enabled: bool | None = None
-    supports_guest_queries: bool | None = None
     allows_users_to_create_topics: bool | None = None
+    can_manage_bots: bool | None = None
 
 
 class Chat(_BaseModel):
@@ -155,6 +156,7 @@ class Message(_BaseModel):
     quote: Optional["TextQuote"] = None
     reply_to_story: Optional["Story"] = None
     reply_to_checklist_task_id: int | None = None
+    reply_to_poll_option_id: str | None = None
     via_bot: Optional[User] = None
     edit_date: int | None = None
     has_protected_content: bool | None = None
@@ -230,7 +232,10 @@ class Message(_BaseModel):
     giveaway: Optional["Giveaway"] = None
     giveaway_winners: Optional["GiveawayWinners"] = None
     giveaway_completed: Optional["GiveawayCompleted"] = None
+    managed_bot_created: Optional["ManagedBotCreated"] = None
     paid_message_price_changed: Optional["PaidMessagePriceChanged"] = None
+    poll_option_added: Optional["PollOptionAdded"] = None
+    poll_option_deleted: Optional["PollOptionDeleted"] = None
     suggested_post_approved: Optional["SuggestedPostApproved"] = None
     suggested_post_approval_failed: Optional["SuggestedPostApprovalFailed"] = None
     suggested_post_declined: Optional["SuggestedPostDeclined"] = None
@@ -329,6 +334,7 @@ class ReplyParameters(_BaseModel):
     quote_entities: List[MessageEntity] | None = None
     quote_position: int | None = None
     checklist_task_id: int | None = None
+    poll_option_id: str | None = None
 
 
 class MessageOriginUser(_BaseModel):
@@ -533,9 +539,13 @@ class Dice(_BaseModel):
 
 
 class PollOption(_BaseModel):
+    persistent_id: str
     text: str
     text_entities: list[MessageEntity] | None = None
     voter_count: int
+    added_by_user: User | None = None
+    added_by_chat: Chat | None = None
+    addition_date: int | None = None
 
 
 class InputPollOption(_BaseModel):
@@ -549,6 +559,7 @@ class PollAnswer(_BaseModel):
     voter_chat: Chat | None = None
     user: User | None = None
     option_ids: list[int]
+    option_persistent_ids: list[str] | None = None
 
 
 class Poll(_BaseModel):
@@ -561,11 +572,14 @@ class Poll(_BaseModel):
     is_anonymous: bool
     type: str
     allows_multiple_answers: bool
-    correct_option_id: int | None = None
+    allows_revoting: bool
+    correct_option_ids: list[int] | None = None
     explanation: str | None = None
     explanation_entities: list[MessageEntity] | None = None
     open_period: int | None = None
     close_date: int | None = None
+    description: str | None = None
+    description_entities: list[MessageEntity] | None = None
 
 
 class ChecklistTask(_BaseModel):
@@ -644,6 +658,29 @@ class ProximityAlertTriggered(_BaseModel):
 
 class MessageAutoDeleteTimerChanged(_BaseModel):
     message_auto_delete_time: int
+
+
+class ManagedBotCreated(_BaseModel):
+    bot: User
+
+
+class ManagedBotUpdated(_BaseModel):
+    user: User
+    bot: User
+
+
+class PollOptionAdded(_BaseModel):
+    poll_message: Optional["MaybeInaccessibleMessage"] = None
+    option_persistent_id: str
+    option_text: str
+    option_text_entities: list[MessageEntity] | None = None
+
+
+class PollOptionDeleted(_BaseModel):
+    poll_message: Optional["MaybeInaccessibleMessage"] = None
+    option_persistent_id: str
+    option_text: str
+    option_text_entities: list[MessageEntity] | None = None
 
 
 class ChatBoostAdded(_BaseModel):
@@ -1065,6 +1102,12 @@ class KeyboardButtonRequestChat(_BaseModel):
     request_photo: bool | None = None
 
 
+class KeyboardButtonRequestManagedBot(_BaseModel):
+    request_id: int
+    suggested_name: str | None = None
+    suggested_username: str | None = None
+
+
 class KeyboardButtonPollType(_BaseModel):
     type: str | None = None
 
@@ -1075,6 +1118,7 @@ class KeyboardButton(_BaseModel):
     style: str | None = None  # Must be one of "danger", "success" or "primary" or None
     request_users: KeyboardButtonRequestUsers | None = None
     request_chat: KeyboardButtonRequestChat | None = None
+    request_managed_bot: KeyboardButtonRequestManagedBot | None = None
     request_contact: bool | None = None
     request_location: bool | None = None
     request_poll: KeyboardButtonPollType | None = None
@@ -1892,6 +1936,10 @@ class BusinessMessagesDeleted(_BaseModel):
     business_connection_id: str
     chat: Chat
     message_ids: list[int]
+
+
+class PreparedKeyboardButton(_BaseModel):
+    id: str
 
 
 class ResponseParameters(_BaseModel):

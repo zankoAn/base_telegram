@@ -33,6 +33,7 @@ from apps.telegram.telegram_models import (
     InputProfilePhoto,
     InputSticker,
     InputStoryContent,
+    KeyboardButton,
     LabeledPrice,
     LinkPreviewOptions,
     MenuButton,
@@ -46,6 +47,7 @@ from apps.telegram.telegram_models import (
     PassportElementError,
     Poll,
     PreparedInlineMessage,
+    PreparedKeyboardButton,
     ReactionType,
     ReplyMarkup,
     ReplyParameters,
@@ -1333,14 +1335,21 @@ class Telegram:
         question_entities: List[MessageEntity] | None = None,
         is_anonymous: bool | None = None,
         poll_type: str | None = None,
+        allows_revoting: bool | None = None,
+        shuffle_options: bool | None = None,
         allows_multiple_answers: bool | None = None,
-        correct_option_id: int | None = None,
+        allow_adding_options: bool | None = None,
+        hide_results_until_closes: bool | None = None,
+        correct_option_ids: List[int] | None = None,
         explanation: str | None = None,
         explanation_parse_mode: str | None = None,
         explanation_entities: List[MessageEntity] | None = None,
         open_period: int | None = None,
         close_date: int | None = None,
         is_closed: bool | None = None,
+        description: str | None = None,
+        description_parse_mode: str | None = None,
+        description_entities: List[MessageEntity] | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
         allow_paid_broadcast: bool | None = None,
@@ -1361,8 +1370,12 @@ class Telegram:
         :param question_entities: List of special entities in the question.
         :param is_anonymous: True if the poll is anonymous (default: True).
         :param poll_type: Poll type: "quiz" or "regular" (default: "regular").
+        :param allows_revoting:Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls.
+        :param shuffle_options: Pass True, if the poll options must be shown in random order.
         :param allows_multiple_answers: True if multiple answers are allowed (ignored in quiz mode, default: False).
-        :param correct_option_id: 0-based index of the correct answer option (required for quiz mode).
+        :param allow_adding_options: Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes.
+        :param hide_results_until_closes: Pass True, if poll results must be shown only after the poll closes.
+        :param correct_option_ids: Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
         :param explanation: Text shown when an incorrect answer is chosen (0–200 characters).
         :param explanation_parse_mode: Mode for parsing entities in the explanation.
         :param explanation_entities: List of special entities in the explanation.
@@ -1370,6 +1383,9 @@ class Telegram:
         :param close_date: Unix timestamp when the poll will be automatically closed (5–600 seconds in future).
                         Cannot be used with open_period.
         :param is_closed: Pass True to immediately close the poll (useful for preview).
+        :param description: Description of the poll to be sent, 0-1024 characters after entities parsing.
+        :param description_parse_mode: Mode for parsing entities in the poll description. See formatting options for more details.
+        :param description_entities: A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode.
         :param disable_notification: Send message silently without notification sound.
         :param protect_content: Protect message from forwarding and saving.
         :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
@@ -1380,22 +1396,29 @@ class Telegram:
         """
         payload = {
             "chat_id": chat_id,
+            "question": question,
+            "options": json.dumps(options),
             "business_connection_id": business_connection_id,
             "message_thread_id": message_thread_id,
-            "question": question,
             "question_parse_mode": question_parse_mode,
             "question_entities": question_entities,
-            "options": json.dumps(options),
             "is_anonymous": is_anonymous,
-            "type": poll_type,
+            "poll_type": poll_type,
+            "allows_revoting": allows_revoting,
+            "shuffle_options": shuffle_options,
             "allows_multiple_answers": allows_multiple_answers,
-            "correct_option_id": correct_option_id,
+            "allow_adding_options": allow_adding_options,
+            "hide_results_until_closes": hide_results_until_closes,
+            "correct_option_ids": correct_option_ids,
             "explanation": explanation,
             "explanation_parse_mode": explanation_parse_mode,
             "explanation_entities": explanation_entities,
             "open_period": open_period,
             "close_date": close_date,
             "is_closed": is_closed,
+            "description": description,
+            "description_parse_mode": description_parse_mode,
+            "description_entities": description_entities,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
@@ -2624,6 +2647,32 @@ class Telegram:
             "getBusinessConnection", method="GET", params=payload
         )
         return BusinessConnection.model_validate(response)
+
+    def get_managed_bot_token(self, user_id: int) -> str:
+        """
+        Use this method to get the token of a managed bot.
+
+        :param user_id: User identifier of the managed bot whose token will be returned.
+        :return: The token as String on success.
+        """
+        payload = {"user_id": user_id}
+        response = self._make_request(
+            "getManagedBotToken", method="GET", params=payload
+        )
+        return str(response)
+
+    def replace_managed_bot_token(self, user_id: int) -> str:
+        """
+        Use this method to revoke the current token of a managed bot and generate a new one.
+
+        :param user_id: User identifier of the managed bot whose token will be replaced.
+        :return: New token as String on success.
+        """
+        payload = {"user_id": user_id}
+        response = self._make_request(
+            "replaceManagedBotToken", method="POST", data=payload
+        )
+        return str(response)
 
     def set_my_commands(
         self,
@@ -4345,6 +4394,22 @@ class Telegram:
             "savePreparedInlineMessage", method="POST", data=payload
         )
         return PreparedInlineMessage.model_validate(response)
+
+    def save_prepared_keyboard_button(
+        self, user_id: int, button: KeyboardButton
+    ) -> PreparedKeyboardButton:
+        """
+        Stores a keyboard button that can be used by a user within a Mini App.
+
+        :param user_id: Unique identifier of the target user that can use the prepared message.
+        :param button: A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot.
+        :return: PreparedKeyboardButton object
+        """
+        payload = {"user_id": user_id, "button": button}
+        response = self._make_request(
+            "savePreparedKeyboardButton", method="POST", data=payload
+        )
+        return PreparedKeyboardButton.model_validate(response)
 
     def create_prepared_inline_message(
         self, _id: str, expiration_date: int
