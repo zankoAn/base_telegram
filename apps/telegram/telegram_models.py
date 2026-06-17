@@ -32,6 +32,7 @@ class Update(_BaseModel):
     business_message: Optional["Message"] = None
     edited_business_message: Optional["Message"] = None
     deleted_business_messages: Optional["BusinessMessagesDeleted"] = None
+    guest_message: Optional["Message"] = None
     message_reaction: Optional["MessageReactionUpdated"] = None
     message_reaction_count: Optional["MessageReactionCountUpdated"] = None
     inline_query: Optional["InlineQuery"] = None
@@ -61,6 +62,7 @@ class User(_BaseModel):
     added_to_attachment_menu: bool | None = None
     can_join_groups: bool | None = None
     can_read_all_group_messages: bool | None = None
+    supports_guest_queries: bool | None = None
     supports_inline_queries: bool | None = None
     can_connect_to_business: bool | None = None
     has_main_web_app: bool | None = None
@@ -146,6 +148,7 @@ class Message(_BaseModel):
     sender_business_bot: User | None = None
     sender_tag: str | None = None
     date: PositiveInt
+    guest_query_id: str | None = None
     business_connection_id: str | None = None
     chat: Chat
     forward_origin: Optional["MessageOrigin"] | None = None
@@ -158,6 +161,8 @@ class Message(_BaseModel):
     reply_to_checklist_task_id: int | None = None
     reply_to_poll_option_id: str | None = None
     via_bot: Optional[User] = None
+    guest_bot_caller_user: User | None = None
+    guest_bot_caller_chat: Chat | None = None
     edit_date: int | None = None
     has_protected_content: bool | None = None
     is_from_offline: bool | None = None
@@ -173,6 +178,7 @@ class Message(_BaseModel):
     animation: Optional["Animation"] = None
     audio: Optional["Audio"] = None
     document: Optional["Document"] = None
+    live_photo: Optional["LivePhoto"] = None
     paid_media: Optional["PaidMediaInfo"] = None
     photo: List["PhotoSize"] | None = None
     sticker: Optional["Sticker"] = None
@@ -305,6 +311,7 @@ class ExternalReplyInfo(_BaseModel):
     animation: Optional["Animation"] = None
     audio: Optional["Audio"] = None
     document: Optional["Document"] = None
+    live_photo: Optional["LivePhoto"] = None
     paid_media: Optional["PaidMediaInfo"] = None
     photo: list["PhotoSize"] | None = None
     sticker: Optional["Sticker"] = None
@@ -401,6 +408,17 @@ class Document(_BaseModel):
     file_unique_id: str
     thumbnail: PhotoSize | None = None
     file_name: str | None = None
+    mime_type: str | None = None
+    file_size: int | None = None
+
+
+class LivePhoto(_BaseModel):
+    photo: list[PhotoSize] | None = None
+    file_id: str
+    file_unique_id: str
+    width: int
+    height: int
+    duration: int
     mime_type: str | None = None
     file_size: int | None = None
 
@@ -515,6 +533,11 @@ class PaidMediaPreview(_BaseModel):
     duration: int | None = None
 
 
+class PaidMediaLivePhoto(_BaseModel):
+    type: str = "live_photo"
+    live_photo: LivePhoto
+
+
 class PaidMediaPhoto(_BaseModel):
     type: str = "photo"
     photo: list[PhotoSize]
@@ -538,10 +561,28 @@ class Dice(_BaseModel):
     value: int
 
 
+class Link(_BaseModel):
+    url: str
+
+
+class PollMedia(_BaseModel):
+    animation: Animation | None = None
+    audio: Audio | None = None
+    document: Document | None = None
+    link: Link | None = None
+    live_photo: LivePhoto | None = None
+    location: Optional["Location"] | None = None
+    photo: list[PhotoSize] | None = None
+    sticker: Sticker | None = None
+    venue: Optional["Venue"] | None = None
+    video: Video | None = None
+
+
 class PollOption(_BaseModel):
     persistent_id: str
     text: str
     text_entities: list[MessageEntity] | None = None
+    media: PollMedia | None = None
     voter_count: int
     added_by_user: User | None = None
     added_by_chat: Chat | None = None
@@ -552,6 +593,7 @@ class InputPollOption(_BaseModel):
     text: str
     text_parse_mode: str | None = None
     text_entities: list[MessageEntity] | None = None
+    media: Optional["InputPollOptionMedia"] = None
 
 
 class PollAnswer(_BaseModel):
@@ -572,14 +614,18 @@ class Poll(_BaseModel):
     is_anonymous: bool
     type: str
     allows_multiple_answers: bool
+    members_only: bool
+    country_codes: list[str] | None = None
     allows_revoting: bool
     correct_option_ids: list[int] | None = None
     explanation: str | None = None
     explanation_entities: list[MessageEntity] | None = None
+    explanation_media: PollMedia | None = None
     open_period: int | None = None
     close_date: int | None = None
     description: str | None = None
     description_entities: list[MessageEntity] | None = None
+    media: PollMedia | None = None
 
 
 class ChecklistTask(_BaseModel):
@@ -894,6 +940,10 @@ class SentWebAppMessage(_BaseModel):
     result: "InlineQueryResult"
 
 
+class SentGuestMessage(_BaseModel):
+    inline_message_id: str
+
+
 class CopyTextButton(_BaseModel):
     text: str
 
@@ -1015,6 +1065,7 @@ class ChatMemberRestricted(_BaseModel):
     can_send_polls: bool
     can_send_other_messages: bool
     can_add_web_page_previews: bool
+    can_react_to_messages: bool
     can_edit_tag: bool
     can_change_info: bool
     can_invite_users: bool
@@ -1054,6 +1105,7 @@ class ChatPermissions(_BaseModel):
     can_send_polls: bool | None = None
     can_send_other_messages: bool | None = None
     can_add_web_page_previews: bool | None = None
+    can_react_to_messages: bool | None = None
     can_edit_tag: bool | None = None
     can_change_info: bool | None = None
     can_invite_users: bool | None = None
@@ -1786,6 +1838,11 @@ class OwnedGifts(_BaseModel):
     next_offset: str | None = None
 
 
+class BotAccessSettings(_BaseModel):
+    is_access_restricted: bool
+    added_users: list[User]
+
+
 class AcceptedGiftTypes(_BaseModel):
     unlimited_gifts: bool
     limited_gifts: bool
@@ -1947,6 +2004,13 @@ class ResponseParameters(_BaseModel):
     retry_after: Optional[int] = None
 
 
+class InputMediaLocation(_BaseModel):
+    type: str
+    latitude: float
+    longitude: float
+    horizontal_accuracy: float | None = None
+
+
 class InputMediaPhoto(_BaseModel):
     type: Literal["photo"] = "photo"
     media: str
@@ -1955,6 +2019,24 @@ class InputMediaPhoto(_BaseModel):
     caption_entities: Optional[List[MessageEntity]] = None
     show_caption_above_media: Optional[bool] = None
     has_spoiler: Optional[bool] = None
+
+
+class InputMediaSticker(_BaseModel):
+    type: str
+    media: str
+    emoji: str | None = None
+
+
+class InputMediaVenue(_BaseModel):
+    type: str
+    latitude: float
+    longitude: float
+    title: str
+    address: str
+    foursquare_id: str | None = None
+    foursquare_type: str | None = None
+    google_place_id: str | None = None
+    google_place_type: str | None = None
 
 
 class InputMediaVideo(_BaseModel):
@@ -2010,8 +2092,25 @@ class InputMediaDocument(_BaseModel):
     disable_content_type_detection: Optional[bool] = None
 
 
+class InputMediaLivePhoto(_BaseModel):
+    type: str
+    media: str
+    photo: Optional[str] = None
+    caption: str | None = None
+    parse_mode: str | None = None
+    caption_entities: List[MessageEntity] | None = None
+    show_caption_above_media: bool | None = None
+    has_spoiler: bool | None = None
+
+
 class InputFile(_BaseModel):
     pass
+
+
+class InputPaidMediaLivePhoto(_BaseModel):
+    type: Literal["live_photo"] = "live_photo"
+    media: str
+    photo: str
 
 
 class InputPaidMediaPhoto(_BaseModel):
@@ -2488,6 +2587,29 @@ InputMedia = Annotated[
     Discriminator("type"),
 ]
 
+InputPollMedia = Annotated[
+    InputMediaAnimation
+    | InputMediaAudio
+    | InputMediaDocument
+    | InputMediaLivePhoto
+    | InputMediaLocation
+    | InputMediaPhoto
+    | InputMediaVenue
+    | InputMediaVideo,
+    Discriminator("type"),
+]
+
+InputPollOptionMedia = Annotated[
+    InputMediaAnimation
+    | InputMediaLivePhoto
+    | InputMediaLocation
+    | InputMediaPhoto
+    | InputMediaSticker
+    | InputMediaVenue
+    | InputMediaVideo,
+    Discriminator("type"),
+]
+
 InputPaidMedia = Annotated[
     InputPaidMediaPhoto | InputPaidMediaVideo, Discriminator("type")
 ]
@@ -2578,6 +2700,7 @@ BotCommandList = TypeAdapter(List[BotCommand])
 ChatMemberAdapter = TypeAdapter(ChatMember)
 OwnedGiftAdapter = TypeAdapter(OwnedGift)
 MenuButtonAdapter = TypeAdapter(MenuButton)
+MessageListAdapter = TypeAdapter(list[Message])
 
 
 # Resolve forward references

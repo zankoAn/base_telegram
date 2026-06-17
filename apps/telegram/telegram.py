@@ -5,6 +5,7 @@ import requests
 
 from apps.telegram.telegram_models import (
     AcceptedGiftTypes,
+    BotAccessSettings,
     BotCommand,
     BotCommandList,
     BotCommandScope,
@@ -29,6 +30,7 @@ from apps.telegram.telegram_models import (
     InputFile,
     InputMedia,
     InputPaidMedia,
+    InputPollMedia,
     InputPollOption,
     InputProfilePhoto,
     InputSticker,
@@ -42,6 +44,7 @@ from apps.telegram.telegram_models import (
     MessageEntity,
     MessageId,
     MessageIdList,
+    MessageListAdapter,
     OwnedGift,
     OwnedGiftAdapter,
     PassportElementError,
@@ -51,6 +54,7 @@ from apps.telegram.telegram_models import (
     ReactionType,
     ReplyMarkup,
     ReplyParameters,
+    SentGuestMessage,
     SentWebAppMessage,
     ShippingOption,
     StarAmount,
@@ -68,6 +72,7 @@ from apps.telegram.telegram_models import (
 )
 from utils.load_env import env
 from utils.logger import logger
+from pydantic import TypeAdapter
 
 
 class Telegram:
@@ -485,6 +490,85 @@ class Telegram:
             # Reuse existing file_id or URL → use GET
             payload["photo"] = photo
             response = self._make_request("sendPhoto", method="GET", params=payload)
+
+        return Message.model_validate(response)
+
+    def send_live_photo(
+        self,
+        chat_id: int | str,
+        live_photo: InputFile | str,
+        photo: InputFile | str,
+        business_connection_id: str | None = None,
+        message_thread_id: int | None = None,
+        direct_messages_topic_id: int | None = None,
+        caption: str | None = None,
+        parse_mode: str | None = None,
+        caption_entities: List[MessageEntity] | None = None,
+        show_caption_above_media: bool | None = None,
+        has_spoiler: bool | None = None,
+        disable_notification: bool | None = None,
+        protect_content: bool | None = None,
+        allow_paid_broadcast: bool | None = None,
+        message_effect_id: str | None = None,
+        suggested_post_parameters: SuggestedPostParameters | None = None,
+        reply_parameters: ReplyParameters | None = None,
+        reply_markup: ReplyMarkup | None = None,
+    ) -> Message:
+        """
+        Use this method to send live photos.
+
+        :param business_connection_id: Unique identifier of the business connection on behalf of which the message will be sent.
+        :param chat_id: Unique identifier for the target chat or username of the target channel (in the format @channelusername).
+        :param message_thread_id: Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only.
+        :param direct_messages_topic_id: Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat.
+        :param live_photo: Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
+        :param photo: The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
+        :param caption: Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing.
+        :param parse_mode: Mode for parsing entities in the video caption. See formatting options for more details.
+        :param caption_entities: A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode.
+        :param show_caption_above_media: Pass True, if the caption must be shown above the message media.
+        :param has_spoiler: Pass True if the video needs to be covered with a spoiler animation.
+        :param disable_notification: Sends the message silently. Users will receive a notification with no sound.
+        :param protect_content: Protects the contents of the sent message from forwarding and saving.
+        :param allow_paid_broadcast: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
+        :param message_effect_id: Unique identifier of the message effect to be added to the message; for private chats only.
+        :param suggested_post_parameters: Parameters for sending a suggested post.
+        :param reply_parameters: Description of the message to reply to.
+        :param reply_markup: Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+        :return: The sent Message object on success.
+        """
+        payload = {
+            "business_connection_id": business_connection_id,
+            "chat_id": chat_id,
+            "message_thread_id": message_thread_id,
+            "direct_messages_topic_id": direct_messages_topic_id,
+            "live_photo": live_photo,
+            "photo": photo,
+            "caption": caption,
+            "parse_mode": parse_mode,
+            "caption_entities": caption_entities,
+            "show_caption_above_media": show_caption_above_media,
+            "has_spoiler": has_spoiler,
+            "disable_notification": disable_notification,
+            "protect_content": protect_content,
+            "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
+            "suggested_post_parameters": suggested_post_parameters,
+            "reply_parameters": reply_parameters,
+            "reply_markup": reply_markup,
+        }
+
+        if isinstance(photo, bytes):
+            # Upload new photo → use POST + multipart/form-data
+            files = {"photo": photo}
+            payload["photo"] = None
+            response = self._make_request(
+                "sendLivePhoto", method="POST", data=payload, files=files
+            )
+        else:
+            # Reuse existing file_id or URL → use GET
+            payload["photo"] = photo
+            response = self._make_request("sendLivePhoto", method="GET", params=payload)
 
         return Message.model_validate(response)
 
@@ -1340,16 +1424,20 @@ class Telegram:
         allows_multiple_answers: bool | None = None,
         allow_adding_options: bool | None = None,
         hide_results_until_closes: bool | None = None,
+        members_only: bool | None = None,
+        country_codes: List[str] | None = None,
         correct_option_ids: List[int] | None = None,
         explanation: str | None = None,
         explanation_parse_mode: str | None = None,
         explanation_entities: List[MessageEntity] | None = None,
+        explanation_media: InputPollMedia | None = None,
         open_period: int | None = None,
         close_date: int | None = None,
         is_closed: bool | None = None,
         description: str | None = None,
         description_parse_mode: str | None = None,
         description_entities: List[MessageEntity] | None = None,
+        media: InputPollMedia | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
         allow_paid_broadcast: bool | None = None,
@@ -1375,10 +1463,13 @@ class Telegram:
         :param allows_multiple_answers: True if multiple answers are allowed (ignored in quiz mode, default: False).
         :param allow_adding_options: Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes.
         :param hide_results_until_closes: Pass True, if poll results must be shown only after the poll closes.
+        :param members_only: Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only.
+        :param country_codes: A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only. Use “FT” as a country code to allow users with anonymous numbers to vote. If omitted or empty, then users from any country can participate in the poll.
         :param correct_option_ids: Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
         :param explanation: Text shown when an incorrect answer is chosen (0–200 characters).
         :param explanation_parse_mode: Mode for parsing entities in the explanation.
         :param explanation_entities: List of special entities in the explanation.
+        :param explanation_media: Media added to the quiz explanation.
         :param open_period: Duration in seconds the poll will be active (5–600). Cannot be used with close_date.
         :param close_date: Unix timestamp when the poll will be automatically closed (5–600 seconds in future).
                         Cannot be used with open_period.
@@ -1386,6 +1477,7 @@ class Telegram:
         :param description: Description of the poll to be sent, 0-1024 characters after entities parsing.
         :param description_parse_mode: Mode for parsing entities in the poll description. See formatting options for more details.
         :param description_entities: A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode.
+        :param media: Media added to the poll description.
         :param disable_notification: Send message silently without notification sound.
         :param protect_content: Protect message from forwarding and saving.
         :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
@@ -1409,16 +1501,20 @@ class Telegram:
             "allows_multiple_answers": allows_multiple_answers,
             "allow_adding_options": allow_adding_options,
             "hide_results_until_closes": hide_results_until_closes,
+            "members_only": members_only,
+            "country_codes": country_codes,
             "correct_option_ids": correct_option_ids,
             "explanation": explanation,
             "explanation_parse_mode": explanation_parse_mode,
             "explanation_entities": explanation_entities,
+            "explanation_media": explanation_media,
             "open_period": open_period,
             "close_date": close_date,
             "is_closed": is_closed,
             "description": description,
             "description_parse_mode": description_parse_mode,
             "description_entities": description_entities,
+            "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
@@ -2283,15 +2379,17 @@ class Telegram:
         response = self._make_request("getChat", method="GET", params=payload)
         return ChatFullInfo.model_validate(response)
 
-    def get_chat_administrators(self, chat_id: int | str) -> ChatMember:
+    def get_chat_administrators(
+        self, chat_id: int | str, return_bots: bool = False
+    ) -> ChatMember:
         """
-        Get a list of administrators in a chat (excluding bots).
-        Returns an array of ChatMember objects.
+        Use this method to get a list of administrators in a chat.
 
         :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+        :param return_bots: Pass True to additionally receive all bots that are administrators of the chat. By default, bots other than the current bot are omitted.
         :return: Array of ChatMember objects on success.
         """
-        payload = {"chat_id": chat_id}
+        payload = {"chat_id": chat_id, "return_bots": return_bots}
         response = self._make_request(
             "getChatAdministrators", method="GET", params=payload
         )
@@ -2311,6 +2409,23 @@ class Telegram:
         )
         return cast(int, response)
 
+    def get_user_personal_chat_messages(
+        self, user_id: int, limit: int
+    ) -> List[Message]:
+        """
+        Use this method to get the last messages from the personal chat
+        (i.e., the chat currently added to their profile) of a given user
+
+        :param user_id: Unique identifier for the target user.
+        :param limit: The maximum number of messages to return; 1-20.
+        :return: Aarray of Message objects is returned.
+        """
+        payload = {"user_id": user_id, "limit": limit}
+        response = self._make_request(
+            "getUserPersonalChatMessages", method="GET", params=payload
+        )
+        return MessageListAdapter.validate_python(response)
+
     def get_chat_member(self, chat_id: int | str, user_id: int) -> ChatMember:
         """
         Get information about a specific member of a chat.
@@ -2325,7 +2440,6 @@ class Telegram:
             "user_id": user_id,
         }
         response = self._make_request("getChatMember", method="GET", params=payload)
-        print(payload)
         return ChatMemberAdapter.validate_python(response)
 
     def set_chat_sticker_set(self, chat_id: int | str, sticker_set_name: str) -> bool:
@@ -2617,6 +2731,21 @@ class Telegram:
         )
         return bool(response)
 
+    def answer_guest_query(
+        self, guest_query_id: str, result: InlineQueryResult
+    ) -> SentGuestMessage:
+        """
+        Use this method to reply to a received guest message.
+
+        :param guest_query_id: Unique identifier for the query to be answered.
+        :param result: A JSON-serialized object describing the message to be sent.
+        :return: SentGuestMessage object on success.
+        """
+        payload = {"guest_query_id": guest_query_id, "result": result}
+
+        response = self._make_request("answerGuestQuery", method="POST", data=payload)
+        return SentGuestMessage.model_validate(response)
+
     def get_user_chat_boosts(self, chat_id: int | str, user_id: int) -> UserChatBoosts:
         """
         Get the list of boosts added to a chat by a user.
@@ -2673,6 +2802,40 @@ class Telegram:
             "replaceManagedBotToken", method="POST", data=payload
         )
         return str(response)
+
+    def get_managed_bot_access_settings(self, user_id: int) -> BotAccessSettings:
+        """
+        Use this method to get the access settings of a managed bot.
+
+        :param user_id: User identifier of the managed bot whose access settings will be returned.
+        :return: BotAccessSettings object on success.
+        """
+        payload = {"user_id": user_id}
+        response = self._make_request(
+            "getManagedBotAccessSettings", method="GET", params=payload
+        )
+        return BotAccessSettings.model_validate(response)
+
+    def set_managed_bot_access_settings(
+        self, user_id: int, is_access_restricted: bool, added_user_ids: List[int]
+    ) -> bool:
+        """
+        Use this method to change the access settings of a managed bot.
+
+        :param user_id: User identifier of the managed bot whose access settings will be changed.
+        :param is_access_restricted: Pass True, if only selected users can access the bot. The bot's owner can always access it.
+        :param added_user_ids: A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
+        :return: True on success.
+        """
+        payload = {
+            "user_id": user_id,
+            "is_access_restricted": is_access_restricted,
+            "added_user_ids": added_user_ids,
+        }
+        response = self._make_request(
+            "setManagedBotAccessSettings", method="POST", data=payload
+        )
+        return bool(response)
 
     def set_my_commands(
         self,
@@ -3910,6 +4073,52 @@ class Telegram:
             "message_ids": json.dumps(message_ids),
         }
         response = self._make_request("deleteMessages", method="POST", data=payload)
+        return bool(response)
+
+    def delete_message_reaction(
+        self, chat_id: int | str, message_id: int, user_id: int, actor_chat_id: int
+    ) -> bool:
+        """
+        Use this method to remove a reaction from a message in a group or a supergroup chat.
+        The bot must have the 'can_delete_messages' administrator right in the chat.
+
+        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
+        :param message_id: A list of 1–100 message identifiers to delete. See delete_message() for limitations on deletable messages.
+        :param user_id: Identifier of the user whose reaction will be removed, if the reaction was added by a user.
+        :param actor_chat_id: Identifier of the chat whose reaction will be removed, if the reaction was added by a chat.
+        :return: True on success.
+        """
+        payload = {
+            "chat_id": chat_id,
+            "message_id": message_id,
+            "user_id": user_id,
+            "actor_chat_id": actor_chat_id,
+        }
+        response = self._make_request(
+            "deleteMessageReaction", method="POST", data=payload
+        )
+        return bool(response)
+
+    def delete_message_reactions(
+        self, chat_id: int | str, user_id: int, actor_chat_id: int
+    ) -> bool:
+        """
+        Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat.
+        The bot must have the 'can_delete_messages' administrator right in the chat.
+
+        :param chat_id: Unique identifier for the target chat or username of the target supergroup in the format @username.
+        :param user_id: Identifier of the user whose reactions will be removed, if the reactions were added by a user.
+        :param actor_chat_id: Identifier of the chat whose reactions will be removed, if the reactions were added by a chat.
+        :return: True on success.
+        """
+        payload = {
+            "chat_id": chat_id,
+            "user_id": user_id,
+            "actor_chat_id": actor_chat_id,
+        }
+        response = self._make_request(
+            "deleteAllMessageReactions", method="POST", data=payload
+        )
         return bool(response)
 
     def send_sticker(
