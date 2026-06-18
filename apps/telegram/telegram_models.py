@@ -69,6 +69,7 @@ class User(_BaseModel):
     has_topics_enabled: bool | None = None
     allows_users_to_create_topics: bool | None = None
     can_manage_bots: bool | None = None
+    supports_join_request_queries: bool | None = None
 
 
 class Chat(_BaseModel):
@@ -134,6 +135,7 @@ class ChatFullInfo(_BaseModel):
     first_profile_audio: Optional["Audio"] | None = None
     unique_gift_colors: Optional["UniqueGiftColors"] = None
     paid_message_star_count: int | None = None
+    guard_bot: User | None = None
 
 
 class Message(_BaseModel):
@@ -175,6 +177,7 @@ class Message(_BaseModel):
     link_preview_options: Optional["LinkPreviewOptions"] = None
     suggested_post_info: Optional["SuggestedPostInfo"] = None
     effect_id: str | None = None
+    rich_message: Optional["RichMessage"] = None
     animation: Optional["Animation"] = None
     audio: Optional["Audio"] = None
     document: Optional["Document"] = None
@@ -507,6 +510,308 @@ class InputSticker(_BaseModel):
     emoji_list: list[str]
     mask_position: MaskPosition | None = None
     keywords: list[str] | None = None
+
+
+class RichMessage(_BaseModel):
+    blocks: list["RichBlock"]
+    is_rtl: bool | None = None
+
+
+class InputRichMessage(_BaseModel):
+    html: str | None = None
+    markdown: str | None = None
+    is_rtl: bool | None = None
+    skip_entity_detection: bool | None = None
+
+
+class RichTextBold(_BaseModel):
+    type: str = "bold"
+    text: "RichText"
+
+
+class RichTextItalic(_BaseModel):
+    type: str = "italic"
+    text: "RichText"
+
+
+class RichTextUnderline(_BaseModel):
+    type: str = "underline"
+    text: "RichText"
+
+
+class RichTextStrikethrough(_BaseModel):
+    type: str = "strikethrough"
+    text: "RichText"
+
+
+class RichTextSpoiler(_BaseModel):
+    type: str = "spoiler"
+    text: "RichText"
+
+
+class RichTextDateTime(_BaseModel):
+    type: str = "date_time"
+    text: "RichText"
+    unix_time: int
+    date_time_format: str
+
+
+class RichTextTextMention(_BaseModel):
+    type: str = "text_mention"
+    text: "RichText"
+    user: User
+
+
+class RichTextSubscript(_BaseModel):
+    type: str = "subscript"
+    text: "RichText"
+
+
+class RichTextSuperscript(_BaseModel):
+    type: str = "superscript"
+    text: "RichText"
+
+
+class RichTextMarked(_BaseModel):
+    type: str = "marked"
+    text: "RichText"
+
+
+class RichTextCode(_BaseModel):
+    type: str = "code"
+    text: "RichText"
+
+
+class RichTextCustomEmoji(_BaseModel):
+    type: str = "custom_emoji"
+    custom_emoji_id: str
+    alternative_text: str
+
+
+class RichTextMathematicalExpression(_BaseModel):
+    type: str = "mathematical_expression"
+    expression: str
+
+
+class RichTextUrl(_BaseModel):
+    type: str = "url"
+    text: "RichText"
+    url: str
+
+
+class RichTextEmailAddress(_BaseModel):
+    type: str = "email_address"
+    text: "RichText"
+    email_address: str
+
+
+class RichTextPhoneNumber(_BaseModel):
+    type: str = "phone_number"
+    text: "RichText"
+    phone_number: str
+
+
+class RichTextBankCardNumber(_BaseModel):
+    type: str = "bank_card_number"
+    text: "RichText"
+    bank_card_number: str
+
+
+class RichTextMention(_BaseModel):
+    type: str = "mention"
+    text: "RichText"
+    username: str
+
+
+class RichTextHashtag(_BaseModel):
+    type: str = "hashtag"
+    text: "RichText"
+    hashtag: str
+
+
+class RichTextCashtag(_BaseModel):
+    type: str = "cashtag"
+    text: "RichText"
+    cashtag: str
+
+
+class RichTextBotCommand(_BaseModel):
+    type: str = "bot_command"
+    text: "RichText"
+    bot_command: str
+
+
+class RichTextAnchor(_BaseModel):
+    type: str = "anchor"
+    name: str
+
+
+class RichTextAnchorLink(_BaseModel):
+    type: str = "anchor_link"
+    text: "RichText"
+    anchor_name: str
+
+
+class RichTextReference(_BaseModel):
+    type: str = "reference"
+    text: "RichText"
+    name: str
+
+
+class RichTextReferenceLink(_BaseModel):
+    type: str = "reference_link"
+    text: "RichText"
+    reference_name: str
+
+
+class RichBlockCaption(_BaseModel):
+    text: "RichText"
+    credit: "RichText"
+
+
+class RichBlockTableCell(_BaseModel):
+    text: "RichText"
+    is_header: bool | None
+    colspan: int | None
+    rowspan: int | None
+    align: str
+    valign: str
+
+
+class RichBlockListItem(_BaseModel):
+    label: str
+    blocks: List["RichBlock"]
+    has_checkbox: bool | None
+    is_checked: bool | None
+    value: int | None
+    type: str | None
+
+
+class RichBlockParagraph(_BaseModel):
+    type: str = "paragraph"
+    text: "RichText"
+
+
+class RichBlockSectionHeading(_BaseModel):
+    type: str = "heading"
+    text: "RichText"
+    size: int
+
+
+class RichBlockPreformatted(_BaseModel):
+    type: str = "pre"
+    text: "RichText"
+    language: str | None
+
+
+class RichBlockFooter(_BaseModel):
+    type: str = "footer"
+    text: "RichText"
+
+
+class RichBlockDivider(_BaseModel):
+    type: str = "divider"
+
+
+class RichBlockMathematicalExpression(_BaseModel):
+    type: str = "mathematical_expression"
+    expression: str
+
+
+class RichBlockAnchor(_BaseModel):
+    type: str = "anchor"
+    name: str
+
+
+class RichBlockList(_BaseModel):
+    type: str = "list"
+    items: list[RichBlockListItem]
+
+
+class RichBlockBlockQuotation(_BaseModel):
+    type: str = "blockquote"
+    blocks: list["RichBlock"]
+    credit: "RichText"
+
+
+class RichBlockPullQuotation(_BaseModel):
+    type: str = "pullquote"
+    text: "RichText"
+    credit: "RichText"
+
+
+class RichBlockCollage(_BaseModel):
+    type: str = "collage"
+    blocks: list["RichBlock"]
+    caption: Optional[RichBlockCaption] = None
+
+
+class RichBlockSlideshow(_BaseModel):
+    type: str = "slideshow"
+    blocks: list["RichBlock"]
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockTable(_BaseModel):
+    type: str = "table"
+    cells: list[list[RichBlockTableCell]]
+    is_bordered: bool | None = None
+    is_striped: bool | None = None
+    caption: Optional["RichText"] = None
+
+
+class RichBlockDetails(_BaseModel):
+    type: str = "details"
+    summary: "RichText"
+    blocks: list["RichBlock"]
+    is_open: bool | None = None
+
+
+class RichBlockMap(_BaseModel):
+    type: str = "map"
+    location: "Location"
+    zoom: int
+    width: int
+    height: int
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockAnimation(_BaseModel):
+    type: str = "animation"
+    animation: Animation
+    has_spoiler: bool | None = None
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockAudio(_BaseModel):
+    type: str = "audio"
+    audio: Audio
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockPhoto(_BaseModel):
+    type: str = "photo"
+    photo: list[PhotoSize]
+    has_spoiler: bool | None = None
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockVideo(_BaseModel):
+    type: str = "video"
+    video: Video
+    has_spoiler: bool | None = None
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockVoiceNote(_BaseModel):
+    type: str = "voice_note"
+    voice_note: "Voice"
+    caption: RichBlockCaption | None = None
+
+
+class RichBlockThinking(_BaseModel):
+    type: str = "thinking"
+    text: "RichText"
 
 
 class Voice(_BaseModel):
@@ -1092,6 +1397,7 @@ class ChatJoinRequest(_BaseModel):
     date: int
     bio: str | None = None
     invite_link: ChatInviteLink | None = None
+    query_id: str | None = None
 
 
 class ChatPermissions(_BaseModel):
@@ -2070,6 +2376,11 @@ class InputMediaAnimation(_BaseModel):
     has_spoiler: Optional[bool] = None
 
 
+class InputMediaLink(_BaseModel):
+    type: str
+    url: str
+
+
 class InputMediaAudio(_BaseModel):
     type: Literal["audio"] = "audio"
     media: str
@@ -2464,6 +2775,10 @@ class InputTextMessageContent(_BaseModel):
     link_preview_options: LinkPreviewOptions | None = None
 
 
+class InputRichMessageContent(_BaseModel):
+    rich_message: InputRichMessage
+
+
 class InputLocationMessageContent(_BaseModel):
     latitude: float
     longitude: float
@@ -2580,8 +2895,9 @@ ChatBoostSource = Annotated[
 
 InputMedia = Annotated[
     InputMediaAnimation
-    | InputMediaDocument
     | InputMediaAudio
+    | InputMediaDocument
+    | InputMediaLivePhoto
     | InputMediaPhoto
     | InputMediaVideo,
     Discriminator("type"),
@@ -2601,6 +2917,7 @@ InputPollMedia = Annotated[
 
 InputPollOptionMedia = Annotated[
     InputMediaAnimation
+    | InputMediaLink
     | InputMediaLivePhoto
     | InputMediaLocation
     | InputMediaPhoto
@@ -2684,6 +3001,7 @@ ReplyMarkup = (
 
 InputMessageContent = (
     InputTextMessageContent
+    | InputRichMessageContent
     | InputLocationMessageContent
     | InputVenueMessageContent
     | InputContactMessageContent
@@ -2692,6 +3010,57 @@ InputMessageContent = (
 
 MaybeInaccessibleMessage = Message | InaccessibleMessage
 
+RichText = (
+    RichTextBold
+    | RichTextItalic
+    | RichTextUnderline
+    | RichTextStrikethrough
+    | RichTextSpoiler
+    | RichTextDateTime
+    | RichTextTextMention
+    | RichTextSubscript
+    | RichTextSuperscript
+    | RichTextMarked
+    | RichTextCode
+    | RichTextCustomEmoji
+    | RichTextMathematicalExpression
+    | RichTextUrl
+    | RichTextEmailAddress
+    | RichTextPhoneNumber
+    | RichTextBankCardNumber
+    | RichTextMention
+    | RichTextHashtag
+    | RichTextCashtag
+    | RichTextBotCommand
+    | RichTextAnchor
+    | RichTextAnchorLink
+    | RichTextReference
+    | RichTextReferenceLink
+)
+
+RichBlock = (
+    RichBlockParagraph
+    | RichBlockSectionHeading
+    | RichBlockPreformatted
+    | RichBlockFooter
+    | RichBlockDivider
+    | RichBlockMathematicalExpression
+    | RichBlockAnchor
+    | RichBlockList
+    | RichBlockBlockQuotation
+    | RichBlockPullQuotation
+    | RichBlockCollage
+    | RichBlockSlideshow
+    | RichBlockTable
+    | RichBlockDetails
+    | RichBlockMap
+    | RichBlockAnimation
+    | RichBlockAudio
+    | RichBlockPhoto
+    | RichBlockVideo
+    | RichBlockVoiceNote
+    | RichBlockThinking
+)
 
 # ─── Type Adapters ─────────────────────────────────────────────
 MessageIdList = TypeAdapter(List[MessageId])
