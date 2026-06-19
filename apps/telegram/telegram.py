@@ -73,7 +73,6 @@ from apps.telegram.telegram_models import (
 )
 from utils.load_env import env
 from utils.logger import logger
-from pydantic import TypeAdapter
 
 
 class Telegram:
