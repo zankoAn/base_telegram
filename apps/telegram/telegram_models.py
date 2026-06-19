@@ -1547,7 +1547,7 @@ class InlineQueryResultsButton(_BaseModel):
 
 class InlineQuery(_BaseModel):
     id: str
-    from_user: User
+    from_user: User = Field(..., alias="from")
     query: str
     offset: str
     chat_type: str | None = None
@@ -1556,7 +1556,7 @@ class InlineQuery(_BaseModel):
 
 class ChosenInlineResult(_BaseModel):
     result_id: str
-    from_user: User
+    from_user: User = Field(..., alias="from")
     location: Location | None = None
     inline_message_id: str | None = None
     query: str
@@ -2489,7 +2489,7 @@ class ShippingAddress(_BaseModel):
 
 class ShippingQuery(_BaseModel):
     id: str
-    from_user: User
+    from_user: User = Field(..., alias="from")
     invoice_payload: str
     shipping_address: ShippingAddress
 
@@ -2596,7 +2596,7 @@ class PassportElementErrorUnspecified(_BaseModel):
 
 class PreCheckoutQuery(_BaseModel):
     id: str
-    from_user: User
+    from_user: User = Field(..., alias="from")
     currency: str
     total_amount: int
     invoice_payload: str
@@ -2605,7 +2605,7 @@ class PreCheckoutQuery(_BaseModel):
 
 
 class PaidMediaPurchased(_BaseModel):
-    from_user: User
+    from_user: User = Field(..., alias="from")
     paid_media_payload: str
 
 
