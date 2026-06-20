@@ -163,11 +163,17 @@ class Telegram:
 
         cleaned = {}
         for key, value in data.items():
-            if value is not None:
-                if isinstance(value, dict):
-                    cleaned[key] = json.dumps(value, ensure_ascii=False)
-                else:
-                    cleaned[key] = value
+            if value is None:
+                continue
+
+            if hasattr(value, "model_dump"):
+                value = value.model_dump(exclude_none=True)
+
+            if isinstance(value, dict):
+                cleaned[key] = json.dumps(value, ensure_ascii=False)
+            else:
+                cleaned[key] = value
+
         return cleaned
 
     def close(self):
