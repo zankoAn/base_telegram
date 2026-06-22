@@ -166,6 +166,16 @@ class Telegram:
             if value is None:
                 continue
 
+            if isinstance(value, list):
+                cleaned_list = [
+                    item.model_dump(exclude_none=True)
+                    if hasattr(item, "model_dump")
+                    else item
+                    for item in value
+                ]
+                cleaned[key] = json.dumps(cleaned_list, ensure_ascii=False)
+                continue
+
             if hasattr(value, "model_dump"):
                 value = value.model_dump(exclude_none=True)
 
