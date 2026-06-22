@@ -4395,7 +4395,7 @@ class Telegram:
             "user_id": user_id,
             "name": name,
             "old_sticker": old_sticker,
-            "sticker": sticker.to_dict(),
+            "sticker": sticker,
         }
         response = self._make_request(
             "replaceStickerInSet", method="POST", data=payload
@@ -4658,11 +4658,11 @@ class Telegram:
         """
         payload = {
             "inline_query_id": inline_query_id,
-            "results": json.dumps([result.to_dict() for result in results]),
+            "results": results,
             "cache_time": cache_time,
             "is_personal": is_personal,
             "next_offset": next_offset,
-            "button": button.to_dict() if button else None,
+            "button": button,
         }
         response = self._make_request("answerInlineQuery", method="POST", data=payload)
         return bool(response)

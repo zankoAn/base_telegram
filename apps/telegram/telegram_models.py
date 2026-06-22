@@ -18,9 +18,6 @@ class _BaseModel(BaseModel):
         extra="allow",
     )
 
-    def to_dict(self, **kwargs):
-        return self.model_dump(exclude_none=True, **kwargs)
-
 
 class Update(_BaseModel):
     update_id: int

@@ -3,30 +3,32 @@ from apps.telegram.telegram_models import (
     InlineKeyboardMarkup,
     KeyboardButton,
     ReplyKeyboardMarkup,
+    ReplyKeyboardRemove,
+    ReplyMarkup,
 )
 
 
 class ReplyKeyboardBuilder:
-    def home_keyboard(self):
+    def home_keyboard(self) -> ReplyMarkup:
         keyboard = [
             [KeyboardButton(text="دکمه دوم"), KeyboardButton(text="دکمه اول")],
             [KeyboardButton(text="دکمه چهارم"), KeyboardButton(text="دکمه سوم")],
         ]
         markup = ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
-        return markup.to_dict()
+        return markup
 
-    def back_keyboard(self):
+    def back_keyboard(self) -> ReplyMarkup:
         keyboard = [[KeyboardButton(text="بازگشت")]]
         markup = ReplyKeyboardMarkup(keyboard=keyboard, resize_keyboard=True)
-        return markup.to_dict()
+        return markup
 
-    def remove_keyboard(self):
-        markup = ReplyKeyboardMarkup()
-        return markup.to_dict()
+    def remove_keyboard(self) -> ReplyMarkup:
+        markup = ReplyKeyboardRemove()
+        return markup
 
 
 class InlineKeyboardBuilder:
-    def first_keyboard(self):
+    def first_keyboard(self) -> ReplyMarkup:
         keyboard = [
             [
                 InlineKeyboardButton(text="دکمه دوم", callback_data="second_button"),
@@ -38,25 +40,27 @@ class InlineKeyboardBuilder:
             ],
         ]
         makrup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-        return makrup.to_dict()
+        return makrup
 
-    def sponsor_channel_keyboard(self, channels):
+    def sponsor_channel_keyboard(self, channels) -> ReplyMarkup:
         keyboard = [[]]
         for channel in channels.order_by("-other"):
             keyboard.append(
-                InlineKeyboardMarkup(text=f"{channel.name}", url=channel.link)
+                [InlineKeyboardButton(text=f"{channel.name}", url=channel.link)]
             )
 
         if keyboard:
             keyboard.append(
-                InlineKeyboardMarkup(
-                    text="تایید عضویت ✅", callback_data="joined_to_sponsor"
-                )
+                [
+                    InlineKeyboardButton(
+                        text="تایید عضویت ✅", callback_data="joined_to_sponsor"
+                    )
+                ]
             )
 
         markup = InlineKeyboardMarkup(inline_keyboard=keyboard)
-        return markup.to_dict()
+        return markup
 
-    def remove_keyboard(self):
-        markup = InlineKeyboardMarkup()
-        return markup.to_dict()
+    def remove_keyboard(self) -> ReplyMarkup:
+        markup = ReplyKeyboardRemove()
+        return markup
