@@ -122,7 +122,7 @@ class Telegram:
         """
         Send HTTP request to Telegram Bot API.
         """
-        url = self.webhook + f"bot{self.token}/{method_name}"
+        url = f"{self.webhook}/bot{self.token}/{method_name}"
         response = json.loads("{}")
         params = self._clean_dict(params)
         data = self._clean_dict(data)
