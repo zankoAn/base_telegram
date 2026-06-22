@@ -9,7 +9,6 @@ from utils.load_env import env
 
 
 class SponsorCacheHandler:
-
     @staticmethod
     def set_cache(key: str, value, expire: int = 3600):
         """
@@ -26,6 +25,7 @@ class SponsorCacheHandler:
         """
         data = cache.get(key)
         return bool(data)
+
 
 def channel_sponsor(self: BaseHandler):
 
@@ -56,11 +56,12 @@ def channel_sponsor(self: BaseHandler):
                 chat_id=self.user_id,
                 text=msg,
                 parse_mode="html",
-                reply_markup=self.inline_keyboard.sponsor_channel_keyboard(channels)
+                reply_markup=self.inline_keyboard.sponsor_channel_keyboard(channels),
             )
             return False
     sponsor_cache.set_cache(cache_key, True, expire=60)
     return True
+
 
 def sponsor_required(func):
     @wraps(func)
@@ -68,4 +69,5 @@ def sponsor_required(func):
         if not channel_sponsor(self):
             return
         return func(self, *args, **kwargs)
+
     return wrapper

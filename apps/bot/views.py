@@ -1,4 +1,3 @@
-import json
 import traceback
 
 from rest_framework import status
@@ -7,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.telegram.dispatcher import Dispatcher
+from apps.telegram.telegram import Telegram
 from apps.telegram.telegram_models import Update
 from utils.logger import logger
 
@@ -36,11 +36,12 @@ class TelegramWebhookView(APIView):
             Response: A JSON response with a success message.
         """
         try:
-            update_dict = request.data
-            logger.info("Received Telegram update:\n%s", json.dumps(update_dict, indent=4, ensure_ascii=False))
-
-            update = Update(**update_dict)
-            Dispatcher(update).dispatch()
+            update = Update.model_validate(request.data)
+            bot = Telegram()
+            logger.info(
+                f"Received Telegram update: {update.model_dump(exclude_none=True)}"
+            )
+            Dispatcher(update, bot).dispatch()
 
         except Exception:
             error_msg = traceback.format_exc().strip()
