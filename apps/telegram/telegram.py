@@ -82,8 +82,19 @@ class Telegram:
     """
 
     HEADERS: Dict[str, str] = {"Cache-Control": "no-cache"}
+    _instance = None
+    _initialized = False
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+
+        return cls._instance
 
     def __init__(self):
+        if self._initialized:
+            return
+
         self._validate_config()
         self.token = env.get("TOKEN")
         self.webhook = env.get("TM_WEBHOOK_URL")
@@ -91,6 +102,7 @@ class Telegram:
         self.proxy = self._setup_proxy()
         self._session = requests.Session()
         self._session.headers.update(self.HEADERS)
+        self._initialized = True
 
     def _validate_config(self):
         """Ensure all required environment variables are present."""
@@ -189,12 +201,6 @@ class Telegram:
     def close(self):
         """Close the session."""
         self._session.close()
-
-    def __enter__(self):
-        response = self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
 
     def get_me(self) -> User:
         response = self._make_request("getMe", method="GET")
