@@ -1,4 +1,4 @@
-from apps.telegram.decorator import sponsor_required
+from apps.telegram.decorators import sponsor_required
 from apps.telegram.handlers.base_handlers import BaseHandler
 from apps.telegram.telegram import Telegram
 from apps.telegram.telegram_models import ReplyParameters, Update
@@ -28,9 +28,7 @@ class CommandHandler(BaseHandler):
             chat_id=self.chat_id,
             text="Home",
             reply_markup=self.reply_keyboard.home_keyboard(),
-            reply_parameters=ReplyParameters(
-                message_id=self.update.message.message_id
-            ).to_dict(),
+            reply_parameters=ReplyParameters(message_id=self.update.message.message_id),
         )
 
     def help_handler(self):

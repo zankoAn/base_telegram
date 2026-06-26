@@ -1,4 +1,4 @@
-from apps.telegram.decorator import sponsor_required
+from apps.telegram.decorators import sponsor_required
 from apps.telegram.handlers.base_handlers import BaseHandler
 from apps.telegram.telegram import Telegram
 from apps.telegram.telegram_models import Update
@@ -6,16 +6,12 @@ from utils.utils import update_object
 
 
 class MessageHandler(BaseHandler):
-
     def __init__(self, update: Update, bot: Telegram):
         super().__init__(update, bot)
         self.update = update
         self.bot = bot
 
-        self.steps = {
-            "home": self.home,
-            "second_button": self.second_button
-        }
+        self.steps = {"home": self.home, "second_button": self.second_button}
 
     @sponsor_required
     def home(self):
@@ -33,15 +29,14 @@ class MessageHandler(BaseHandler):
             return self.bot.send_message(
                 chat_id=self.chat_id,
                 text="دکمه اول",
-                reply_markup=self.inline_keyboard.first_keyboard()
-
+                reply_markup=self.inline_keyboard.first_keyboard(),
             )
         elif self.update.message.text == "دکمه دوم":
             update_object(self.user_obj, step="second_button")
             return self.bot.send_message(
                 chat_id=self.chat_id,
                 text="دکمه دوم",
-                reply_markup=self.reply_keyboard.back_keyboard()
+                reply_markup=self.reply_keyboard.back_keyboard(),
             )
 
     def second_button(self):
@@ -65,12 +60,16 @@ class MessageHandler(BaseHandler):
             )
 
     def handle(self):
-        if self.is_update_mode():return  # noqa: E701
-        if self.is_user_block():return  # noqa: E701
+        if self.is_update_mode():
+            return  # noqa: E701
+        if self.is_user_block():
+            return  # noqa: E701
 
         if self.user_step:
-            if callback := self.steps.get(self.user_step): # step : "home"
+            if callback := self.steps.get(self.user_step):  # step : "home"
                 return callback()
 
-            if callback := self.steps.get(self.user_step.split(":")[0]): # step : "home:info"
+            if callback := self.steps.get(
+                self.user_step.split(":")[0]
+            ):  # step : "home:info"
                 return callback()
