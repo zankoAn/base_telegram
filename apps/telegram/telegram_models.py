@@ -1490,7 +1490,7 @@ class ReplyKeyboardMarkup(_BaseModel):
 
 
 class ReplyKeyboardRemove(_BaseModel):
-    remove_keyboard: bool
+    remove_keyboard: bool = True
     selective: bool | None = None
 
 
