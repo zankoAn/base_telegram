@@ -1,9 +1,11 @@
 import threading
-from typing import Optional
+from typing import cast
 
+from django.contrib.auth.models import make_password
 from django.utils.functional import cached_property
 
 from apps.account.models import User as UserDB
+from apps.bot.models import BotUpdateStatus
 from apps.common._message import MessageManager
 from apps.telegram.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 from apps.telegram.telegram import Telegram
@@ -27,42 +29,45 @@ class BaseHandler:
         self.bot_messages = MessageManager()
 
     @property
-    def chat(self) -> Optional[Chat]:
+    def chat(self) -> Chat:
         """
         Returns the chat object from the update, if available.
         """
+        chat = None
         if self.update.message:
-            return self.update.message.chat
-        if self.update.callback_query:
-            return self.update.callback_query.message.chat
-        return None
+            chat = self.update.message.chat
+
+        if self.update.callback_query and self.update.callback_query.message:
+            chat = self.update.callback_query.message.chat
+
+        return cast(Chat, chat)
 
     @property
-    def user(self) -> Optional[User]:
+    def user(self) -> User:
         """
         Returns the user object who sent the update, if available.
         """
+        user = None
         if self.update.message:
-            return self.update.message.from_user
+            user = self.update.message.from_user
+
         if self.update.callback_query:
-            return self.update.callback_query.from_user
+            user = self.update.callback_query.from_user
+
         if self.update.inline_query:
-            return self.update.inline_query.from_user
-        return None
+            user = self.update.inline_query.from_user
+
+        return cast(User, user)
 
     @property
-    def chat_id(self) -> Optional[int]:
-        """
-        Returns the chat ID, if the chat exists.
-        """
-        return self.chat.id if self.chat else None
+    def chat_id(self) -> int:
+        return self.chat.id if self.chat else 0
 
     @cached_property
-    def user_obj(self) -> Optional[UserDB]:
-        if not self.user:
-            return None
-        if not self.is_private():
-            return None
+    def user_obj(self) -> UserDB:
+        if not self.is_private() or not self.user:
+            return cast(UserDB, None)
+
         user, _ = UserDB.objects.get_or_create(
             user_id=self.user_id,
             defaults={
@@ -75,91 +80,56 @@ class BaseHandler:
         return user
 
     @property
-    def user_step(self):
-        """
-        Returns the current user step from the database.
-        """
-        return self.user_obj.step if self.user_obj else None
+    def user_step(self) -> str:
+        return self.user_obj.step if self.user_obj else ""
 
     @property
-    def user_id(self) -> Optional[int]:
-        """
-        Returns the Telegram user ID, if available.
-        """
-        return self.user.id if self.user else None
+    def user_id(self) -> int:
+        return self.user.id if self.user else 0
 
     @property
     def text(self) -> str:
-        """
-        Checks whether the update is a text message.
-        """
+        text = ""
         if self.update.message:
-            return self.update.message.text
+            text = self.update.message.text
+
         if self.update.callback_query:
-            return self.update.callback_query.message.text
+            text = self.update.callback_query.message.text
 
-        return None
-
-    def is_text(self) -> bool:
-        """
-        Checks whether the update is a text message.
-        """
-        return bool(self.update.message and self.update.message.text)
-
-    def is_command(self) -> bool:
-        """
-        Checks whether the message is a command (starts with "/").
-        """
-        return bool(self.update.message and self.update.message.text and self.update.message.text.startswith("/"))
-
-    def is_photo(self) -> bool:
-        """
-        Checks whether the message contains a photo.
-        """
-        return bool(self.update.message and self.update.message.photo)
+        return cast(str, text)
 
     def is_private(self) -> bool:
-        """
-        Checks whether the message contains a private chat.
-        """
         if self.chat:
             return self.chat.type == "private"
-        return None
+
+        return False
 
     def is_group(self) -> bool:
-        """
-        Checks whether the message contains a group chat.
-        """
         if self.chat:
-            return self.chat.type in ["supergroup", "group"]
-        return None
+            return self.chat.type in ("supergroup", "group")
+
+        return False
+
+    def is_update_mode(self):
+        if self.user_obj.is_superuser:
+            return False
+
+        update_obj = BotUpdateStatus.objects.first()
+        if update_obj and update_obj.is_update:
+            return self.bot.send_message(self.chat_id, text=update_obj.update_msg)
+
+        return False
+
+    def is_user_block(self):
+        if self.user_obj and not self.user_obj.is_active:
+            return self.bot.send_message(self.chat_id, text="شما در ربات بلاک شده اید")
+
+        return False
 
     def run_function_in_thread(self, func, *args, **kwargs):
         """
-            Run the given function in a separate thread.
+        Run the given function in a separate thread.
         """
         thread = threading.Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread
-
-    def is_update_mode(self):
-        """Check if the application is currently in update mode."""
-        from apps.bot.models import BotUpdateStatus
-        update_obj = BotUpdateStatus.objects.first()
-        if update_obj.is_update and not self.user_obj.is_superuser:
-            return self.bot.send_message(
-                self.chat_id,
-                text=update_obj.update_msg,
-                parse_mode="html"
-            )
-        return False
-
-    def is_user_block(self):
-
-        if self.user_obj and not self.user_obj.is_active:
-            return self.bot.send_message(
-                self.chat_id,
-                text="شما در ربات بلاک شده اید",
-                parse_mode="html"
-            )
-        return False
