@@ -156,11 +156,10 @@ class Telegram:
             json_data = response.json()
 
             if not json_data.get("ok", False):
-                error_msg = json_data.get("description", "Unknown Telegram API error")
                 logger.log_error(
-                    f"Telegram API error | Method: {method_name} | Code: {json_data.get('error_code')} | Description: {error_msg}",
+                    f"Telegram API error | Method: {method_name} | Response: {json_data}",
                 )
-                return {"ok": False, "error": error_msg}
+                return {"ok": False, "error": True}
 
             return json_data["result"]
 
