@@ -67,10 +67,10 @@ class BaseHandler:
             user_id=self.user_id,
             defaults={
                 "username": self.user.username or str(self.user_id),
-                "password": str(self.user_id),
+                "password": make_password(str(self.user_id)),
                 "first_name": self.user.first_name,
                 "last_name": self.user.last_name or str(self.user_id),
-            }
+            },
         )
         return user
 
