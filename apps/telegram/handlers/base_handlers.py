@@ -7,9 +7,16 @@ from django.utils.functional import cached_property
 from apps.account.models import User as UserDB
 from apps.bot.models import BotUpdateStatus
 from apps.common._message import MessageManager
-from apps.telegram.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from apps.telegram.keyboard import InlineKeyboardBuilder, ReplyKeyboardBuilder
 from apps.telegram.telegram import Telegram
-from apps.telegram.telegram_models import Chat, Update, User
+from apps.telegram.telegram_models import (
+    CallbackQuery,
+    Chat,
+    InlineQuery,
+    Message,
+    Update,
+    User,
+)
 
 
 class BaseHandler:
@@ -29,16 +36,28 @@ class BaseHandler:
         self.bot_messages = MessageManager()
 
     @property
+    def inline_query(self) -> InlineQuery:
+        return cast(InlineQuery, self.update.inline_query)
+
+    @property
+    def callback_query(self) -> CallbackQuery:
+        return cast(CallbackQuery, self.update.callback_query)
+
+    @property
+    def message(self) -> Message:
+        return cast(Message, self.update.message)
+
+    @property
     def chat(self) -> Chat:
         """
         Returns the chat object from the update, if available.
         """
         chat = None
-        if self.update.message:
-            chat = self.update.message.chat
+        if self.message:
+            chat = self.message.chat
 
-        if self.update.callback_query and self.update.callback_query.message:
-            chat = self.update.callback_query.message.chat
+        if self.callback_query and self.callback_query.message:
+            chat = self.callback_query.message.chat
 
         return cast(Chat, chat)
 
@@ -48,14 +67,14 @@ class BaseHandler:
         Returns the user object who sent the update, if available.
         """
         user = None
-        if self.update.message:
-            user = self.update.message.from_user
+        if self.message:
+            user = self.message.from_user
 
-        if self.update.callback_query:
-            user = self.update.callback_query.from_user
+        if self.callback_query:
+            user = self.callback_query.from_user
 
-        if self.update.inline_query:
-            user = self.update.inline_query.from_user
+        if self.inline_query:
+            user = self.inline_query.from_user
 
         return cast(User, user)
 
@@ -90,11 +109,11 @@ class BaseHandler:
     @property
     def text(self) -> str:
         text = ""
-        if self.update.message:
-            text = self.update.message.text
+        if self.message:
+            text = self.message.text
 
-        if self.update.callback_query:
-            text = self.update.callback_query.message.text
+        if self.callback_query:
+            text = self.callback_query.message.text
 
         return cast(str, text)
 

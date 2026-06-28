@@ -16,10 +16,10 @@ class InlineQueryHandler(BaseHandler):
 
     def test_a(self):
         self.bot.answer_inline_query(
-            self.update.inline_query.id,
+            self.inline_query.id,
             [
                 InlineQueryResultArticle(
-                    id=str(self.update.inline_query.id),
+                    id=str(self.inline_query.id),
                     title="Title A",
                     input_message_content=InputTextMessageContent(
                         message_text="inline msg a"
@@ -35,6 +35,6 @@ class InlineQueryHandler(BaseHandler):
         if self.is_user_block():
             return
 
-        _handler = self.callback_handlers.get(self.update.inline_query.query)
+        _handler = self.callback_handlers.get(self.inline_query.query)
         if _handler:
             return _handler()

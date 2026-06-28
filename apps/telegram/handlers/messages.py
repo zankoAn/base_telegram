@@ -25,13 +25,13 @@ class MessageHandler(BaseHandler):
         This method routes the user based on their selected option from the home screen.
         """
 
-        if self.update.message.text == "دکمه اول":
+        if self.message.text == "دکمه اول":
             return self.bot.send_message(
                 chat_id=self.chat_id,
                 text="دکمه اول",
                 reply_markup=self.inline_keyboard.first_keyboard(),
             )
-        elif self.update.message.text == "دکمه دوم":
+        elif self.message.text == "دکمه دوم":
             update_object(self.user_obj, step="second_button")
             return self.bot.send_message(
                 chat_id=self.chat_id,
@@ -49,7 +49,7 @@ class MessageHandler(BaseHandler):
         This method allows the user to navigate back to the home screen.
         """
 
-        if self.update.message.text == "بازگشت":
+        if self.message.text == "بازگشت":
             # update user step
             update_object(self.user_obj, step="home")
 

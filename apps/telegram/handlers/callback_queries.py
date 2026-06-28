@@ -17,7 +17,7 @@ class CallBackQueryHandler(BaseHandler):
     def joined_channel_sponsor_handler(self):
         self.bot.delete_message(
             chat_id=self.chat_id,
-            message_id=self.update.callback_query.message.message_id,
+            message_id=self.callback_query.message.message_id,
         )
         update_object(self.user_obj, step="home")
         return self.bot.send_message(chat_id=self.chat_id, text="Home")
@@ -29,7 +29,7 @@ class CallBackQueryHandler(BaseHandler):
         if self.is_user_block():
             return
 
-        callback_data = self.update.callback_query.data or ""
+        callback_data = self.callback_query.data or ""
         # callback_data is "check_joined_channel_sponsor" or "check_joined_channel_sponsor:user_id"
         base_key = callback_data.split(":", 1)[0]
         handler = self.callback_handlers.get(base_key)

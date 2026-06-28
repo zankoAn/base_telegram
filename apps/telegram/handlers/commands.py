@@ -28,7 +28,7 @@ class CommandHandler(BaseHandler):
             chat_id=self.chat_id,
             text="Home",
             reply_markup=self.reply_keyboard.home_keyboard(),
-            reply_parameters=ReplyParameters(message_id=self.update.message.message_id),
+            reply_parameters=ReplyParameters(message_id=self.message.message_id),
         )
 
     def help_handler(self):
@@ -40,10 +40,10 @@ class CommandHandler(BaseHandler):
         if self.is_user_block():
             return  # noqa: E701
 
-        if self.update.message.text.startswith("/start"):
+        if self.message.text.startswith("/start"):
             self.start_handler()
 
-        elif self.update.message.text.startswith("/help"):
+        elif self.message.text.startswith("/help"):
             self.help_handler()
 
         print("Command Handlers")
