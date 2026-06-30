@@ -1,4 +1,5 @@
 import json
+from io import BufferedReader
 from typing import Any, Dict, List, Optional, cast
 
 import requests
@@ -196,6 +197,49 @@ class Telegram:
                 cleaned[key] = value
 
         return cleaned
+
+    def _add_file(
+        self,
+        field_name,
+        file_name,
+        file_obj,
+        payload,
+        thumbnail=None,
+        cover=None,
+        files={},
+    ):
+        if isinstance(file_obj, BufferedReader):
+            files[field_name] = (
+                file_name or getattr(file_obj, "name", field_name),
+                file_obj,
+            )
+
+        elif isinstance(file_obj, bytes):
+            files[field_name] = (file_name or field_name, file_obj)
+
+        elif isinstance(file_obj, str):
+            payload[field_name] = file_obj
+
+        else:
+            raise ValueError(f"Unsupported type for {field_name}")
+
+        if thumbnail:
+            if isinstance(thumbnail, (bytes, BufferedReader)):
+                thumb_name = getattr(thumbnail, "name", "thumb.jpg")
+                files["thumbnail"] = (thumb_name, thumbnail)
+                payload["thumbnail"] = "attach://thumbnail"
+            else:
+                payload["thumbnail"] = thumbnail
+
+        if cover:
+            if isinstance(cover, (bytes, BufferedReader)):
+                thumb_name = getattr(cover, "name", "cover.jpg")
+                files["cover"] = (cover, cover)
+                payload["cover"] = "attach://cover"
+            else:
+                payload["cover"] = cover
+
+        return payload, files
 
     def close(self):
         """Close the session."""
@@ -442,7 +486,7 @@ class Telegram:
     def send_photo(
         self,
         chat_id: int | str,
-        photo: str | bytes,
+        photo: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
@@ -458,6 +502,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send a photo to a chat. Uses GET for file_id/URL, POST for raw bytes.
@@ -479,6 +524,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -499,19 +545,10 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(photo, bytes):
-            # Upload new photo → use POST + multipart/form-data
-            files = {"photo": photo}
-            payload["photo"] = None
-            response = self._make_request(
-                "sendPhoto", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["photo"] = photo
-            response = self._make_request("sendPhoto", method="GET", params=payload)
-
+        payload, files = self._add_file("photo", file_name, photo, payload)
+        response = self._make_request(
+            "sendPhoto", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_live_photo(
@@ -534,6 +571,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Use this method to send live photos.
@@ -556,6 +594,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -563,8 +602,6 @@ class Telegram:
             "chat_id": chat_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "live_photo": live_photo,
-            "photo": photo,
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
@@ -578,25 +615,17 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(photo, bytes):
-            # Upload new photo → use POST + multipart/form-data
-            files = {"photo": photo}
-            payload["photo"] = None
-            response = self._make_request(
-                "sendLivePhoto", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["photo"] = photo
-            response = self._make_request("sendLivePhoto", method="GET", params=payload)
-
+        payload, files = self._add_file("live_photo", file_name, live_photo, payload)
+        payload, files = self._add_file("photo", file_name, photo, payload, files=files)
+        response = self._make_request(
+            "sendLivePhoto", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_audio(
         self,
         chat_id: int | str,
-        audio: str | bytes,
+        audio: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
@@ -606,7 +635,7 @@ class Telegram:
         duration: int | None = None,
         performer: str | None = None,
         title: str | None = None,
-        thumbnail: str | bytes | None = None,
+        thumbnail: str | InputFile | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
         allow_paid_broadcast: bool | None = None,
@@ -614,6 +643,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send an audio file (e.g., music) to be displayed in the music player.
@@ -637,6 +667,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -658,40 +689,20 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(audio, bytes):
-            # Upload new audio → use POST + multipart/form-data
-            files = {"audio": audio}
-
-            if isinstance(thumbnail, bytes):
-                files["thumbnail"] = thumbnail
-                payload["thumbnail"] = "attach://thumbnail"
-
-            elif thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            payload["audio"] = None
-            response = self._make_request(
-                "sendAudio", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["audio"] = audio
-            if thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            response = self._make_request("sendAudio", method="GET", params=payload)
-
+        payload, files = self._add_file("audio", file_name, audio, payload, thumbnail)
+        response = self._make_request(
+            "sendAudio", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_document(
         self,
         chat_id: int | str,
-        document: str | bytes,
+        document: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
-        thumbnail: str | bytes | None = None,
+        thumbnail: str | InputFile | None = None,
         caption: str | None = None,
         parse_mode: str | None = None,
         caption_entities: List[MessageEntity] | None = None,
@@ -703,6 +714,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send a general file to a chat. Uses GET for file_id/URL, POST for raw bytes.
@@ -724,6 +736,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -743,43 +756,26 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(document, bytes):
-            # Upload new document → use POST + multipart/form-data
-            files = {"document": document}
-            if isinstance(thumbnail, bytes):
-                files["thumbnail"] = thumbnail
-                payload["thumbnail"] = "attach://thumbnail"
-
-            elif thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            payload["document"] = None
-            response = self._make_request(
-                "sendDocument", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["document"] = document
-            if thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            response = self._make_request("sendDocument", method="GET", params=payload)
-
+        payload, files = self._add_file(
+            "document", file_name, document, payload, thumbnail
+        )
+        response = self._make_request(
+            "sendDocument", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_video(
         self,
         chat_id: int | str,
-        video: str | bytes,
+        video: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
         duration: int | None = None,
         width: int | None = None,
         height: int | None = None,
-        thumbnail: str | bytes | None = None,
-        cover: str | bytes | None = None,
+        thumbnail: str | InputFile | None = None,
+        cover: str | InputFile | None = None,
         start_timestamp: int | None = None,
         caption: str | None = None,
         parse_mode: str | None = None,
@@ -794,6 +790,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send a video file to a chat. Uses GET for file_id/URL, POST for raw bytes.
@@ -822,6 +819,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -847,52 +845,25 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(video, bytes):
-            # Upload new video → use POST + multipart/form-data
-            files = {"video": video}
-            if isinstance(thumbnail, bytes):
-                files["thumbnail"] = thumbnail
-                payload["thumbnail"] = "attach://thumbnail"
-
-            elif thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            if isinstance(cover, bytes):
-                files["cover"] = cover
-                payload["cover"] = "attach://cover"
-
-            elif cover:
-                payload["cover"] = cover
-
-            payload["video"] = None
-            response = self._make_request(
-                "sendVideo", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["video"] = video
-            if thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            if cover:
-                payload["cover"] = cover
-
-            response = self._make_request("sendVideo", method="GET", params=payload)
-
+        payload, files = self._add_file(
+            "video", file_name, video, payload, thumbnail, cover
+        )
+        response = self._make_request(
+            "sendVideo", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_animation(
         self,
         chat_id: int | str,
-        animation: str | bytes,
+        animation: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
         duration: int | None = None,
         width: int | None = None,
         height: int | None = None,
-        thumbnail: str | bytes | None = None,
+        thumbnail: str | InputFile | None = None,
         caption: str | None = None,
         parse_mode: str | None = None,
         caption_entities: List[MessageEntity] | None = None,
@@ -905,6 +876,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send an animation file (GIF or H.264/MPEG-4 AVC video without sound).
@@ -930,6 +902,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -953,35 +926,18 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(animation, bytes):
-            # Upload new animation → use POST + multipart/form-data
-            files = {"animation": animation}
-            if isinstance(thumbnail, bytes):
-                files["thumbnail"] = thumbnail
-                payload["thumbnail"] = "attach://thumbnail"
-
-            elif thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            payload["animation"] = None
-            response = self._make_request(
-                "sendAnimation", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["animation"] = animation
-            if thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            response = self._make_request("sendAnimation", method="GET", params=payload)
-
+        payload, files = self._add_file(
+            "video", file_name, animation, payload, thumbnail
+        )
+        response = self._make_request(
+            "sendAnimation", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_voice(
         self,
         chat_id: int | str,
-        voice: str | bytes,
+        voice: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
@@ -996,6 +952,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send a voice message (audio file displayed as voice message).
@@ -1016,6 +973,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -1035,31 +993,22 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(voice, bytes):
-            # Upload new voice → use POST + multipart/form-data
-            files = {"voice": voice}
-            payload["voice"] = None
-            response = self._make_request(
-                "sendVoice", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id or URL → use GET
-            payload["voice"] = voice
-            response = self._make_request("sendVoice", method="GET", params=payload)
-
+        payload, files = self._add_file("voice", file_name, voice, payload)
+        response = self._make_request(
+            "sendVoice", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_video_note(
         self,
         chat_id: int | str,
-        video_note: str | bytes,
+        video_note: str | InputFile,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
         duration: int | None = None,
         length: int | None = None,
-        thumbnail: str | bytes | None = None,
+        thumbnail: str | InputFile | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
         allow_paid_broadcast: bool | None = None,
@@ -1067,6 +1016,7 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
+        file_name: str = "",
     ) -> Message:
         """
         Send a video note (round video message).
@@ -1086,6 +1036,7 @@ class Telegram:
         :param suggested_post_parameters: Parameters for sending a suggested post.
         :param reply_parameters: Description of the message to reply to.
         :param reply_markup: Inline or reply keyboard.
+        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
         :return: The sent Message object on success.
         """
         payload = {
@@ -1103,29 +1054,12 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-
-        if isinstance(video_note, bytes):
-            # Upload new video note → use POST + multipart/form-data
-            files = {"video_note": video_note}
-            if isinstance(thumbnail, bytes):
-                files["thumbnail"] = thumbnail
-                payload["thumbnail"] = "attach://thumbnail"
-
-            elif thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            payload["video_note"] = None
-            response = self._make_request(
-                "sendVideoNote", method="POST", data=payload, files=files
-            )
-        else:
-            # Reuse existing file_id → use GET (URL not supported per API)
-            payload["video_note"] = video_note
-            if thumbnail:
-                payload["thumbnail"] = thumbnail
-
-            response = self._make_request("sendVideoNote", method="GET", params=payload)
-
+        payload, files = self._add_file(
+            "video_note", file_name, video_note, payload, thumbnail
+        )
+        response = self._make_request(
+            "sendVideoNote", method="POST", data=payload, files=files if files else None
+        )
         return Message.model_validate(response)
 
     def send_paid_media(
