@@ -375,7 +375,7 @@ class Telegram:
         payload = {
             "chat_id": chat_id,
             "from_chat_id": from_chat_id,
-            "message_ids": json.dumps(message_ids),
+            "message_ids": message_ids,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
             "disable_notification": disable_notification,
@@ -473,7 +473,7 @@ class Telegram:
         payload = {
             "chat_id": chat_id,
             "from_chat_id": from_chat_id,
-            "message_ids": json.dumps(message_ids),
+            "message_ids": message_ids,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
             "disable_notification": disable_notification,
@@ -1085,13 +1085,13 @@ class Telegram:
         """
         Send paid media that requires Telegram Stars to access.
 
+        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
         :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
                     If the chat is a channel, proceeds go to the channel's balance; otherwise to the bot's balance.
-        :param star_count: Number of Telegram Stars required to access the media (1–10000).
-        :param media: A list of InputPaidMedia objects (e.g., photo, video) describing the media to send (up to 10 items).
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
         :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
         :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
+        :param star_count: Number of Telegram Stars required to access the media (1–10000).
+        :param media: A list of InputPaidMedia objects (e.g., photo, video) describing the media to send (up to 10 items).
         :param payload: Bot-defined payload (0–128 bytes), not visible to user, for internal processing.
         :param caption: Caption for the media (0–1024 characters after entities parsing).
         :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
@@ -1111,7 +1111,7 @@ class Telegram:
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
             "star_count": star_count,
-            "media": json.dumps(media),
+            "media": media,
             "payload": payload,
             "caption": caption,
             "parse_mode": parse_mode,
@@ -1161,7 +1161,7 @@ class Telegram:
             "business_connection_id": business_connection_id,
             "message_thread_id": message_thread_id,
             "direct_messages_topic_id": direct_messages_topic_id,
-            "media": json.dumps(media),
+            "media": media,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
@@ -1444,7 +1444,7 @@ class Telegram:
         payload = {
             "chat_id": chat_id,
             "question": question,
-            "options": json.dumps(options),
+            "options": options,
             "business_connection_id": business_connection_id,
             "message_thread_id": message_thread_id,
             "question_parse_mode": question_parse_mode,
@@ -1507,7 +1507,7 @@ class Telegram:
         payload = {
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
-            "checklist": json.dumps(checklist),
+            "checklist": checklist,
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "message_effect_id": message_effect_id,
@@ -1651,7 +1651,7 @@ class Telegram:
         payload = {
             "chat_id": chat_id,
             "message_id": message_id,
-            "reaction": json.dumps(reaction) if reaction is not None else None,
+            "reaction": reaction,
             "is_big": is_big,
         }
         response = self._make_request("setMessageReaction", method="POST", data=payload)
@@ -1829,7 +1829,7 @@ class Telegram:
         payload = {
             "chat_id": chat_id,
             "user_id": user_id,
-            "permissions": json.dumps(permissions),
+            "permissions": permissions,
             "use_independent_chat_permissions": use_independent_chat_permissions,
             "until_date": until_date,
         }
@@ -1983,7 +1983,7 @@ class Telegram:
         """
         payload = {
             "chat_id": chat_id,
-            "permissions": json.dumps(permissions),
+            "permissions": permissions,
             "use_independent_chat_permissions": use_independent_chat_permissions,
         }
         response = self._make_request("setChatPermissions", method="POST", data=payload)
@@ -2846,8 +2846,8 @@ class Telegram:
         :return: True on success.
         """
         payload = {
-            "commands": json.dumps(commands),
-            "scope": json.dumps(scope) if scope is not None else None,
+            "commands": commands,
+            "scope": scope,
             "language_code": language_code,
         }
         response = self._make_request("setMyCommands", method="POST", data=payload)
@@ -2866,10 +2866,7 @@ class Telegram:
         :param language_code: A two-letter ISO 639-1 language code. If empty, applies to all users in the scope without a dedicated command.
         :return: True on success.
         """
-        payload = {
-            "scope": json.dumps(scope) if scope is not None else None,
-            "language_code": language_code,
-        }
+        payload = {"scope": scope, "language_code": language_code}
         response = self._make_request("deleteMyCommands", method="POST", data=payload)
         return bool(response)
 
@@ -2885,11 +2882,7 @@ class Telegram:
         :param language_code: A two-letter ISO 639-1 language code or empty string.
         :return: An array of BotCommand objects. Empty if no commands are set.
         """
-        payload = {
-            "scope": json.dumps(scope) if scope is not None else None,
-            "language_code": language_code,
-        }
-
+        payload = {"scope": scope, "language_code": language_code}
         response = self._make_request("getMyCommands", method="GET", params=payload)
         return BotCommandList.validate_python(response)
 
@@ -3049,10 +3042,7 @@ class Telegram:
         :param for_channels: Pass True to change rights for channels. Otherwise, for groups/supergroups.
         :return: True on success.
         """
-        payload = {
-            "rights": json.dumps(rights) if rights is not None else None,
-            "for_channels": for_channels,
-        }
+        payload = {"rights": rights, "for_channels": for_channels}
         response = self._make_request(
             "setMyDefaultAdministratorRights", method="POST", data=payload
         )
@@ -3253,7 +3243,7 @@ class Telegram:
         """
         payload = {
             "business_connection_id": business_connection_id,
-            "message_ids": json.dumps(message_ids),
+            "message_ids": message_ids,
         }
         response = self._make_request(
             "deleteBusinessMessages", method="POST", data=payload
@@ -3393,7 +3383,7 @@ class Telegram:
         payload = {
             "business_connection_id": business_connection_id,
             "show_gift_button": show_gift_button,
-            "accepted_gift_types": json.dumps(accepted_gift_types),
+            "accepted_gift_types": accepted_gift_types,
         }
         response = self._make_request(
             "setBusinessAccountGiftSettings", method="POST", data=payload
@@ -3581,12 +3571,12 @@ class Telegram:
         """
         payload = {
             "business_connection_id": business_connection_id,
-            "content": json.dumps(content),
+            "content": content,
             "active_period": active_period,
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
-            "areas": json.dumps(areas) if areas is not None else None,
+            "areas": areas,
             "post_to_chat_page": post_to_chat_page,
             "protect_content": protect_content,
         }
@@ -3619,11 +3609,11 @@ class Telegram:
         payload = {
             "business_connection_id": business_connection_id,
             "story_id": story_id,
-            "content": json.dumps(content),
+            "content": content,
             "caption": caption,
             "parse_mode": parse_mode,
             "caption_entities": caption_entities,
-            "areas": json.dumps(areas) if areas is not None else None,
+            "areas": areas,
         }
         response = self._make_request("editStory", method="POST", data=payload)
         return Story.model_validate(response)
@@ -3778,7 +3768,7 @@ class Telegram:
             "chat_id": chat_id,
             "message_id": message_id,
             "inline_message_id": inline_message_id,
-            "media": json.dumps(media),
+            "media": media,
             "reply_markup": reply_markup,
         }
         response = self._make_request("editMessageMedia", method="POST", data=payload)
@@ -3909,7 +3899,7 @@ class Telegram:
             "business_connection_id": business_connection_id,
             "chat_id": chat_id,
             "message_id": message_id,
-            "checklist": json.dumps(checklist),
+            "checklist": checklist,
             "reply_markup": reply_markup,
         }
         response = self._make_request(
@@ -4065,10 +4055,7 @@ class Telegram:
                             See delete_message() for limitations on deletable messages.
         :return: True on success.
         """
-        payload = {
-            "chat_id": chat_id,
-            "message_ids": json.dumps(message_ids),
-        }
+        payload = {"chat_id": chat_id, "message_ids": message_ids}
         response = self._make_request("deleteMessages", method="POST", data=payload)
         return bool(response)
 
@@ -4203,7 +4190,7 @@ class Telegram:
         :param custom_emoji_ids: A list of up to 200 unique identifiers of custom emoji stickers.
         :return: An Array of Sticker objects on success.
         """
-        payload = {"custom_emoji_ids": json.dumps(custom_emoji_ids)}
+        payload = {"custom_emoji_ids": custom_emoji_ids}
         response = self._make_request(
             "getCustomEmojiStickers", method="POST", data=payload
         )
@@ -4256,7 +4243,7 @@ class Telegram:
             "user_id": user_id,
             "name": name,
             "title": title,
-            "stickers": json.dumps(stickers),
+            "stickers": stickers,
             "sticker_type": sticker_type,
             "needs_repainting": needs_repainting,
         }
@@ -4279,11 +4266,7 @@ class Telegram:
                         If the same sticker exists, the set is not changed.
         :return: True on success.
         """
-        payload = {
-            "user_id": user_id,
-            "name": name,
-            "sticker": json.dumps(sticker),
-        }
+        payload = {"user_id": user_id, "name": name, "sticker": sticker}
         response = self._make_request("addStickerToSet", method="POST", data=payload)
         return bool(response)
 
@@ -4350,10 +4333,7 @@ class Telegram:
         :param emoji_list: List of 1–20 emoji to associate with the sticker.
         :return: True on success.
         """
-        payload = {
-            "sticker": sticker,
-            "emoji_list": json.dumps(emoji_list),
-        }
+        payload = {"sticker": sticker, "emoji_list": emoji_list}
         response = self._make_request(
             "setStickerEmojiList", method="POST", data=payload
         )
@@ -4371,10 +4351,7 @@ class Telegram:
         :param keywords: List of 0–20 search keywords. Pass empty list or omit to remove.
         :return: True on success.
         """
-        payload = {
-            "sticker": sticker,
-            "keywords": json.dumps(keywords) if keywords is not None else None,
-        }
+        payload = {"sticker": sticker, "keywords": keywords}
         response = self._make_request("setStickerKeywords", method="POST", data=payload)
         return bool(response)
 
@@ -4391,12 +4368,7 @@ class Telegram:
                             where the mask should be placed on the face. Pass None to remove.
         :return: True on success.
         """
-        payload = {
-            "sticker": sticker,
-            "mask_position": json.dumps(mask_position)
-            if mask_position is not None
-            else None,
-        }
+        payload = {"sticker": sticker, "mask_position": mask_position}
         response = self._make_request(
             "setStickerMaskPosition", method="POST", data=payload
         )
@@ -4422,7 +4394,7 @@ class Telegram:
         name: str,
         user_id: int,
         thumbnail: InputFile | str | None = None,
-        format: str = "static",
+        _format: str = "static",
     ) -> bool:
         """
         Set the thumbnail of a regular or mask sticker set.
@@ -4446,7 +4418,7 @@ class Telegram:
         payload = {
             "name": name,
             "user_id": user_id,
-            "format": format,
+            "format": _format,
         }
         files = None
         if isinstance(thumbnail, bytes):
@@ -4620,10 +4592,7 @@ class Telegram:
                     Must be one of the supported result types (e.g., article, photo, video, etc.).
         :return: A SentWebAppMessage object on success.
         """
-        payload = {
-            "web_app_query_id": web_app_query_id,
-            "result": json.dumps(result),
-        }
+        payload = {"web_app_query_id": web_app_query_id, "result": result}
         response = self._make_request("answerWebAppQuery", method="POST", data=payload)
         return SentWebAppMessage.model_validate(response)
 
@@ -4669,7 +4638,7 @@ class Telegram:
         """
         payload = {
             "user_id": user_id,
-            "result": json.dumps(result),
+            "result": result,
             "allow_user_chats": allow_user_chats,
             "allow_bot_chats": allow_bot_chats,
             "allow_group_chats": allow_group_chats,
@@ -4804,7 +4773,7 @@ class Telegram:
             "payload": payload,
             "provider_token": provider_token,
             "currency": currency,
-            "prices": json.dumps(prices),
+            "prices": prices,
             "max_tip_amount": max_tip_amount,
             "suggested_tip_amounts": suggested_tip_amounts,
             "start_parameter": start_parameter,
@@ -4906,12 +4875,10 @@ class Telegram:
             "payload": payload,
             "provider_token": provider_token,
             "currency": currency,
-            "prices": json.dumps(prices),
+            "prices": prices,
             "subscription_period": subscription_period,
             "max_tip_amount": max_tip_amount,
-            "suggested_tip_amounts": json.dumps(suggested_tip_amounts)
-            if suggested_tip_amounts is not None
-            else None,
+            "suggested_tip_amounts": suggested_tip_amounts,
             "provider_data": provider_data,
             "photo_url": photo_url,
             "photo_size": photo_size,
@@ -4960,9 +4927,7 @@ class Telegram:
         payload = {
             "shipping_query_id": shipping_query_id,
             "ok": ok,
-            "shipping_options": json.dumps(shipping_options)
-            if shipping_options is not None
-            else None,
+            "shipping_options": shipping_options,
             "error_message": error_message,
         }
         response = self._make_request(
@@ -5091,10 +5056,7 @@ class Telegram:
         :param errors: A list of PassportElementError objects describing the errors.
         :return: True on success.
         """
-        payload = {
-            "user_id": user_id,
-            "errors": json.dumps(errors),
-        }
+        payload = {"user_id": user_id, "errors": errors}
         response = self._make_request(
             "setPassportDataErrors", method="POST", data=payload
         )
