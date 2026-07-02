@@ -448,7 +448,7 @@ class Telegram:
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
         }
-        response = self._make_request("forwardMessage", data=payload)
+        response = self._make_request("copyMessage", data=payload)
         msg_id = MessageId.model_validate(response)
         return msg_id
 
