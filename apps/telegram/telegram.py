@@ -3469,6 +3469,78 @@ class Telegram:
         )
         return OwnedGiftAdapter.validate_python(response)
 
+    def get_user_gift(
+        self,
+        user_id: str,
+        exclude_unlimited: bool | None = None,
+        exclude_limited_upgradable: bool | None = None,
+        exclude_limited_non_upgradable: bool | None = None,
+        exclude_from_blockchain: bool | None = None,
+        exclude_unique: bool | None = None,
+        sort_by_price: bool | None = None,
+        offset: str | None = None,
+        limit: int | None = None,
+    ) -> OwnedGift:
+        """
+        Returns the gifts owned and hosted by a user.
+
+        Args:
+            user_id: Unique identifier of the user.
+
+            See full parameters here: [getUserGifts](https://core.telegram.org/bots/api#getusergifts)
+        """
+        payload = {
+            "user_id": user_id,
+            "exclude_unlimited": exclude_unlimited,
+            "exclude_limited_upgradable": exclude_limited_upgradable,
+            "exclude_limited_non_upgradable": exclude_limited_non_upgradable,
+            "exclude_from_blockchain": exclude_from_blockchain,
+            "exclude_unique": exclude_unique,
+            "sort_by_price": sort_by_price,
+            "offset": offset,
+            "limit": limit,
+        }
+        response = self._make_request("getUserGifts", method="GET", params=payload)
+        return OwnedGiftAdapter.validate_python(response)
+
+    def get_chat_gift(
+        self,
+        chat_id: str | int,
+        exclude_unsaved: bool | None = None,
+        exclude_saved: bool | None = None,
+        exclude_unlimited: bool | None = None,
+        exclude_limited_upgradable: bool | None = None,
+        exclude_limited_non_upgradable: bool | None = None,
+        exclude_from_blockchain: bool | None = None,
+        exclude_unique: bool | None = None,
+        sort_by_price: bool | None = None,
+        offset: str | None = None,
+        limit: int | None = None,
+    ) -> OwnedGift:
+        """
+        Returns the gifts owned by a chat.
+
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+
+            See full parameters here: [getChatGifts](https://core.telegram.org/bots/api#getchatgifts)
+        """
+        payload = {
+            "chat_id": chat_id,
+            "exclude_unsaved": exclude_unsaved,
+            "exclude_saved": exclude_saved,
+            "exclude_unlimited": exclude_unlimited,
+            "exclude_limited_upgradable": exclude_limited_upgradable,
+            "exclude_limited_non_upgradable": exclude_limited_non_upgradable,
+            "exclude_from_blockchain": exclude_from_blockchain,
+            "exclude_unique": exclude_unique,
+            "sort_by_price": sort_by_price,
+            "offset": offset,
+            "limit": limit,
+        }
+        response = self._make_request("getChatGifts", method="GET", params=payload)
+        return OwnedGiftAdapter.validate_python(response)
+
     def convert_gift_to_stars(
         self, business_connection_id: str, owned_gift_id: str
     ) -> bool:
@@ -3581,6 +3653,39 @@ class Telegram:
             "protect_content": protect_content,
         }
         response = self._make_request("postStory", method="POST", data=payload)
+        return Story.model_validate(response)
+
+    def repost_story(
+        self,
+        business_connection_id: str,
+        from_chat_id: int,
+        from_story_id: int,
+        active_period: int,
+        post_to_chat_page: bool | None = None,
+        protect_content: bool | None = None,
+    ) -> Story:
+        """
+        Post a story on behalf of a managed business account.
+        Requires the 'can_manage_stories' business bot right.
+
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            from_chat_id: Unique identifier of the chat which posted the story that should be reposted.
+            from_story_id: Unique identifier of the story that should be reposted.
+            active_period: Duration in seconds after which the story expires.
+                Must be one of: 21600 (6h), 43200 (12h), 86400 (1d), or 172800 (2d).
+            post_to_chat_page: Pass True to keep the story accessible after it expires.
+            protect_content: Pass True if the content of the story must be protected from forwarding and screenshotting.
+        """
+        payload = {
+            "business_connection_id": business_connection_id,
+            "from_chat_id": from_chat_id,
+            "from_story_id": from_story_id,
+            "active_period": active_period,
+            "post_to_chat_page": post_to_chat_page,
+            "protect_content": protect_content,
+        }
+        response = self._make_request("repostStory", method="POST", data=payload)
         return Story.model_validate(response)
 
     def edit_story(
