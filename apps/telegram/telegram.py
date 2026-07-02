@@ -10,6 +10,7 @@ from apps.telegram.telegram_models import (
     BotCommand,
     BotCommandList,
     BotCommandScope,
+    BotCommandScopeDefault,
     BotDescription,
     BotName,
     BotShortDescription,
@@ -42,6 +43,7 @@ from apps.telegram.telegram_models import (
     LinkPreviewOptions,
     MenuButton,
     MenuButtonAdapter,
+    MenuButtonDefault,
     Message,
     MessageEntity,
     MessageId,
@@ -113,7 +115,7 @@ class Telegram:
         if not env.get("TM_WEBHOOK_URL"):
             raise ValueError("TM_WEBHOOK_URL is required in environment variables.")
 
-    def _setup_proxy(self) -> Optional[Dict[str, str]]:
+    def _setup_proxy(self) -> Dict[str, str] | None:
         """Configure SOCKS5 proxy if provided."""
         proxy_socks = env.get("PROXY_SOCKS")
         if proxy_socks:
@@ -127,9 +129,9 @@ class Telegram:
         self,
         method_name: str,
         method: str = "POST",
-        data: Optional[Dict[Any, Any]] = None,
-        params: Optional[Dict[Any, Any]] = None,
-        files: Optional[Dict[str, Any]] = None,
+        data: Dict[Any, Any] | None = None,
+        params: Dict[Any, Any] | None = None,
+        files: Dict[str, Any] | None = None,
         timeout: int = 30,
     ) -> Dict[Any, Any]:
         """
@@ -168,7 +170,7 @@ class Telegram:
             logger.log_error(f"[Erro -> {method_name}]{response.json()}")
             return {"ok": False, "error": str(e)}
 
-    def _clean_dict(self, data: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    def _clean_dict(self, data: Dict[str, Any] | None) -> Dict[str, Any] | None:
         """Remove None values and convert nested dicts to JSON strings."""
         if data is None:
             return None
@@ -319,6 +321,7 @@ class Telegram:
         video_start_timestamp: int | None = None,
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
+        message_effect_id: str | None = None,
         suggested_post_parameters: SuggestedPostParameters | None = None,
     ) -> Message:
         """
@@ -345,6 +348,7 @@ class Telegram:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "suggested_post_parameters": suggested_post_parameters,
+            "message_effect_id": message_effect_id,
         }
         response = self._make_request("forwardMessage", data=payload)
         message = Message.model_validate(response)
@@ -399,6 +403,7 @@ class Telegram:
         disable_notification: bool | None = None,
         protect_content: bool | None = None,
         allow_paid_broadcast: bool | None = None,
+        message_effect_id: str | None = None,
         suggested_post_parameters: SuggestedPostParameters | None = None,
         reply_parameters: ReplyParameters | None = None,
         reply_markup: ReplyMarkup | None = None,
@@ -438,6 +443,7 @@ class Telegram:
             "disable_notification": disable_notification,
             "protect_content": protect_content,
             "allow_paid_broadcast": allow_paid_broadcast,
+            "message_effect_id": message_effect_id,
             "suggested_post_parameters": suggested_post_parameters,
             "reply_parameters": reply_parameters,
             "reply_markup": reply_markup,
@@ -1179,7 +1185,7 @@ class Telegram:
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
-        horizontal_accuracy: Optional[float] = None,
+        horizontal_accuracy: float | None = None,
         live_period: int | None = None,
         heading: int | None = None,
         proximity_alert_radius: int | None = None,
@@ -1658,7 +1664,7 @@ class Telegram:
         return bool(response)
 
     def get_user_profile_photos(
-        self, user_id: int, offset: int | None = None, limit: int | None = None
+        self, user_id: int, offset: int | None = None, limit: int | None = 100
     ) -> UserProfilePhotos:
         """
         Get a list of profile pictures for a user.
@@ -1679,7 +1685,7 @@ class Telegram:
         return UserProfilePhotos.model_validate(response)
 
     def get_user_profile_audios(
-        self, user_id: int, offset: int | None = None, limit: int | None = None
+        self, user_id: int, offset: int | None = None, limit: int | None = 100
     ) -> UserProfileAudios:
         """
         Use this method to get a list of profile audios for a user.
@@ -2697,7 +2703,7 @@ class Telegram:
         self,
         callback_query_id: str,
         text: str | None = None,
-        show_alert: bool | None = None,
+        show_alert: bool | None = False,
         url: str | None = None,
         cache_time: int | None = None,
     ) -> bool:
@@ -2845,6 +2851,7 @@ class Telegram:
         :param language_code: A two-letter ISO 639-1 language code. If empty, commands apply to all users in the scope without a dedicated language command.
         :return: True on success.
         """
+        scope = scope or BotCommandScopeDefault()
         payload = {
             "commands": commands,
             "scope": scope,
@@ -2866,6 +2873,7 @@ class Telegram:
         :param language_code: A two-letter ISO 639-1 language code. If empty, applies to all users in the scope without a dedicated command.
         :return: True on success.
         """
+        scope = scope or BotCommandScopeDefault()
         payload = {"scope": scope, "language_code": language_code}
         response = self._make_request("deleteMyCommands", method="POST", data=payload)
         return bool(response)
@@ -2882,6 +2890,7 @@ class Telegram:
         :param language_code: A two-letter ISO 639-1 language code or empty string.
         :return: An array of BotCommand objects. Empty if no commands are set.
         """
+        scope = scope or BotCommandScopeDefault()
         payload = {"scope": scope, "language_code": language_code}
         response = self._make_request("getMyCommands", method="GET", params=payload)
         return BotCommandList.validate_python(response)
@@ -3012,6 +3021,7 @@ class Telegram:
         :param menu_button: A JSON-serialized MenuButton object. Defaults to MenuButtonDefault.
         :return: True on success.
         """
+        menu_button = menu_button or MenuButtonDefault()
         payload = {
             "chat_id": chat_id,
             "menu_button": menu_button,
@@ -3318,7 +3328,7 @@ class Telegram:
     def set_business_account_profile_photo(
         self,
         business_connection_id: str,
-        photo: bytes,
+        photo: InputProfilePhoto,
         is_public: bool | None = None,
     ) -> bool:
         """
@@ -3369,7 +3379,7 @@ class Telegram:
         self,
         business_connection_id: str,
         show_gift_button: bool,
-        accepted_gift_types: Dict[str, Any],
+        accepted_gift_types: AcceptedGiftTypes,
     ) -> bool:
         """
         Change the privacy settings for incoming gifts in a managed business account.
@@ -3741,7 +3751,7 @@ class Telegram:
 
     def edit_message_text(
         self,
-        text: str,
+        text: str | None = None,
         business_connection_id: str | None = None,
         chat_id: int | str | None = None,
         message_id: int | None = None,
@@ -3891,7 +3901,7 @@ class Telegram:
         message_id: int | None = None,
         inline_message_id: str | None = None,
         live_period: int | None = None,
-        horizontal_accuracy: Optional[float] = None,
+        horizontal_accuracy: float | None = None,
         heading: int | None = None,
         proximity_alert_radius: int | None = None,
         reply_markup: InlineKeyboardMarkup | None = None,
@@ -3987,7 +3997,7 @@ class Telegram:
         business_connection_id: str,
         chat_id: int,
         message_id: int,
-        checklist: Dict[str, Any],
+        checklist: InputChecklist,
         reply_markup: InlineKeyboardMarkup | None = None,
     ) -> Message | bool:
         """
@@ -4213,7 +4223,7 @@ class Telegram:
     def send_sticker(
         self,
         chat_id: int | str,
-        sticker: str | bytes,
+        sticker: InputFile | str,
         business_connection_id: str | None = None,
         message_thread_id: int | None = None,
         direct_messages_topic_id: int | None = None,
@@ -4302,7 +4312,7 @@ class Telegram:
         return Sticker.model_validate(response)
 
     def upload_sticker_file(
-        self, user_id: int, sticker: bytes, sticker_format: str
+        self, user_id: int, sticker: InputFile, sticker_format: str
     ) -> File:
         """
         Upload a sticker file for later use in creating or editing sticker sets.
@@ -4330,7 +4340,7 @@ class Telegram:
         name: str,
         title: str,
         stickers: List[InputSticker],
-        sticker_type: str | None = None,
+        sticker_type: str | None = "regular",
         needs_repainting: bool | None = None,
     ) -> bool:
         """
@@ -4445,7 +4455,7 @@ class Telegram:
         return bool(response)
 
     def set_sticker_keywords(
-        self, sticker: str, keywords: Optional[List[str]] = None
+        self, sticker: str, keywords: List[str] | None = None
     ) -> bool:
         """
         Change search keywords for a regular or custom emoji sticker.
@@ -4461,7 +4471,7 @@ class Telegram:
         return bool(response)
 
     def set_sticker_mask_position(
-        self, sticker: str, mask_position: Optional[Dict[str, Any]] = None
+        self, sticker: str, mask_position: MaskPosition | None = None
     ) -> bool:
         """
         Change the mask position of a mask sticker.
@@ -5006,7 +5016,7 @@ class Telegram:
         self,
         shipping_query_id: str,
         ok: bool,
-        shipping_options: Optional[ShippingOption] = None,
+        shipping_options: List[ShippingOption] | None = None,
         error_message: str | None = None,
     ) -> bool:
         """
