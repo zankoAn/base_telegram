@@ -271,24 +271,14 @@ class Telegram:
         reply_markup: ReplyMarkup | None = None,
     ) -> Message:
         """
-        Send a text message to a chat.
+        Send text messages to a chat, user, group or channel.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channel_username).
-        :param text: Text of the message, 1-4096 characters after entities parsing.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier of the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to send to (for direct messages chats).
-        :param parse_mode: Mode for parsing entities in text ('HTML', 'MarkdownV2').
-        :param entities: List of special entities (bold, links, etc.) in the message text.
-        :param link_preview_options: Options for link preview generation.
-        :param disable_notification: Send message silently (no notification sound).
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for a fee of 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (for private chats only).
-        :param suggested_post_parameters: Parameters for a suggested post (monetized message).
-        :param reply_parameters: Description of the message being replied to, with optional quoting.
-        :param reply_markup: Inline or reply keyboard, or instructions to remove/force reply.
-        :return: The sent Message object if successful, otherwise an error dictionary.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            text: Text of the message to be sent, 1-4096 characters after entities parsing.
+            parse_mode: Mode for parsing entities in the message text. ("html" or "MarkdownV2").
+
+            See full parameters here: [sendMessage](https://core.telegram.org/bots/api#sendmessage)
         """
         payload = {
             "chat_id": chat_id,
@@ -326,18 +316,14 @@ class Telegram:
         suggested_post_parameters: SuggestedPostParameters | None = None,
     ) -> Message:
         """
-        Forward a message of any kind.
+        Forward messages of any kind.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (in format @channelusername).
-        :param from_chat_id: Unique identifier for the source chat where the original message was sent.
-        :param message_id: Identifier of the message to forward.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to forward to; required if forwarding to a direct messages chat.
-        :param video_start_timestamp: New start timestamp (in seconds) for the forwarded video.
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect the forwarded message from being forwarded or saved.
-        :param suggested_post_parameters: Parameters for sending a suggested post; for direct messages chats only.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            from_chat_id: Chat ID where the original message was sent, or @username of the target bot/supergroup/channel.
+            message_id: Message identifier in the chat specified in from_chat_id.
+
+            See full parameters here: [forwardMessage](https://core.telegram.org/bots/api#forwardmessage)
         """
         payload = {
             "chat_id": chat_id,
@@ -366,16 +352,14 @@ class Telegram:
         protect_content: bool | None = None,
     ) -> List[MessageId]:
         """
-        Forward multiple messages of any kind at once.
+        Forward multiple messages of any kind.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (in format @channelusername).
-        :param from_chat_id: Unique identifier for the source chat where the original messages were sent.
-        :param message_ids: List of message IDs (1-100) to forward. Must be in strictly increasing order.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to forward to; required if forwarding to a direct messages chat.
-        :param disable_notification: Send messages silently without notification sound.
-        :param protect_content: Protect the contents of the forwarded messages from forwarding and saving.
-        :return: An array of MessageId objects for successfully sent messages.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            from_chat_id: Chat ID where the original message was sent, or @username of the target bot/supergroup/channel.
+            message_ids: List of message IDs (1-100) to forward. Must be in strictly increasing order.
+
+            See full parameters here: [forwardMessages](https://core.telegram.org/bots/api#forwardmessages)
         """
         payload = {
             "chat_id": chat_id,
@@ -410,25 +394,14 @@ class Telegram:
         reply_markup: ReplyMarkup | None = None,
     ) -> MessageId:
         """
-        Copy a message to another chat without a link to the original.
+        Copy messages of any kind.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param from_chat_id: Unique identifier for the source chat where the original message was sent.
-        :param message_id: Identifier of the message to copy.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to send the message to; required if sending to a direct messages chat.
-        :param video_start_timestamp: New start timestamp (in seconds) for the copied video.
-        :param caption: New caption for media, 0–1024 characters. If not specified, the original caption is kept.
-        :param parse_mode: Mode for parsing entities in the new caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the new caption (can be used instead of parse_mode).
-        :param show_caption_above_media: Pass True to show the caption above the media.
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect the message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for a fee of 0.1 Stars per message.
-        :param suggested_post_parameters: Parameters for sending a suggested post; for direct messages chats only.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Additional interface options (inline keyboard, reply keyboard, etc.).
-        :return: A MessageId object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            from_chat_id: Chat ID where the original message was sent, or @username of the target bot/supergroup/channel.
+            message_id: Message identifier in the chat specified in from_chat_id.
+
+            See full parameters here: [copyMessage](https://core.telegram.org/bots/api#copymessage)
         """
         payload = {
             "chat_id": chat_id,
@@ -465,17 +438,16 @@ class Telegram:
         remove_caption: bool | None = None,
     ) -> List[MessageId]:
         """
-        Copy multiple messages to another chat without links to the originals.
+        Copy messages of any kind.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param from_chat_id: Unique identifier for the source chat where the original messages were sent.
-        :param message_ids: List of message IDs (1–100) to copy. Must be in strictly increasing order.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to send messages to; required if sending to a direct messages chat.
-        :param disable_notification: Send messages silently without notification sound.
-        :param protect_content: Protect the contents of the sent messages from forwarding and saving.
-        :param remove_caption: Pass True to copy messages without their captions.
-        :return: An array of MessageId objects for successfully sent messages.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            from_chat_id: Unique identifier for the chat where the original messages were sent (or username of the target bot,
+                supergroup or channel in the format @username).
+            message_ids: A list of 1-100 identifiers of messages in the chat from_chat_id to copy.
+                The identifiers must be specified in a strictly increasing order.
+
+            See full parameters here: [copymessages](https://core.telegram.org/bots/api#copymessages)
         """
         payload = {
             "chat_id": chat_id,
@@ -512,27 +484,18 @@ class Telegram:
         file_name: str = "",
     ) -> Message:
         """
-        Send a photo to a chat. Uses GET for file_id/URL, POST for raw bytes.
+        Send a photo to a chat.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param photo: Photo to send. Can be a file_id (str), URL (str), or raw bytes.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param caption: Photo caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param show_caption_above_media: Show caption above the photo.
-        :param has_spoiler: Cover photo with spoiler animation.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            photo: Photo to send. Pass a file_id as String to send a photo that exists
+                on the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to
+                get a photo from the Internet, or upload a new photo using multipart/form-data.
+                The photo must be at most 10 MB in size. The photo's width and height must not exceed 10000 in total.
+                Width and height ratio must be at most 20.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendPhoto](https://core.telegram.org/bots/api#sendphoto)
         """
         payload = {
             "chat_id": chat_id,
@@ -581,28 +544,22 @@ class Telegram:
         file_name: str = "",
     ) -> Message:
         """
-        Use this method to send live photos.
+        Send live photos.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message will be sent.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (in the format @channelusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat.
-        :param live_photo: Live photo video to send. The video must be no longer than 10 seconds and must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
-        :param photo: The static photo to send. Pass a file_id as String to send a photo that exists on the Telegram servers (recommended) or upload a new video using multipart/form-data. More information on Sending Files ». Sending live photos by a URL is currently unsupported.
-        :param caption: Video caption (may also be used when resending videos by file_id), 0-1024 characters after entities parsing.
-        :param parse_mode: Mode for parsing entities in the video caption. See formatting options for more details.
-        :param caption_entities: A JSON-serialized list of special entities that appear in the caption, which can be specified instead of parse_mode.
-        :param show_caption_above_media: Pass True, if the caption must be shown above the message media.
-        :param has_spoiler: Pass True if the video needs to be covered with a spoiler animation.
-        :param disable_notification: Sends the message silently. Users will receive a notification with no sound.
-        :param protect_content: Protects the contents of the sent message from forwarding and saving.
-        :param allow_paid_broadcast: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
-        :param message_effect_id: Unique identifier of the message effect to be added to the message; for private chats only.
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username of the target channel (in the format @channelusername).
+            live_photo: Live photo video to send. The video must be no longer than 10 seconds and
+                must not exceed 10 MB in size. Pass a file_id as String to send a video that exists on
+                the Telegram servers (recommended) or upload a new video using multipart/form-data.
+                More information on [Sending Files](https://core.telegram.org/bots/api#sending-files)
+                Sending live photos by a URL is currently unsupported.
+            photo: The static photo to send. Pass a file_id as String to send a photo that exists on
+                the Telegram servers (recommended) or upload a new video using multipart/form-data.
+                More information on [Sending Files](https://core.telegram.org/bots/api#sending-files).
+                Sending live photos by a URL is currently unsupported.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendLivePhoto](https://core.telegram.org/bots/api#sendlivephoto)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -655,27 +612,14 @@ class Telegram:
         """
         Send an audio file (e.g., music) to be displayed in the music player.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param audio: Audio file to send. Can be a file_id (str), URL (str), or raw bytes.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param caption: Audio caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param duration: Duration of the audio in seconds.
-        :param performer: Performer name.
-        :param title: Track name.
-        :param thumbnail: Thumbnail (JPEG <200KB, max 320x320). Use bytes or file_id.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            audio: Audio file to send. Pass a file_id as String to send an audio file that exists on
+                the Telegram servers (recommended), pass an HTTP URL as a String for Telegram to get
+                an audio file from the Internet, or upload a new one using multipart/form-data.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendAudio](https://core.telegram.org/bots/api#sendaudio)
         """
         payload = {
             "chat_id": chat_id,
@@ -726,25 +670,12 @@ class Telegram:
         """
         Send a general file to a chat. Uses GET for file_id/URL, POST for raw bytes.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param document: File to send. Can be a file_id (str), URL (str), or raw bytes.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param thumbnail: Thumbnail of the file (JPEG <200KB, max 320x320). Use bytes or file_id.
-        :param caption: Document caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param disable_content_type_detection: Disable automatic content type detection for uploaded files.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            document: File to send. Can be a file_id (str), URL (str), or raw bytes.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendDocument](https://core.telegram.org/bots/api#senddocument)
         """
         payload = {
             "chat_id": chat_id,
@@ -802,32 +733,12 @@ class Telegram:
         """
         Send a video file to a chat. Uses GET for file_id/URL, POST for raw bytes.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param video: Video to send. Can be a file_id (str), URL (str), or raw bytes.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param duration: Duration of the video in seconds.
-        :param width: Video width.
-        :param height: Video height.
-        :param thumbnail: Thumbnail of the video (JPEG <200KB, max 320x320). Use bytes or file_id.
-        :param cover: Cover image for the video in the message. Use file_id, URL, or attach://<name>.
-        :param start_timestamp: Start timestamp for the video (in seconds).
-        :param caption: Video caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param show_caption_above_media: Show caption above the video.
-        :param has_spoiler: Cover video with a spoiler animation.
-        :param supports_streaming: Pass True if the video is suitable for streaming.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            video: Video to send. Can be a file_id (str), URL (str), or raw bytes.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendVideo](https://core.telegram.org/bots/api#sendvideo)
         """
         payload = {
             "chat_id": chat_id,
@@ -888,29 +799,12 @@ class Telegram:
         """
         Send an animation file (GIF or H.264/MPEG-4 AVC video without sound).
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param animation: Animation to send. Can be a file_id (str), URL (str), or raw bytes.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param duration: Duration of the animation in seconds.
-        :param width: Animation width.
-        :param height: Animation height.
-        :param thumbnail: Thumbnail of the file (JPEG <200KB, max 320x320). Use bytes or file_id.
-        :param caption: Animation caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param show_caption_above_media: Show caption above the animation.
-        :param has_spoiler: Cover animation with a spoiler animation.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            animation: Animation to send. Can be a file_id (str), URL (str), or raw bytes.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendAnimation](https://core.telegram.org/bots/api#sendanimation)
         """
         payload = {
             "chat_id": chat_id,
@@ -964,24 +858,12 @@ class Telegram:
         """
         Send a voice message (audio file displayed as voice message).
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param voice: Voice file to send. Can be a file_id (str), URL (str), or raw bytes (.OGG with OPUS, .MP3, .M4A).
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param caption: Voice message caption (0–1024 characters).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption.
-        :param duration: Duration of the voice message in seconds.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            voice: Voice file to send. Can be a file_id (str), URL (str), or raw bytes (.OGG with OPUS, .MP3, .M4A).
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendVoice](https://core.telegram.org/bots/api#sendvoice)
         """
         payload = {
             "chat_id": chat_id,
@@ -1028,23 +910,12 @@ class Telegram:
         """
         Send a video note (round video message).
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param video_note: Video note to send. Can be a file_id (str) or raw bytes. Sending via URL is not supported.
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum.
-        :param direct_messages_topic_id: Identifier of the direct messages topic.
-        :param duration: Duration of the video in seconds.
-        :param length: Diameter of the video message (width and height are equal).
-        :param thumbnail: Thumbnail of the file (JPEG <200KB, max 320x320). Use bytes or file_id.
-        :param disable_notification: Send silently.
-        :param protect_content: Protect from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :param file_name: Optional custom filename with format suffix(e.g., 'test.png').
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            video_note: Video note to send. Can be a file_id (str) or raw bytes. Sending via URL is not supported.
+            file_name: Optional custom filename with format suffix(e.g., 'test.png').
+
+            See full parameters here: [sendVideoNote](https://core.telegram.org/bots/api#sendvideonote)
         """
         payload = {
             "chat_id": chat_id,
@@ -1092,25 +963,12 @@ class Telegram:
         """
         Send paid media that requires Telegram Stars to access.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                    If the chat is a channel, proceeds go to the channel's balance; otherwise to the bot's balance.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param star_count: Number of Telegram Stars required to access the media (1–10000).
-        :param media: A list of InputPaidMedia objects (e.g., photo, video) describing the media to send (up to 10 items).
-        :param payload: Bot-defined payload (0–128 bytes), not visible to user, for internal processing.
-        :param caption: Caption for the media (0–1024 characters after entities parsing).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption (can be used instead of parse_mode).
-        :param show_caption_above_media: Show caption above the media.
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for a fee of 0.1 Stars per message.
-        :param suggested_post_parameters: Parameters for sending a suggested post (for direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            star_count: Number of Telegram Stars required to access the media (1–10000).
+            media: A list of InputPaidMedia objects (e.g., photo, video) describing the media to send (up to 10 items).
+
+            See full parameters here: [sendPaidMedia](https://core.telegram.org/bots/api#sendpaidmedia)
         """
         payload_data = {
             "chat_id": chat_id,
@@ -1150,18 +1008,11 @@ class Telegram:
         """
         Send a group of photos, videos, documents, or audios as an album.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param media: A JSON-serialized array of InputMedia objects (photo, video, document, audio). Must contain 2–10 items.
-                    All items must be of the same type if they are documents or audio.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the messages are sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param disable_notification: Send messages silently without notification sound.
-        :param protect_content: Protect messages from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for a fee of 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (for private chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :return: An array of sent Message objects on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
+            media: A InputPaidMedia array describing messages to be sent, must include 2-10 items.
+
+            See full parameters here: [sendMediaGroup](https://core.telegram.org/bots/api#sendmediagroup)
         """
         payload = {
             "chat_id": chat_id,
@@ -1201,24 +1052,12 @@ class Telegram:
         """
         Send a point on the map.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param latitude: Latitude of the location.
-        :param longitude: Longitude of the location.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param horizontal_accuracy: The radius of uncertainty for the location, in meters (0–1500).
-        :param live_period: Period in seconds during which the location will be updated (60–86400 or 0x7FFFFFFF for indefinite).
-        :param heading: Direction in which the user is moving, in degrees (1–360).
-        :param proximity_alert_radius: Maximum distance for proximity alerts, in meters (1–100000).
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for a fee of 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (for private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (for direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            latitude: Latitude of the location.
+            longitude: Longitude of the location.
+
+            See full parameters here: [sendLocation](https://core.telegram.org/bots/api#sendlocation)
         """
         payload = {
             "chat_id": chat_id,
@@ -1267,26 +1106,14 @@ class Telegram:
         """
         Send information about a venue.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param latitude: Latitude of the venue.
-        :param longitude: Longitude of the venue.
-        :param title: Name of the venue.
-        :param address: Address of the venue.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param foursquare_id: Foursquare identifier of the venue.
-        :param foursquare_type: Foursquare type of the venue (e.g., "arts_entertainment/aquarium").
-        :param google_place_id: Google Places identifier of the venue.
-        :param google_place_type: Google Places type of the venue.
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            latitude: Latitude of the venue.
+            longitude: Longitude of the venue.
+            title: Name of the venue.
+            address: Address of the venue.
+
+            See full parameters here: [sendVenue](https://core.telegram.org/bots/api#sendvenue)
         """
         payload = {
             "chat_id": chat_id,
@@ -1333,22 +1160,12 @@ class Telegram:
         """
         Send a phone contact.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param phone_number: Contact's phone number.
-        :param first_name: Contact's first name.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param last_name: Contact's last name.
-        :param vcard: Additional data about the contact in vCard format (0–2048 bytes).
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
+            phone_number: Contact's phone number.
+            first_name: Contact's first name.
+
+            See full parameters here: [sendContact](https://core.telegram.org/bots/api#sendcontact)
         """
         payload = {
             "chat_id": chat_id,
@@ -1410,43 +1227,13 @@ class Telegram:
         """
         Send a native poll.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                    Polls cannot be sent to channel direct messages chats.
-        :param question: Poll question (1–300 characters).
-        :param options: List of answer options (2–12 options, each 1–100 characters).
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param question_parse_mode: Mode for parsing entities in the question (only custom emoji allowed).
-        :param question_entities: List of special entities in the question.
-        :param is_anonymous: True if the poll is anonymous (default: True).
-        :param poll_type: Poll type: "quiz" or "regular" (default: "regular").
-        :param allows_revoting:Pass True, if the poll allows to change chosen answer options, defaults to False for quizzes and to True for regular polls.
-        :param shuffle_options: Pass True, if the poll options must be shown in random order.
-        :param allows_multiple_answers: True if multiple answers are allowed (ignored in quiz mode, default: False).
-        :param allow_adding_options: Pass True, if answer options can be added to the poll after creation; not supported for anonymous polls and quizzes.
-        :param hide_results_until_closes: Pass True, if poll results must be shown only after the poll closes.
-        :param members_only: Pass True, if voting is limited to users who have been members of the chat where the poll is being sent for more than 24 hours; for channel chats only.
-        :param country_codes: A JSON-serialized list of 0-12 two-letter ISO 3166-1 alpha-2 country codes indicating the countries from which users can vote in the poll; for channel chats only. Use “FT” as a country code to allow users with anonymous numbers to vote. If omitted or empty, then users from any country can participate in the poll.
-        :param correct_option_ids: Array of 0-based identifiers of the correct answer options. Available only for polls in quiz mode which are closed or were sent (not forwarded) by the bot or to the private chat with the bot.
-        :param explanation: Text shown when an incorrect answer is chosen (0–200 characters).
-        :param explanation_parse_mode: Mode for parsing entities in the explanation.
-        :param explanation_entities: List of special entities in the explanation.
-        :param explanation_media: Media added to the quiz explanation.
-        :param open_period: Duration in seconds the poll will be active (5–600). Cannot be used with close_date.
-        :param close_date: Unix timestamp when the poll will be automatically closed (5–600 seconds in future).
-                        Cannot be used with open_period.
-        :param is_closed: Pass True to immediately close the poll (useful for preview).
-        :param description: Description of the poll to be sent, 0-1024 characters after entities parsing.
-        :param description_parse_mode: Mode for parsing entities in the poll description. See formatting options for more details.
-        :param description_entities: A JSON-serialized list of special entities that appear in the poll description, which can be specified instead of description_parse_mode.
-        :param media: Media added to the poll description.
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel. Polls can't be sent
+                to channel direct messages chats.
+            question: Poll question (1–300 characters).
+            options: List of answer options (2–12 options, each 1–100 characters).
+
+            See full parameters here: [sendPoll](https://core.telegram.org/bots/api#sendpoll)
         """
         payload = {
             "chat_id": chat_id,
@@ -1501,15 +1288,12 @@ class Telegram:
         """
         Send a checklist on behalf of a connected business account.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent. Required.
-        :param chat_id: Unique identifier for the target chat.
-        :param checklist: A JSON-serialized object describing the checklist to send.
-        :param disable_notification: Send message silently (no notification sound).
-        :param protect_content: Protect message from forwarding and saving.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline keyboard markup.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat/bot.
+            checklist: A InputChecklist object for the checklist to send.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message will be sent.
+
+            See full parameters here: [sendChecklist](https://core.telegram.org/bots/api#sendchecklist)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -1542,19 +1326,10 @@ class Telegram:
         """
         Send an animated emoji that displays a random value (e.g., dice, target, slot machine).
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param emoji: Emoji for the animation. Must be one of: “🎲”, “🎯”, “🏀”, “⚽”, “🎳”, “🎰”. Defaults to “🎲”.
-        :param disable_notification: Send message silently (no notification sound).
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+
+            See full parameters here: [sendDice](https://core.telegram.org/bots/api#senddice)
         """
         payload = {
             "chat_id": chat_id,
@@ -1586,13 +1361,14 @@ class Telegram:
         Use this method to stream a partial message to a user while the message is being generated;
         supported only for bots with forum topic mode enabled.
 
-        :param chat_id: Unique identifier for the target private chat.
-        :param draft_id: Unique identifier of the message draft; must be non-zero. Changes of drafts with the same identifier are animated.
-        :param text: Text of the message to be sent, 1-4096 characters after entities parsing.
-        :param message_thread_id: Unique identifier for the target message thread.
-        :param parse_mode: Mode for parsing entities in the message text. See formatting options for more details.
-        :param entities: A JSON-serialized list of special entities that appear in message text, which can be specified instead of parse_mode.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target private chat.
+            draft_id: Unique identifier of the message draft; must be non-zero.
+                Changes to drafts with the same identifier are animated.
+            text: Text of the message to be sent, 0-4096 characters after entities parsing.
+                Pass an empty text to show a `Thinking...` placeholder.
+
+            See full parameters here: [sendMessageDraft](https://core.telegram.org/bots/api#sendmessagedraft)
         """
         payload = {
             "chat_id": chat_id,
@@ -1615,20 +1391,19 @@ class Telegram:
         """
         Tell the user that something is happening on the bot's side (e.g., typing, uploading photo).
 
-        :param chat_id: Unique identifier for the target chat or username of the target supergroup (e.g. @supergroupusername).
-                        Channel chats and channel direct messages are not supported.
-        :param action: Type of action to broadcast. Possible values:
-                    'typing' - for text messages,
-                    'upload_photo' - for photos,
-                    'record_video', 'upload_video' - for videos,
-                    'record_voice', 'upload_voice' - for voice notes,
-                    'upload_document' - for general files,
-                    'choose_sticker' - for stickers,
-                    'find_location' - for location data,
-                    'record_video_note', 'upload_video_note' - for video notes.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the action is sent.
-        :param message_thread_id: Unique identifier for the target message thread; for supergroups only.
-        :return: True on success.
+        Args:
+            chat_id: Target chat ID or @username (bot/supergroup). Channels not supported.
+            action: Type of action to broadcast. Possible values:
+                'typing' - for text messages,
+                'upload_photo' - for photos,
+                'record_video', 'upload_video' - for videos,
+                'record_voice', 'upload_voice' - for voice notes,
+                'upload_document' - for general files,
+                'choose_sticker' - for stickers,
+                'find_location' - for location data,
+                'record_video_note', 'upload_video_note' - for video notes.
+
+            See full parameters here: [sendChatAction](https://core.telegram.org/bots/api#sendchataction)
         """
         payload = {
             "chat_id": chat_id,
@@ -1649,11 +1424,12 @@ class Telegram:
         """
         Change the chosen reactions on a message.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param message_id: Identifier of the target message. If the message belongs to a media group, the reaction is set to the first non-deleted message in the group.
-        :param reaction: A JSON-serialized list of reaction types to set. Bots can set up to one reaction. Can be 'emoji' (e.g., "👍") or 'custom_emoji' with custom_emoji_id.
-        :param is_big: Pass True to show the reaction with a big animation.
-        :return: True on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            message_id: Identifier of the target message. If the message belongs to a media group,
+                the reaction is set to the first non-deleted message in the group instead.
+
+            See full parameters here: [setMessageReaction](https://core.telegram.org/bots/api#setmessagereaction)
         """
         payload = {
             "chat_id": chat_id,
@@ -1670,10 +1446,10 @@ class Telegram:
         """
         Get a list of profile pictures for a user.
 
-        :param user_id: Unique identifier of the target user.
-        :param offset: Sequential number of the first photo to return. Defaults to 0 (all photos).
-        :param limit: Limits the number of photos to retrieve (1–100). Defaults to 100.
-        :return: A UserProfilePhotos object on success.
+        Args:
+            user_id: Unique identifier of the target user.
+            offset: Sequential number of the first photo to be returned. By default, all photos are returned.
+            limit: Limits the number of photos to be retrieved. Values between 1-100 are accepted. Defaults to 100.
         """
         payload = {
             "user_id": user_id,
@@ -1691,10 +1467,10 @@ class Telegram:
         """
         Use this method to get a list of profile audios for a user.
 
-        :param user_id: Unique identifier of the target user.
-        :param offset: Sequential number of the first photo to return. Defaults to 0 (all photos).
-        :param limit: Limits the number of photos to retrieve (1–100). Defaults to 100.
-        :return: A UserProfileAudios object.
+        Args:
+            user_id: Unique identifier of the target user.
+            offset: Sequential number of the first audio to be returned. By default, all audios are returned.
+            limit: Limits the number of audios to be retrieved. Values between 1-100 are accepted. Defaults to 100.
         """
         payload = {
             "user_id": user_id,
@@ -1713,12 +1489,14 @@ class Telegram:
         emoji_status_expiration_date: int | None = None,
     ) -> bool:
         """
-        Change the emoji status for a user who has granted the bot permission via requestEmojiStatusAccess.
+        Changes the emoji status for a given user that previously allowed the bot to
+        manage their emoji status via the Mini App method requestEmojiStatusAccess.
 
-        :param user_id: Unique identifier of the target user.
-        :param emoji_status_custom_emoji_id: Custom emoji identifier for the status. Pass empty string to remove status.
-        :param emoji_status_expiration_date: Unix timestamp when the emoji status should expire. Pass None for no expiration.
-        :return: True on success.
+        Args:
+            user_id: Unique identifier of the target user.
+            emoji_status_custom_emoji_id: Custom emoji identifier of the emoji status to set.
+                Pass an empty string to remove the status.
+            emoji_status_expiration_date: Expiration date of the emoji status, if any.
         """
         payload = {
             "user_id": user_id,
@@ -1732,28 +1510,21 @@ class Telegram:
         """
         Get basic information about a file and prepare it for downloading.
 
-        :param file_id: File identifier to get information about.
-        :return: A File object on success. The file can be downloaded via https://api.telegram.org/file/bot<token>/<file_path>.
-                The link is guaranteed to be valid for at least 1 hour.
+        Args:
+            file_id: File identifier to get information about.
+
+        Returns:
+            A File object on success.
+            The file can be downloaded via https://api.telegram.org/file/bot<token>/<file_path>.
+            It is guaranteed that the link will be valid for at least 1 hour.
+
+        Note:
+            This function may not preserve the original file name and MIME type.
+            You should save the file's MIME type and name (if available) when the File object is received.
         """
         payload = {"file_id": file_id}
         response = self._make_request("getFile", method="GET", params=payload)
         return File.model_validate(response)
-
-    def set_chat_member_tag(self, chat_id: int | str, user_id: int, tag: str):
-        """
-        Use this method to set a tag for a regular member in a group or a supergroup.
-        The bot must be an administrator in the chat for this to work and must
-        have the can_manage_tags administrator right.
-
-        :param chat_id: Unique identifier for the target chat or username of the target supergroup in the format @username
-        :param user_id: Unique identifier of the target user.
-        :param tag: New tag for the member; 0-16 characters, emoji are not allowed.
-        :return: True on success.
-        """
-        payload = {"chat_id": chat_id, "user_id": user_id, "tag": tag}
-        response = self._make_request("setChatMemberTag", method="POST", data=payload)
-        return bool(response)
 
     def ban_chat_member(
         self,
@@ -1767,15 +1538,11 @@ class Telegram:
         In supergroups and channels, the user will not be able to return on their own unless unbanned.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param user_id: Unique identifier of the user to ban.
-        :param until_date: Date when the user will be automatically unbanned (Unix timestamp).
-                        If omitted or set to more than 366 days in the future, the ban is considered permanent.
-                        Applied only to supergroups and channels.
-        :param revoke_messages: Pass True to delete all messages from the chat for the user being removed.
-                                If False, the user can still see messages sent before removal.
-                                Always True for supergroups and channels.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target group or username of the target supergroup or channel in the format @username.
+            user_id: Unique identifier of the target user.
+
+            See full parameters here: [banChatMember](https://core.telegram.org/bots/api#banchatmember)
         """
         payload = {
             "chat_id": chat_id,
@@ -1798,10 +1565,11 @@ class Telegram:
         If the user is currently a member, they will be removed from the chat unless only_if_banned is True.
         The bot must be an administrator.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param user_id: Unique identifier of the user to unban.
-        :param only_if_banned: Do nothing if the user is not currently banned.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target group or username of
+                the target supergroup or channel in the format @username.
+            user_id: Unique Unique identifier of the target user.
+            only_if_banned: Do nothing if the user is not banned.
         """
         payload = {
             "chat_id": chat_id,
@@ -1824,14 +1592,12 @@ class Telegram:
         The bot must be an administrator with appropriate rights.
         Pass True for all permissions to lift restrictions.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param user_id: Unique identifier of the target user.
-        :param permissions: A JSON-serialized ChatPermissions object specifying new permissions.
-        :param use_independent_chat_permissions: Pass True if permissions should be applied independently.
-                                                Otherwise, certain permissions imply others (e.g., can_send_polls implies can_send_messages).
-        :param until_date: Date when restrictions will be lifted (Unix timestamp).
-                        Permanent if more than 366 days in the future or less than 30 seconds from now.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            user_id: Unique identifier of the target user.
+            permissions: A ChatPermissions object specifying new permissions.
+
+            See full parameters here: [restrictChatMember](https://core.telegram.org/bots/api#restrictchatmember)
         """
         payload = {
             "chat_id": chat_id,
@@ -1870,27 +1636,11 @@ class Telegram:
         The bot must be an administrator with appropriate rights.
         Pass False for all parameters to demote the user.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param user_id: Unique identifier of the target user.
-        :param is_anonymous: True if the administrator's presence is hidden.
-        :param can_manage_chat: True if the admin can access chat event log, boost list, see hidden members, report spam, ignore slow mode, and send messages without Stars.
-                                Implied by any other privilege.
-        :param can_delete_messages: True if the admin can delete messages of other users.
-        :param can_manage_video_chats: True if the admin can manage video chats.
-        :param can_restrict_members: True if the admin can restrict, ban, or unban members, or access supergroup stats.
-        :param can_promote_members: True if the admin can add new admins with subset of own privileges or demote those they promoted.
-        :param can_change_info: True if the admin can change chat title, photo, and other settings.
-        :param can_invite_users: True if the admin can invite new users.
-        :param can_post_stories: True if the admin can post stories to the chat.
-        :param can_edit_stories: True if the admin can edit others' stories, post stories to chat page, pin stories, and access archive.
-        :param can_delete_stories: True if the admin can delete others' stories.
-        :param can_post_messages: True if the admin can post messages in the channel, approve suggested posts, or access channel stats (channels only).
-        :param can_edit_messages: True if the admin can edit messages of other users and pin messages (channels only).
-        :param can_pin_messages: True if the admin can pin messages (supergroups only).
-        :param can_manage_topics: True if the admin can create, rename, close, and reopen forum topics (supergroups only).
-        :param can_manage_direct_messages: True if the admin can manage direct messages of the channel and decline suggested posts (channels only).
-        :param can_manage_tags:Pass True if the administrator can edit the tags of regular members; for groups and supergroups only
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            user_id: Unique identifier of the target user.
+
+            See full parameters here: [promoteChatMember](https://core.telegram.org/bots/api#promotechatmember)
         """
         payload = {
             "chat_id": chat_id,
@@ -1922,10 +1672,10 @@ class Telegram:
         """
         Set a custom title for an administrator in a supergroup promoted by the bot.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param user_id: Unique identifier of the target administrator.
-        :param custom_title: New custom title for the administrator (0–16 characters, emoji not allowed).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            user_id: Unique identifier of the target user.
+            custom_title: New custom title for the administrator; 0-16 characters, emoji are not allowed.
         """
         payload = {
             "chat_id": chat_id,
@@ -1937,15 +1687,31 @@ class Telegram:
         )
         return bool(response)
 
+    def set_chat_member_tag(self, chat_id: int | str, user_id: int, tag: str):
+        """
+        Use this method to set a tag for a regular member in a group or a supergroup.
+        The bot must be an administrator in the chat for this to work and must
+        have the can_manage_tags administrator right.
+
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup
+            user_id: Unique identifier of the target user.
+            tag: New tag for the member; 0-16 characters, emoji are not allowed.
+        """
+        payload = {"chat_id": chat_id, "user_id": user_id, "tag": tag}
+        response = self._make_request("setChatMemberTag", method="POST", data=payload)
+        return bool(response)
+
     def ban_chat_sender_chat(self, chat_id: int | str, sender_chat_id: int) -> bool:
         """
         Ban a channel chat in a supergroup or channel.
         After this, the channel's owner cannot post on behalf of that channel until it's unbanned.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param sender_chat_id: Unique identifier of the sender chat (i.e., the channel) to ban.
-        :return: True on success.
+        Args:
+            chat_id: Unique Unique identifier for the target chat or username of
+                the target channel in the format @username.
+            sender_chat_id: Unique identifier of the target sender chat.
         """
         payload = {
             "chat_id": chat_id,
@@ -1959,9 +1725,9 @@ class Telegram:
         Unban a previously banned channel chat in a supergroup or channel.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param sender_chat_id: Unique identifier of the sender chat (channel) to unban.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            sender_chat_id: Unique identifier of the sender chat (channel) to unban.
         """
         payload = {
             "chat_id": chat_id,
@@ -1982,11 +1748,14 @@ class Telegram:
         Set default chat permissions for all members in a group or supergroup.
         The bot must be an administrator with can_restrict_members right.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param permissions: A JSON-serialized ChatPermissions object defining default permissions.
-        :param use_independent_chat_permissions: Whether permissions are applied independently.
-                                                If False, some permissions imply others.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            permissions: A ChatPermissions object for new default chat permissions.
+            use_independent_chat_permissions: Pass True if chat permissions are set independently.
+                Otherwise, the can_send_other_messages and can_add_web_page_previews permissions will
+                imply the can_send_messages, can_send_audios, can_send_documents, can_send_photos, can_send_videos,
+                can_send_video_notes, and can_send_voice_notes permissions; the can_send_polls permission will imply
+                the can_send_messages permission.
         """
         payload = {
             "chat_id": chat_id,
@@ -2002,8 +1771,19 @@ class Telegram:
         The bot must be an administrator with appropriate rights.
         Each administrator (including bots) has their own invite links.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: The new invite link as a string on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+
+        Note:
+            Each administrator in a chat generates their own invite links.
+            Bots can't use invite links generated by other administrators.
+            If you want your bot to work with invite links, it will need to generate its own link
+             using exportChatInviteLink or by calling the getChat method.
+            If your bot needs to generate a new primary invite link replacing its previous one,
+             use exportChatInviteLink again.
+
+        Returns:
+            The new invite link as a string on success.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2024,13 +1804,10 @@ class Telegram:
         The link can be edited or revoked using editChatInviteLink or revokeChatInviteLink.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param name: Invite link name (0–32 characters).
-        :param expire_date: Unix timestamp when the link will expire.
-        :param member_limit: Maximum number of users that can join via this link (1–99999).
-        :param creates_join_request: True if users must be approved by administrators to join.
-                                    If True, member_limit cannot be specified.
-        :return: The new ChatInviteLink object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+
+            See full parameters here: [createChatInviteLink](https://core.telegram.org/bots/api#createchatinvitelink)
         """
         payload = {
             "chat_id": chat_id,
@@ -2057,14 +1834,11 @@ class Telegram:
         Edit a non-primary invite link created by the bot.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param invite_link: The invite link to edit.
-        :param name: New invite link name (0–32 characters).
-        :param expire_date: New Unix timestamp when the link will expire.
-        :param member_limit: New maximum number of users that can join via this link (1–99999).
-        :param creates_join_request: True if users must be approved by administrators to join.
-                                    If True, member_limit cannot be specified.
-        :return: The edited ChatInviteLink object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
+            invite_link: The invite link to edit.
+
+            See full parameters here: [editChatInviteLink](https://core.telegram.org/bots/api#editchatinvitelink)
         """
         payload = {
             "chat_id": chat_id,
@@ -2089,11 +1863,11 @@ class Telegram:
         Users must pay Telegram Stars to join via this link.
         The bot must have the 'can_invite_users' administrator right.
 
-        :param chat_id: Unique identifier for the target channel or username (e.g. @channelusername).
-        :param subscription_period: Duration of the subscription in seconds. Must be 2592000 (30 days).
-        :param subscription_price: Amount of Telegram Stars required (1–10000).
-        :param name: Invite link name (0–32 characters).
-        :return: The new ChatInviteLink object on success.
+        Args:
+            chat_id: Unique identifier for the target channel or username (e.g. @channelusername).
+            subscription_period: Duration of the subscription in seconds. Must be 2592000 (30 days).
+            subscrdiption_price: Amount of Telegram Stars required (1–10000).
+            name: Invite link name (0–32 characters).
         """
         payload = {
             "chat_id": chat_id,
@@ -2113,10 +1887,10 @@ class Telegram:
         Edit a subscription invite link created by the bot.
         The bot must have the 'can_invite_users' administrator right.
 
-        :param chat_id: Unique identifier for the target channel or username (e.g. @channelusername).
-        :param invite_link: The subscription invite link to edit.
-        :param name: New invite link name (0–32 characters).
-        :return: The edited ChatInviteLink object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            invite_link: The subscription invite link to edit.
+            name: New invite link name (0–32 characters).
         """
         payload = {
             "chat_id": chat_id,
@@ -2136,9 +1910,9 @@ class Telegram:
         If the primary link is revoked, a new one is automatically generated.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param invite_link: The invite link to revoke.
-        :return: The revoked ChatInviteLink object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            invite_link: The invite link to revoke.
         """
         payload = {
             "chat_id": chat_id,
@@ -2154,9 +1928,9 @@ class Telegram:
         Approve a user's request to join a chat.
         The bot must be an administrator with the 'can_invite_users' right.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param user_id: Unique identifier of the user whose join request is approved.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            user_id: Unique identifier of the user whose join request is approved.
         """
         payload = {
             "chat_id": chat_id,
@@ -2172,9 +1946,9 @@ class Telegram:
         Decline a user's request to join a chat.
         The bot must be an administrator with the 'can_invite_users' right.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param user_id: Unique identifier of the user whose join request is declined.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            user_id: Unique identifier of the user whose join request is declined.
         """
         payload = {
             "chat_id": chat_id,
@@ -2191,9 +1965,10 @@ class Telegram:
         """
         Use this method to process a received chat join request query.
 
-        :param chat_join_request_query_id: Unique identifier of the join request query.
-        :param result: Result of the query. Must be either “approve” to allow the user to join the chat, “decline” to disallow the user to join the chat, or “queue” to leave the decision to other administrators.
-        :return: True on success.
+        Args:
+            chat_join_request_query_id: Unique identifier of the join request query.
+            result: Result of the query. Must be either `approve` to allow the user to join the chat,
+             `decline` to disallow the user to join the chat, or `queue` to leave the decision to other administrators.
         """
         payload = {
             "chat_join_request_query_id": chat_join_request_query_id,
@@ -2211,9 +1986,9 @@ class Telegram:
         Use this method to process a received chat join request query by
         showing a Mini App to the user before deciding the outcome.
 
-        :param chat_join_request_query_id: Unique identifier of the join request query.
-        :param web_app_url: The URL of the Mini App to be opened.
-        :return: True on success.
+        Args:
+            chat_join_request_query_id: Unique identifier of the join request query.
+            web_app_url: The URL of the Mini App to be opened.
         """
         payload = {
             "chat_join_request_query_id": chat_join_request_query_id,
@@ -2230,9 +2005,9 @@ class Telegram:
         Not available for private chats.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param photo: New chat photo, uploaded as bytes using multipart/form-data.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            photo: New chat photo, uploaded using multipart/form-data.
         """
         files = {"photo": photo}
         payload = {"chat_id": chat_id}
@@ -2247,8 +2022,8 @@ class Telegram:
         Not available for private chats.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request("deleteChatPhoto", method="POST", data=payload)
@@ -2260,9 +2035,9 @@ class Telegram:
         Not available for private chats.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param title: New chat title (1–128 characters).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            title: New chat title, 1-128 characters.
         """
         payload = {
             "chat_id": chat_id,
@@ -2278,9 +2053,9 @@ class Telegram:
         Change the description of a group, supergroup, or channel.
         The bot must be an administrator with appropriate rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param description: New chat description (0–255 characters). Pass empty string to remove.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            description: New chat description, 0-255 characters.
         """
         payload = {
             "chat_id": chat_id,
@@ -2301,12 +2076,11 @@ class Telegram:
         Pin a message in a chat.
         In groups and channels, the bot must have 'can_pin_messages' or 'can_edit_messages' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param message_id: Identifier of the message to pin.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is pinned.
-        :param disable_notification: Pass True to disable notification for all members about the new pinned message.
-                                    Always disabled in channels and private chats.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            message_id: Identifier of a message to pin.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message will be pinned.
+            disable_notification: Sends the message silently.
         """
         payload = {
             "chat_id": chat_id,
@@ -2328,10 +2102,11 @@ class Telegram:
         If message_id is not specified, the most recent pinned message is unpinned.
         The bot must have appropriate rights in groups and channels.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param message_id: Identifier of the message to unpin. Required if business_connection_id is used.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is unpinned.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
+            message_id: Identifier of the message to unpin. Required if business_connection_id is specified.
+                If not specified, the most recent pinned message (by sending date) will be unpinned.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message will be unpinned.
         """
         payload = {
             "chat_id": chat_id,
@@ -2347,8 +2122,8 @@ class Telegram:
         No special rights needed in private chats or channel direct messages.
         In groups and channels, the bot must have 'can_pin_messages' or 'can_edit_messages' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the channel.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2361,8 +2136,10 @@ class Telegram:
         Make the bot leave a group, supergroup, or channel.
         Channel direct messages chats are not supported; leave the corresponding channel instead.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username of the target supergroup or channel
+                in the format @username. Channel direct messages chats aren't supported;
+                leave the corresponding channel instead.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request("leaveChat", method="POST", data=payload)
@@ -2373,8 +2150,8 @@ class Telegram:
         Get up-to-date information about a chat (group, supergroup, channel, or private chat).
         Returns a ChatFullInfo object.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: A ChatFullInfo object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup/channel.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request("getChat", method="GET", params=payload)
@@ -2386,9 +2163,10 @@ class Telegram:
         """
         Use this method to get a list of administrators in a chat.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param return_bots: Pass True to additionally receive all bots that are administrators of the chat. By default, bots other than the current bot are omitted.
-        :return: Array of ChatMember objects on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup/channel.
+            return_bots: Pass True to additionally receive all bots that are administrators of the chat.
+                By default, bots other than the current bot are omitted.
         """
         payload = {"chat_id": chat_id, "return_bots": return_bots}
         response = self._make_request(
@@ -2401,8 +2179,8 @@ class Telegram:
         Get the number of members in a chat.
         Returns an integer on success.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :return: Number of members in the chat.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup/channel.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2410,31 +2188,14 @@ class Telegram:
         )
         return cast(int, response)
 
-    def get_user_personal_chat_messages(
-        self, user_id: int, limit: int
-    ) -> List[Message]:
-        """
-        Use this method to get the last messages from the personal chat
-        (i.e., the chat currently added to their profile) of a given user
-
-        :param user_id: Unique identifier for the target user.
-        :param limit: The maximum number of messages to return; 1-20.
-        :return: Aarray of Message objects is returned.
-        """
-        payload = {"user_id": user_id, "limit": limit}
-        response = self._make_request(
-            "getUserPersonalChatMessages", method="GET", params=payload
-        )
-        return MessageListAdapter.validate_python(response)
-
     def get_chat_member(self, chat_id: int | str, user_id: int) -> ChatMember:
         """
         Get information about a specific member of a chat.
         Guaranteed to work for other users only if the bot is an administrator.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param user_id: Unique identifier of the target user.
-        :return: A ChatMember object on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup/channel.
+            user_id: Unique identifier of the target user.
         """
         payload = {
             "chat_id": chat_id,
@@ -2443,15 +2204,32 @@ class Telegram:
         response = self._make_request("getChatMember", method="GET", params=payload)
         return ChatMemberAdapter.validate_python(response)
 
+    def get_user_personal_chat_messages(
+        self, user_id: int, limit: int
+    ) -> List[Message]:
+        """
+        Use this method to get the last messages from the personal chat
+        (i.e., the chat currently added to their profile) of a given user
+
+        Args:
+            user_id: Unique identifier for the target chat or @username of the supergroup/channel.
+            limit: The maximum number of messages to return; 1-20.
+        """
+        payload = {"user_id": user_id, "limit": limit}
+        response = self._make_request(
+            "getUserPersonalChatMessages", method="GET", params=payload
+        )
+        return MessageListAdapter.validate_python(response)
+
     def set_chat_sticker_set(self, chat_id: int | str, sticker_set_name: str) -> bool:
         """
         Set a new group sticker set for a supergroup.
         The bot must be an administrator with appropriate rights.
         Use getChat to check if the bot can_set_sticker_set.
 
-        :param chat_id: Unique identifier for the target supergroup or username (e.g. @supergroupusername).
-        :param sticker_set_name: Name of the sticker set to set as the group sticker set.
-        :return: True on success.
+        Args:
+            chat_id: Unique Unique identifier for the target chat or @username of the supergroup.
+            sticker_set_name: Name of the sticker set to be set as the group sticker set.
         """
         payload = {
             "chat_id": chat_id,
@@ -2466,8 +2244,8 @@ class Telegram:
         The bot must be an administrator with appropriate rights.
         Use getChat to check if the bot can_set_sticker_set.
 
-        :param chat_id: Unique identifier for the target supergroup or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2479,8 +2257,6 @@ class Telegram:
         """
         Get custom emoji stickers that can be used as forum topic icons by any user.
         This method requires no parameters.
-
-        :return: An Array of Sticker objects on success.
         """
         response = self._make_request("getForumTopicIconStickers", method="GET")
         return StickerList.validate_python(response)
@@ -2496,14 +2272,14 @@ class Telegram:
         Create a new topic in a forum supergroup chat.
         The bot must be an administrator with 'can_manage_topics' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param name: Name of the new topic (1–128 characters).
-        :param icon_color: Color of the topic icon in RGB format. Must be one of:
-                        7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB),
-                        9367192 (0x8EEE98), 16749490 (0xFF93B2), 16478047 (0xFB6F5F).
-        :param icon_custom_emoji_id: Unique identifier of a custom emoji to use as the topic icon.
-                                    Use get_forum_topic_icon_stickers() to get allowed identifiers.
-        :return: A ForumTopic object containing information about the created topic.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            name: Topic name, 1-128 characters.
+            icon_color: Color of the topic icon in RGB format. Must be one of:
+                7322096 (0x6FB9F0), 16766590 (0xFFD67E), 13338331 (0xCB86DB),
+                9367192 (0x8EEE98), 16749490 (0xFF93B2), 16478047 (0xFB6F5F).
+            icon_custom_emoji_id: UniqUnique identifier of the custom emoji shown as the topic icon.
+                Use get_forum_topic_icon_stickers() to get all allowed custom emoji identifiers.
         """
         payload = {
             "chat_id": chat_id,
@@ -2525,13 +2301,14 @@ class Telegram:
         Edit the name and/or icon of a forum topic.
         The bot must be an administrator with 'can_manage_topics' rights, unless it's the topic creator.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic).
-        :param name: New name for the topic (0–128 characters). If empty, name remains unchanged.
-        :param icon_custom_emoji_id: New custom emoji identifier for the icon.
-                                    Pass empty string to remove the icon.
-                                    If not specified, icon remains unchanged.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_thread_id: Unique identifier for the target message thread of the forum topic.
+            name: New topic name, 0-128 characters. If not specified, the current icon will be kept.
+            icon_custom_emoji_id: New unique identifier of the custom emoji shown as the topic icon.
+                Use get_forum_topic_icon_stickers() to get all allowed custom emoji identifiers.
+                Pass an empty string to remove the icon.
+                If not specified, the current icon will be kept.
         """
         payload = {
             "chat_id": chat_id,
@@ -2547,9 +2324,9 @@ class Telegram:
         Close an open forum topic.
         The bot must be an administrator with 'can_manage_topics' rights, unless it's the topic creator.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_thread_id: Unique identifier for the target message thread of the forum topic.
         """
         payload = {
             "chat_id": chat_id,
@@ -2563,9 +2340,9 @@ class Telegram:
         Reopen a closed forum topic.
         The bot must be an administrator with 'can_manage_topics' rights, unless it's the topic creator.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_thread_id: Unique identifier for the target message thread of the forum topic.
         """
         payload = {
             "chat_id": chat_id,
@@ -2579,9 +2356,9 @@ class Telegram:
         Delete a forum topic along with all its messages.
         The bot must be an administrator with 'can_delete_messages' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_thread_id: Unique identifier for the target message thread of the forum topic.
         """
         payload = {
             "chat_id": chat_id,
@@ -2597,9 +2374,9 @@ class Telegram:
         Clear the list of pinned messages in a specific forum topic.
         The bot must be an administrator with 'can_pin_messages' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param message_thread_id: Unique identifier for the target message thread (topic).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_thread_id: Unique identifier for the target message thread of the forum topic.
         """
         payload = {
             "chat_id": chat_id,
@@ -2615,9 +2392,9 @@ class Telegram:
         Edit the name of the 'General' topic in a forum supergroup.
         The bot must be an administrator with 'can_manage_topics' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :param name: New name for the 'General' topic (1–128 characters).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            name: New topic name, 1-128 characters.
         """
         payload = {
             "chat_id": chat_id,
@@ -2633,8 +2410,8 @@ class Telegram:
         Close the 'General' topic in a forum supergroup.
         The bot must be an administrator with 'can_manage_topics' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2648,8 +2425,8 @@ class Telegram:
         The bot must be an administrator with 'can_manage_topics' rights.
         If the topic was hidden, it will be automatically unhidden.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2663,8 +2440,8 @@ class Telegram:
         The bot must be an administrator with 'can_manage_topics' rights.
         The topic will be automatically closed if it was open.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2677,8 +2454,8 @@ class Telegram:
         Unhide the 'General' topic in a forum supergroup.
         The bot must be an administrator with 'can_manage_topics' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2691,8 +2468,8 @@ class Telegram:
         Clear the list of pinned messages in the 'General' forum topic.
         The bot must be an administrator with 'can_pin_messages' rights.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @supergroupusername).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -2712,12 +2489,13 @@ class Telegram:
         Send an answer to a callback query sent from an inline keyboard.
         The answer will be displayed to the user as a notification or an alert.
 
-        :param callback_query_id: Unique identifier for the query to be answered.
-        :param text: Text of the notification. If not specified, nothing is shown to the user (0–200 characters).
-        :param show_alert: If True, an alert is shown instead of a notification at the top of the chat screen. Defaults to False.
-        :param url: URL to be opened by the user's client. Use for games (created via @BotFather) or deep linking (e.g., t.me/your_bot?start=XXXX).
-        :param cache_time: Maximum amount of time in seconds that the result may be cached client-side. Defaults to 0.
-        :return: True on success.
+        Args:
+            callback_query_id: Unique identifier for the query to be answered.
+            text: Text of the notification. If not specified, nothing will be shown to the user, 0-200 characters.
+            show_alert: If True, an alert will be shown by the client instead of a notification at the top of the chat screen.
+            url: URL to be opened by the user's client. Use for games (created via @BotFather) or
+                deep linking (e.g., t.me/your_bot?start=XXXX).
+            cache_time: Maximum amount of time in seconds that the result may be cached client-side. Defaults to 0.
         """
         payload = {
             "callback_query_id": callback_query_id,
@@ -2738,9 +2516,9 @@ class Telegram:
         """
         Use this method to reply to a received guest message.
 
-        :param guest_query_id: Unique identifier for the query to be answered.
-        :param result: A JSON-serialized object describing the message to be sent.
-        :return: SentGuestMessage object on success.
+        Args:
+            guest_query_id: Unique identifier for the query to be answered.
+            result: InlineQueryResult object describing the message to be sent.
         """
         payload = {"guest_query_id": guest_query_id, "result": result}
 
@@ -2752,9 +2530,9 @@ class Telegram:
         Get the list of boosts added to a chat by a user.
         The bot must have administrator rights in the chat.
 
-        :param chat_id: Unique identifier for the chat or username of the channel (e.g. @channelusername).
-        :param user_id: Unique identifier of the target user.
-        :return: A UserChatBoosts object on success.
+        Args:
+            chat_id: Unique identifier for the chat or username of the channel in the format @username.
+            user_id: Unique identifier of the target user.
         """
         payload = {
             "chat_id": chat_id,
@@ -2769,8 +2547,8 @@ class Telegram:
         """
         Get information about the connection of the bot with a business account.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :return: A BusinessConnection object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
         """
         payload = {"business_connection_id": business_connection_id}
         response = self._make_request(
@@ -2782,8 +2560,8 @@ class Telegram:
         """
         Use this method to get the token of a managed bot.
 
-        :param user_id: User identifier of the managed bot whose token will be returned.
-        :return: The token as String on success.
+        Args:
+            user_id: User identifier of the managed bot whose token will be returned.
         """
         payload = {"user_id": user_id}
         response = self._make_request(
@@ -2795,8 +2573,8 @@ class Telegram:
         """
         Use this method to revoke the current token of a managed bot and generate a new one.
 
-        :param user_id: User identifier of the managed bot whose token will be replaced.
-        :return: New token as String on success.
+        Args:
+            user_id: User identifier of the managed bot whose token will be replaced.
         """
         payload = {"user_id": user_id}
         response = self._make_request(
@@ -2808,8 +2586,8 @@ class Telegram:
         """
         Use this method to get the access settings of a managed bot.
 
-        :param user_id: User identifier of the managed bot whose access settings will be returned.
-        :return: BotAccessSettings object on success.
+        Args:
+            user_id: User identifier of the managed bot whose access settings will be returned.
         """
         payload = {"user_id": user_id}
         response = self._make_request(
@@ -2823,10 +2601,11 @@ class Telegram:
         """
         Use this method to change the access settings of a managed bot.
 
-        :param user_id: User identifier of the managed bot whose access settings will be changed.
-        :param is_access_restricted: Pass True, if only selected users can access the bot. The bot's owner can always access it.
-        :param added_user_ids: A JSON-serialized list of up to 10 identifiers of users who will have access to the bot in addition to its owner. Ignored if is_access_restricted is false.
-        :return: True on success.
+        Args:
+            user_id: User identifier of the managed bot whose access settings will be changed.
+            is_access_restricted: Pass True, if only selected users can access the bot. The bot's owner can always access it.
+            added_user_ids: A list of user IDs up to 10 identifiers of who will have access to the bot
+                in addition to its owner. Ignored if is_access_restricted is false.
         """
         payload = {
             "user_id": user_id,
@@ -2847,10 +2626,12 @@ class Telegram:
         """
         Change the list of the bot's commands.
 
-        :param commands: A list of BotCommand objects (JSON-serialized), at most 100.
-        :param scope: A JSON-serialized BotCommandScope object. Defaults to BotCommandScopeDefault.
-        :param language_code: A two-letter ISO 639-1 language code. If empty, commands apply to all users in the scope without a dedicated language command.
-        :return: True on success.
+        Args:
+            commands: A list of BotCommand objects, at most 100 commands can be specified.
+            scope: A BotCommandScope object, describing scope of users for which the commands are relevant.
+            language_code: A two-letter ISO 639-1 language code.
+                If empty, commands will be applied to all users from the given scope,
+                for whose language there are no dedicated commands.
         """
         scope = scope or BotCommandScopeDefault()
         payload = {
@@ -2870,9 +2651,11 @@ class Telegram:
         Delete the list of the bot's commands for the given scope and language.
         After deletion, higher-level commands will be used.
 
-        :param scope: A JSON-serialized BotCommandScope object. Defaults to BotCommandScopeDefault.
-        :param language_code: A two-letter ISO 639-1 language code. If empty, applies to all users in the scope without a dedicated command.
-        :return: True on success.
+        Args:
+            scope: A BotCommandScope object, describing scope of users for which the commands are relevant.
+            language_code: A two-letter ISO 639-1 language code.
+                If empty, commands will be applied to all users from the given scope,
+                for whose language there are no dedicated commands.
         """
         scope = scope or BotCommandScopeDefault()
         payload = {"scope": scope, "language_code": language_code}
@@ -2887,9 +2670,9 @@ class Telegram:
         """
         Get the current list of the bot's commands for the given scope and language.
 
-        :param scope: A JSON-serialized BotCommandScope object. Defaults to BotCommandScopeDefault.
-        :param language_code: A two-letter ISO 639-1 language code or empty string.
-        :return: An array of BotCommand objects. Empty if no commands are set.
+        Args:
+            scope: A BotCommandScope object, describing scope of users.
+            language_code: A two-letter ISO 639-1 language code or an empty string
         """
         scope = scope or BotCommandScopeDefault()
         payload = {"scope": scope, "language_code": language_code}
@@ -2902,9 +2685,10 @@ class Telegram:
         """
         Change the bot's name.
 
-        :param name: New bot name (0–64 characters). Pass empty string to remove the name for the given language.
-        :param language_code: A two-letter ISO 639-1 language code. If empty, name applies to all users without a dedicated name.
-        :return: True on success.
+        Args:
+            name: New bot name; 0-64 characters. Pass an empty string to remove the dedicated name for the given language.
+            language_code: A two-letter ISO 639-1 language code.
+                If empty, the name will be shown to all users for whose language there is no dedicated name.
         """
         payload = {
             "name": name,
@@ -2917,8 +2701,8 @@ class Telegram:
         """
         Get the current bot name for the given user language.
 
-        :param language_code: A two-letter ISO 639-1 language code or empty string.
-        :return: A BotName object on success.
+        Args:
+            language_code: A two-letter ISO 639-1 language code or an empty string.
         """
         payload = {"language_code": language_code}
         response = self._make_request("getMyName", method="GET", params=payload)
@@ -2930,9 +2714,11 @@ class Telegram:
         """
         Change the bot's description shown in the chat when it's empty.
 
-        :param description: New bot description (0–512 characters). Pass empty string to remove for the given language.
-        :param language_code: A two-letter ISO 639-1 language code. If empty, applies to all users without a dedicated description.
-        :return: True on success.
+        Args:
+            description: New bot description; 0-512 characters.
+                Pass an empty string to remove the dedicated description for the given language.
+            language_code: A two-letter ISO 639-1 language code. If empty, the description will
+                be applied to all users for whose language there is no dedicated description.
         """
         payload = {
             "description": description,
@@ -2946,8 +2732,8 @@ class Telegram:
         """
         Get the current bot description for the given user language.
 
-        :param language_code: A two-letter ISO 639-1 language code or empty string.
-        :return: A BotDescription object on success.
+        Args:
+            language_code: A two-letter ISO 639-1 language code or an empty string.
         """
         payload = {"language_code": language_code}
         response = self._make_request("getMyDescription", method="GET", params=payload)
@@ -2961,9 +2747,11 @@ class Telegram:
         """
         Change the bot's short description shown on the profile and when shared.
 
-        :param short_description: New short description (0–120 characters). Pass empty string to remove for the given language.
-        :param language_code: A two-letter ISO 639-1 language code. If empty, applies to all users without a dedicated short description.
-        :return: True on success.
+        Args:
+            short_description: New short description for the bot; 0-120 characters.
+                Pass an empty string to remove the dedicated short description for the given language.
+            language_code: A two-letter ISO 639-1 language code. If empty, the short description will be
+                applied to all users for whose language there is no dedicated short description.
         """
         payload = {
             "short_description": short_description,
@@ -2980,8 +2768,8 @@ class Telegram:
         """
         Get the current bot short description for the given user language.
 
-        :param language_code: A two-letter ISO 639-1 language code or empty string.
-        :return: A BotShortDescription object on success.
+        Args:
+            language_code: A two-letter ISO 639-1 language code or an empty string.
         """
         payload = {"language_code": language_code}
 
@@ -2994,8 +2782,8 @@ class Telegram:
         """
         Changes the profile photo of the bot.
 
-        :param photo: The new profile photo to set.
-        :return: True on success.
+        Args:
+            photo: The new profile photo to set.
         """
         payload = {"photo": photo}
         response = self._make_request("setMyProfilePhoto", method="POST", data=payload)
@@ -3004,8 +2792,6 @@ class Telegram:
     def remove_my_profile_photo(self) -> bool:
         """
         Removes the profile photo of the bot. Requires no parameters.
-
-        :return: True on success.
         """
         response = self._make_request("removeMyProfilePhoto", method="POST")
         return bool(response)
@@ -3018,9 +2804,10 @@ class Telegram:
         """
         Change the bot's menu button in a private chat or the default menu button.
 
-        :param chat_id: Unique identifier for the target private chat. If not specified, changes the default menu button.
-        :param menu_button: A JSON-serialized MenuButton object. Defaults to MenuButtonDefault.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target private chat. If not specified,
+                the bot's default menu button will be changed.
+            menu_button: A MenuButton object for the bot's new menu button.
         """
         menu_button = menu_button or MenuButtonDefault()
         payload = {
@@ -3034,8 +2821,9 @@ class Telegram:
         """
         Get the current value of the bot's menu button in a private chat or the default.
 
-        :param chat_id: Unique identifier for the target private chat. If not specified, returns the default menu button.
-        :return: A MenuButton object on success.
+        Args:
+            chat_id: Unique identifier for the target private chat.
+                If not specified, the bot's default menu button will be returned.
         """
         payload = {"chat_id": chat_id}
         response = self._make_request("getChatMenuButton", method="GET", params=payload)
@@ -3049,9 +2837,11 @@ class Telegram:
         """
         Change the default administrator rights requested when the bot is added to groups or channels.
 
-        :param rights: A JSON-serialized ChatAdministratorRights object. If not specified, rights are cleared.
-        :param for_channels: Pass True to change rights for channels. Otherwise, for groups/supergroups.
-        :return: True on success.
+        Args:
+            rights: A ChatAdministratorRights object describing new default administrator rights.
+                If not specified, the default administrator rights will be cleared.
+            for_channels: Pass True to change the default administrator rights of the bot in channels.
+                Otherwise, the default administrator rights of the bot for groups and supergroups will be changed.
         """
         payload = {"rights": rights, "for_channels": for_channels}
         response = self._make_request(
@@ -3065,8 +2855,9 @@ class Telegram:
         """
         Get the current default administrator rights of the bot.
 
-        :param for_channels: Pass True to get rights for channels. Otherwise, for groups/supergroups.
-        :return: A ChatAdministratorRights object on success.
+        Args:
+            for_channels: Pass True to get default administrator rights of the bot in channels.
+                Otherwise, default administrator rights of the bot for groups and supergroups will be returned.
         """
         payload = {"for_channels": for_channels}
         response = self._make_request(
@@ -3077,8 +2868,6 @@ class Telegram:
     def get_available_gifts(self) -> Gift:
         """
         Get the list of gifts that can be sent by the bot to users and channel chats.
-
-        :return: A Gifts object on success.
         """
         response = self._make_request("getAvailableGifts", method="GET")
         return Gift.model_validate(response)
@@ -3096,15 +2885,15 @@ class Telegram:
         """
         Send a gift to a user or channel chat. The gift cannot be converted to Telegram Stars.
 
-        :param gift_id: Identifier of the gift to send.
-        :param user_id: Unique identifier of the target user. Required if chat_id is not specified.
-        :param chat_id: Unique identifier or username of the target channel. Required if user_id is not specified.
-        :param pay_for_upgrade: Pass True to pay for the gift upgrade from the bot's balance (free for receiver).
-        :param text: Text to show with the gift (0–128 characters).
-        :param text_parse_mode: Mode for parsing entities in the text (e.g., 'HTML', 'MarkdownV2').
-        :param text_entities: List of special entities in the text (can be used instead of parse_mode).
-                            Only bold, italic, underline, strikethrough, spoiler, and custom_emoji are allowed.
-        :return: True on success.
+        Args:
+            gift_id: Identifier of the gift; limited gifts can't be sent to channel chats.
+            user_id: Unique identifier of the target user who will receive the gift.
+            chat_id: Unique identifier for the chat or username of
+                the channel (in the format @username) that will receive the gift.
+
+        Note:
+            chat_id Required if user_id is not specified.
+            user_id Required if chat_id is not specified.
         """
         if not (user_id or chat_id):
             raise ValueError("Either user_id or chat_id must be provided.")
@@ -3133,15 +2922,13 @@ class Telegram:
         """
         Gift a Telegram Premium subscription to a user.
 
-        :param user_id: Unique identifier of the target user who will receive the subscription.
-        :param month_count: Number of months the subscription will be active. Must be one of: 3, 6, or 12.
-        :param star_count: Number of Telegram Stars to pay. Must be 1000 (3 months), 1500 (6 months), or 2500 (12 months).
-        :param text: Text to show with the service message (0–128 characters).
-        :param text_parse_mode: Mode for parsing entities in the text ('HTML', 'MarkdownV2').
-                                Only bold, italic, underline, strikethrough, spoiler, and custom_emoji are allowed.
-        :param text_entities: List of special entities in the text (can be used instead of parse_mode).
-                            Same restrictions apply as with text_parse_mode.
-        :return: True on success.
+        Args:
+            user_id: Unique identifier of the target user who will receive a Telegram Premium subscription.
+            month_count: Number of months the Telegram Premium subscription
+                will be active for the user; must be one of 3, 6, or 12.
+            star_count: Number of Telegram Stars to pay. Must be 1000 (3 months), 1500 (6 months), or 2500 (12 months).
+
+            See full parameters here: [giftPremiumSubscription](https://core.telegram.org/bots/api#giftpremiumsubscription)
         """
         payload = {
             "user_id": user_id,
@@ -3160,10 +2947,10 @@ class Telegram:
         """
         Verify a user on behalf of the organization represented by the bot.
 
-        :param user_id: Unique identifier of the target user.
-        :param custom_description: Custom description for the verification (0–70 characters).
-                                Must be empty if the organization isn't allowed to set a custom description.
-        :return: True on success.
+        Args:
+            user_id: Unique identifier of the target user.
+            custom_description: Custom description for the verification; 0-70 characters.
+                Must be empty if the organization isn't allowed to provide a custom verification description.
         """
         payload = {
             "user_id": user_id,
@@ -3178,10 +2965,11 @@ class Telegram:
         """
         Verify a chat (e.g., channel) on behalf of the organization represented by the bot.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-        :param custom_description: Custom description for the verification (0–70 characters).
-                                Must be empty if the organization isn't allowed to set a custom description.
-        :return: True on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+                Channel direct messages chats can't be verified.
+            custom_description: Custom description for the verification; 0-70 characters.
+                Must be empty if the organization isn't allowed to provide a custom verification description.
         """
         payload = {
             "chat_id": chat_id,
@@ -3194,8 +2982,8 @@ class Telegram:
         """
         Remove verification from a user who is currently verified on behalf of the organization.
 
-        :param user_id: Unique identifier of the target user.
-        :return: True on success.
+        Args:
+            user_id: Unique identifier of the target user.
         """
         payload = {"user_id": user_id}
         response = self._make_request(
@@ -3207,9 +2995,8 @@ class Telegram:
         """
         Remove verification from a chat that is currently verified on behalf of the organization.
 
-        :param chat_id: Unique identifier for the target chat or username (e.g. @channelusername).
-                        Channel direct messages chats cannot be verified.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or username of the target bot or channel in the format @username
         """
         payload = {"chat_id": chat_id}
         response = self._make_request(
@@ -3224,11 +3011,11 @@ class Telegram:
         Mark an incoming message as read on behalf of a connected business account.
         Requires the 'can_read_messages' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param chat_id: Unique identifier of the chat where the message was received.
-                        The chat must have been active in the last 24 hours.
-        :param message_id: Unique identifier of the message to mark as read.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection on behalf of which to read the message.
+            chat_id: Unique identifier of the chat in which the message was received.
+                The chat must have been active in the last 24 hours.
+            message_id: Unique identifier of the message to mark as read.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3247,10 +3034,10 @@ class Telegram:
         Delete messages on behalf of a business account.
         Requires 'can_delete_sent_messages' to delete own messages, or 'can_delete_all_messages' to delete any message.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param message_ids: A list of 1–100 message identifiers to delete.
-                            All messages must be from the same chat.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection on behalf of which to delete the messages.
+            message_ids: A list of msg ids, 1-100 identifiers of messages to delete.
+                All messages must be from the same chat. See deleteMessage for limitations on which messages can be deleted.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3271,10 +3058,10 @@ class Telegram:
         Change the first and last name of a managed business account.
         Requires the 'can_change_name' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param first_name: New first name for the business account (1–64 characters).
-        :param last_name: New last name for the business account (0–64 characters).
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            first_name: The new value of the first name for the business account; 1-64 characters.
+            last_name: The new value of the last name for the business account; 0-64 characters.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3293,9 +3080,9 @@ class Telegram:
         Change the username of a managed business account.
         Requires the 'can_change_username' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param username: New username for the business account (0–32 characters). Pass empty string to remove.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            username: The new value of the username for the business account; 0-32 characters.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3313,9 +3100,9 @@ class Telegram:
         Change the bio (description) of a managed business account.
         Requires the 'can_change_bio' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param bio: New bio for the business account (0–140 characters). Pass empty string to remove.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            bio: The new value of the bio for the business account; 0-140 characters.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3336,11 +3123,11 @@ class Telegram:
         Change the profile photo of a managed business account.
         Requires the 'can_edit_profile_photo' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param photo: New profile photo, uploaded as bytes using multipart/form-data.
-        :param is_public: Pass True to set the photo as public (visible even if main photo is hidden by privacy settings).
-                        An account can have only one public photo.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            photo: The new profile photo to set.
+            is_public: Pass True to set the public photo, which will be visible even if the main photo
+                is hidden by the business account's privacy settings. An account can have only one public photo.
         """
         files = {"photo": photo}
         payload = {
@@ -3362,10 +3149,11 @@ class Telegram:
         Remove the current profile photo of a managed business account.
         Requires the 'can_edit_profile_photo' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param is_public: Pass True to remove the public photo (visible even if main photo is hidden).
-                        After removing the main photo, the previous photo (if any) becomes the main one.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            is_public: Pass True to remove the public photo, which is visible even if the main photo
+                is hidden by the business account's privacy settings. After the main photo is removed,
+                the previous profile photo (if present) becomes the main photo.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3386,10 +3174,11 @@ class Telegram:
         Change the privacy settings for incoming gifts in a managed business account.
         Requires the 'can_change_gift_settings' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param show_gift_button: Pass True if the gift button should always be shown in the input field.
-        :param accepted_gift_types: A JSON-serialized AcceptedGiftTypes object specifying which types of gifts are accepted.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            show_gift_button: Pass True, if a button for sending a gift to the user
+                or by the business account must always be shown in the input field.
+            accepted_gift_types: Types of gifts accepted by the business account.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3408,8 +3197,8 @@ class Telegram:
         Get the amount of Telegram Stars owned by a managed business account.
         Requires the 'can_view_gifts_and_stars' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :return: A StarAmount object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection
         """
         payload = {"business_connection_id": business_connection_id}
         response = self._make_request(
@@ -3424,9 +3213,9 @@ class Telegram:
         Transfer Telegram Stars from the business account balance to the bot's balance.
         Requires the 'can_transfer_stars' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param star_count: Number of Telegram Stars to transfer (1–10000).
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            star_count: Number of Telegram Stars to transfer; 1-10000
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3453,16 +3242,10 @@ class Telegram:
         Get the list of gifts received and owned by a managed business account.
         Requires the 'can_view_gifts_and_stars' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param exclude_unsaved: Pass True to exclude gifts not saved to the profile page.
-        :param exclude_saved: Pass True to exclude gifts saved to the profile page.
-        :param exclude_unlimited: Pass True to exclude gifts that can be purchased unlimited times.
-        :param exclude_limited: Pass True to exclude limited-purchase gifts.
-        :param exclude_unique: Pass True to exclude unique gifts.
-        :param sort_by_price: Pass True to sort results by price instead of send date.
-        :param offset: Offset for pagination (from previous response); use empty string for first page.
-        :param limit: Maximum number of gifts to return (1–100, default: 100).
-        :return: An OwnedGifts object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+
+            See full parameters here: [getBusinessAccountGifts](https://core.telegram.org/bots/api#getbusinessaccountgifts)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3559,9 +3342,9 @@ class Telegram:
         Convert a regular gift to Telegram Stars.
         Requires the 'can_convert_gifts_to_stars' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param owned_gift_id: Unique identifier of the regular gift to convert.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            owned_gift_id: Unique identifier of the regular gift that should be converted to Telegram Stars.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3582,12 +3365,11 @@ class Telegram:
         Requires the 'can_transfer_and_upgrade_gifts' business bot right.
         If the upgrade is paid, the 'can_transfer_stars' right is also required.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param owned_gift_id: Unique identifier of the regular gift to upgrade.
-        :param keep_original_details: Pass True to keep original sender, receiver, and text in the upgraded gift.
-        :param star_count: Amount of Telegram Stars to pay for the upgrade.
-                        If the gift has a prepaid upgrade, pass 0. Otherwise, this value must match the gift's upgrade cost.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            owned_gift_id: Unique identifier of the regular gift that should be upgraded to a unique one.
+
+            See full parameters here: [upgradeGift](https://core.telegram.org/bots/api#upgradegift)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3610,11 +3392,13 @@ class Telegram:
         Requires the 'can_transfer_and_upgrade_gifts' business bot right.
         If the transfer is paid, the 'can_transfer_stars' right is required.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param owned_gift_id: Unique identifier of the gift to transfer.
-        :param new_owner_chat_id: Unique identifier of the chat that will receive the gift. Must be active in the last 24 hours.
-        :param star_count: Amount of Telegram Stars to pay for the transfer. If 0 or omitted, transfer is free.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            owned_gift_id: Unique identifier of the regular gift that should be transferred.
+            new_owner_chat_id: Unique identifier of the chat which will own the gift.
+                The chat must be active in the last 24 hours.
+            star_count: The amount of Telegram Stars that will be paid for the transfer from the business account balance.
+                If positive, then the can_transfer_stars business bot right is required.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3641,16 +3425,13 @@ class Telegram:
         Post a story on behalf of a managed business account.
         Requires the 'can_manage_stories' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param content: A JSON-serialized InputStoryContent object (e.g., photo, video).
-        :param active_period: Duration in seconds after which the story expires. Must be one of: 21600 (6h), 43200 (12h), 86400 (1d), or 172800 (2d).
-        :param caption: Story caption (0–2048 characters).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption (can be used instead of parse_mode).
-        :param areas: List of clickable StoryArea objects (e.g., locations, links, quiz).
-        :param post_to_chat_page: Pass True to keep the story accessible after expiration.
-        :param protect_content: Pass True to protect the story from forwarding and screenshots.
-        :return: A Story object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            content: Content of the story.
+            active_period: Duration in seconds after which the story expires.
+                Must be one of: 21600 (6h), 43200 (12h), 86400 (1d), or 172800 (2d).
+
+            See full parameters here: [postStory](https://core.telegram.org/bots/api#poststory)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3713,14 +3494,12 @@ class Telegram:
         Edit a story previously posted by the bot on behalf of a managed business account.
         Requires the 'can_manage_stories' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param story_id: Unique identifier of the story to edit.
-        :param content: A JSON-serialized InputStoryContent object with new content.
-        :param caption: New caption for the story (0–2048 characters).
-        :param parse_mode: Mode for parsing entities in the caption.
-        :param caption_entities: List of special entities in the caption.
-        :param areas: List of clickable StoryArea objects to replace existing ones.
-        :return: The updated Story object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            story_id: Unique identifier of the story to edit.
+            content: Content of the story.
+
+            See full parameters here: [editStory](https://core.telegram.org/bots/api#editstory)
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3739,9 +3518,9 @@ class Telegram:
         Delete a story previously posted by the bot on behalf of a managed business account.
         Requires the 'can_manage_stories' business bot right.
 
-        :param business_connection_id: Unique identifier of the business connection.
-        :param story_id: Unique identifier of the story to delete.
-        :return: True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection.
+            story_id: Unique identifier of the story to delete.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -3749,6 +3528,70 @@ class Telegram:
         }
         response = self._make_request("deleteStory", method="POST", data=payload)
         return bool(response)
+
+    def answer_web_app_query(
+        self, web_app_query_id: str, result: InlineQueryResult
+    ) -> SentWebAppMessage:
+        """
+        Set the result of an interaction with a Web App and send a corresponding message on behalf of the user
+        to the chat from which the query originated.
+
+        Args:
+            web_app_query_id: Unique identifier for the query to be answered.
+            result: A InlineQueryResult object describing the message to be sent
+        """
+        payload = {"web_app_query_id": web_app_query_id, "result": result}
+        response = self._make_request("answerWebAppQuery", method="POST", data=payload)
+        return SentWebAppMessage.model_validate(response)
+
+    def save_prepared_inline_message(
+        self,
+        user_id: int,
+        result: InlineQueryResult,
+        allow_user_chats: bool | None = None,
+        allow_bot_chats: bool | None = None,
+        allow_group_chats: bool | None = None,
+        allow_channel_chats: bool | None = None,
+    ) -> PreparedInlineMessage:
+        """
+        Store a message that can be sent by a user of a Mini App.
+        This allows the Mini App to prepare a message in advance, which the user can send later with a single tap.
+
+        Args:
+            user_id: Unique identifier of the target user that can use the prepared message.
+            result: A InlineQueryResult object describing the message to be sent.
+
+            See full parameters here: [savePreparedInlineMessage](https://core.telegram.org/bots/api#savepreparedinlinemessage)
+        """
+        payload = {
+            "user_id": user_id,
+            "result": result,
+            "allow_user_chats": allow_user_chats,
+            "allow_bot_chats": allow_bot_chats,
+            "allow_group_chats": allow_group_chats,
+            "allow_channel_chats": allow_channel_chats,
+        }
+        response = self._make_request(
+            "savePreparedInlineMessage", method="POST", data=payload
+        )
+        return PreparedInlineMessage.model_validate(response)
+
+    def save_prepared_keyboard_button(
+        self, user_id: int, button: KeyboardButton
+    ) -> PreparedKeyboardButton:
+        """
+        Stores a keyboard button that can be used by a user within a Mini App.
+
+        Args:
+            user_id: Unique identifier of the target user that can use the prepared message.
+            button: A KeyboardButton object describing the button to be saved.
+                The button must be of the type request_users, request_chat, or request_managed_bot.
+        """
+        payload = {"user_id": user_id, "button": button}
+        response = self._make_request(
+            "savePreparedKeyboardButton", method="POST", data=payload
+        )
+        return PreparedKeyboardButton.model_validate(response)
 
     def edit_message_text(
         self,
@@ -3766,18 +3609,17 @@ class Telegram:
         """
         Edit the text and game messages.
 
-        :param text: New text of the message (1–4096 characters after entities parsing).
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the message to edit. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param parse_mode: Mode for parsing entities in the message text ('HTML', 'MarkdownV2').
-        :param entities: List of special entities in the message text (can be used instead of parse_mode).
-        :param link_preview_options: Options for link preview generation.
-        :param: rich_message: New rich content of the message; required if text isn't specified.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id:Required if inline_message_id is not specified. Identifier of the message to edit.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+            text: New text of the message, 1-4096 characters after entity parsing; required if rich_message isn't specified.
+
+           See full parameters here: [editMessageText](https://core.telegram.org/bots/api#editmessagetext)
+
+        Note:
+            business messages that were not sent by the bot and do not contain an inline keyboard
+            can only be edited within 48 hours from the time they were sent.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -3817,17 +3659,17 @@ class Telegram:
         """
         Edit the caption of messages.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the message to edit. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param caption: New caption of the message (0–1024 characters after entities parsing).
-        :param parse_mode: Mode for parsing entities in the caption ('HTML', 'MarkdownV2').
-        :param caption_entities: List of special entities in the caption (can be used instead of parse_mode).
-        :param show_caption_above_media: Pass True to show the caption above the media (supported only for animation, photo, video).
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id:Required if inline_message_id is not specified. Identifier of the message to edit.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+            caption: New caption of the message, 0-1024 characters after entities parsing.
+
+            See full parameters here: [editMessageCaption](https://core.telegram.org/bots/api#editmessagecaption)
+
+        Note:
+            business messages that were not sent by the bot and do not contain an inline keyboard
+            can only be edited within 48 hours from the time they were sent.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -3862,17 +3704,19 @@ class Telegram:
     ) -> Message | bool:
         """
         Edit the media content of a message (animation, audio, document, photo, video) or add media to a text message.
-
         When editing inline messages, a new file cannot be uploaded; use existing file_id or URL.
 
-        :param media: A JSON-serialized object representing the new media content (InputMediaPhoto, InputMediaVideo, etc.).
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the message to edit. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            media: A InputMedia object representing the new media content (InputMediaPhoto, InputMediaVideo, etc.).
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id: Required if inline_message_id is not specified. Identifier of the message to edit.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message was sent.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+            reply_markup: A InlineKeyboardMarkup object for a new inline keyboard.
+
+        Note:
+            business messages that were not sent by the bot and do not contain an inline keyboard
+            can only be edited within 48 hours from the time they were sent.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -3912,20 +3756,14 @@ class Telegram:
 
         Location can be edited until live_period expires or until stopMessageLiveLocation is called.
 
-        :param latitude: New latitude of the location.
-        :param longitude: New longitude of the location.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the message to edit. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param live_period: New period in seconds during which the location can be updated.
-                            If 0x7FFFFFFF, location can be updated forever. Must not extend current period by more than 1 day.
-        :param horizontal_accuracy: Radius of uncertainty for the location (0–1500 meters).
-        :param heading: Direction of user movement in degrees (1–360).
-        :param proximity_alert_radius: Maximum distance for proximity alerts (1–100000 meters).
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            latitude: New latitude of the location.
+            longitude: New longitude of the location.
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id: Required if inline_message_id is not specified. Identifier of the message to edit.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+
+            See full parameters here: [editMessageLiveLocation](https://core.telegram.org/bots/api#editmessagelivelocation)
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -3965,13 +3803,12 @@ class Telegram:
         """
         Stop updating a live location message before live_period expires.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the live location message to stop. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id: Required if inline_message_id is not specified. Identifier of the message to edit.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message was sent.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+            reply_markup: A InlineKeyboardMarkup object for a new inline keyboard.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -4004,12 +3841,12 @@ class Telegram:
         """
         Edit a checklist on behalf of a connected business account.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited. Required.
-        :param chat_id: Unique identifier for the target chat.
-        :param message_id: Unique identifier for the target message.
-        :param checklist: A JSON-serialized InputChecklist object for the new checklist.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection on behalf of which the message will be sent.
+            chat_id: Chat ID or @username of the target chat/bot.
+            message_id: Unique identifier for the target message.
+            checklist: A InputChecklist object for the new checklist.
+            reply_markup: A InlineKeyboardMarkup object for a new inline keyboard.
         """
         payload = {
             "business_connection_id": business_connection_id,
@@ -4037,13 +3874,12 @@ class Telegram:
         """
         Edit only the reply markup (inline keyboard) of a message.
 
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is edited.
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-                        Required if inline_message_id is not specified.
-        :param message_id: Identifier of the message to edit. Required if inline_message_id is not specified.
-        :param inline_message_id: Identifier of the inline message. Required if chat_id and message_id are not specified.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            business_connection_id: Unique identifier of the business connection on behalf of which the message was sent.
+            chat_id: Required if `inline_message_id` not specified. Target chat ID or @username (supergroup/channel).
+            message_id: Required if inline_message_id is not specified. Identifier of the message to edit.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
+            reply_markup: A InlineKeyboardMarkup object for a new inline keyboard.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -4076,11 +3912,11 @@ class Telegram:
         Stop a poll that was sent by the bot.
         On success, the stopped Poll object is returned.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param message_id: Identifier of the original message with the poll.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the poll is stopped.
-        :param reply_markup: A JSON-serialized object for a new inline keyboard attached to the message.
-        :return: The stopped Poll object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            message_id: Identifier of the original message with the poll.
+            business_connection_id: Unique identifier of the business connection on behalf of which the message was sent.
+            reply_markup: A InlineKeyboardMarkup object for a new inline keyboard attached to the message.
         """
         payload = {
             "chat_id": chat_id,
@@ -4098,12 +3934,12 @@ class Telegram:
         Approve a suggested post in a direct messages chat.
         The bot must have the 'can_post_messages' administrator right in the corresponding channel chat.
 
-        :param chat_id: Unique identifier for the target direct messages chat.
-        :param message_id: Identifier of the suggested post message to approve.
-        :param send_date: Unix timestamp when the post should be published.
-                        Must be within 30 days (2678400 seconds) in the future.
-                        Omit if already specified during creation.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target direct messages chat.
+            message_id: Identifier of a suggested post message to approve.
+            send_date: Point in time (Unix timestamp) when the post is expected to be published;
+                omit if the date has already been specified when the suggested post was created.
+                If specified, then the date must be not more than 2678400 seconds (30 days) in the future.
         """
         payload = {
             "chat_id": chat_id,
@@ -4122,10 +3958,10 @@ class Telegram:
         Decline a suggested post in a direct messages chat.
         The bot must have the 'can_manage_direct_messages' administrator right in the corresponding channel chat.
 
-        :param chat_id: Unique identifier for the target direct messages chat.
-        :param message_id: Identifier of the suggested post message to decline.
-        :param comment: Comment for the creator of the suggested post (0–128 characters).
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target direct messages chat.
+            message_id: Identifier of a suggested post message to decline.
+            comment: Comment for the creator of the suggested post; 0-128 characters.
         """
         payload = {
             "chat_id": chat_id,
@@ -4150,9 +3986,9 @@ class Telegram:
         - Bots with 'can_delete_messages' right can delete any message in supergroups and channels.
         - Bots with 'can_manage_direct_messages' right can delete any message in direct messages chats.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param message_id: Identifier of the message to delete.
-        :return: True on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            message_id: Identifier of the message to delete.
         """
         payload = {
             "chat_id": chat_id,
@@ -4166,10 +4002,10 @@ class Telegram:
         Delete multiple messages simultaneously.
         If some messages can't be found or deleted, they are simply skipped.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param message_ids: A list of 1–100 message identifiers to delete.
-                            See delete_message() for limitations on deletable messages.
-        :return: True on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            message_ids: A list of 1-100 identifiers of messages to delete.
+                See `delete_message()` for limitations on which messages can be deleted.
         """
         payload = {"chat_id": chat_id, "message_ids": message_ids}
         response = self._make_request("deleteMessages", method="POST", data=payload)
@@ -4182,11 +4018,11 @@ class Telegram:
         Use this method to remove a reaction from a message in a group or a supergroup chat.
         The bot must have the 'can_delete_messages' administrator right in the chat.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param message_id: A list of 1–100 message identifiers to delete. See delete_message() for limitations on deletable messages.
-        :param user_id: Identifier of the user whose reaction will be removed, if the reaction was added by a user.
-        :param actor_chat_id: Identifier of the chat whose reaction will be removed, if the reaction was added by a chat.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            message_id: Identifier of the target message.
+            user_id: Identifier of the user whose reaction will be removed, if the reaction was added by a user.
+            actor_chat_id: Identifier of the chat whose reaction will be removed, if the reaction was added by a chat.
         """
         payload = {
             "chat_id": chat_id,
@@ -4203,13 +4039,14 @@ class Telegram:
         self, chat_id: int | str, user_id: int, actor_chat_id: int
     ) -> bool:
         """
-        Use this method to remove up to 10000 recent reactions in a group or a supergroup chat added by a given user or chat.
+        Use this method to remove up to 10000 recent reactions in a
+        group or a supergroup chat added by a given user or chat.
         The bot must have the 'can_delete_messages' administrator right in the chat.
 
-        :param chat_id: Unique identifier for the target chat or username of the target supergroup in the format @username.
-        :param user_id: Identifier of the user whose reactions will be removed, if the reactions were added by a user.
-        :param actor_chat_id: Identifier of the chat whose reactions will be removed, if the reactions were added by a chat.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target chat or @username of the supergroup.
+            user_id: Identifier of the user whose reactions will be removed, if the reactions were added by a user.
+            actor_chat_id: Identifier of the chat whose reactions will be removed, if the reactions were added by a chat.
         """
         payload = {
             "chat_id": chat_id,
@@ -4241,24 +4078,16 @@ class Telegram:
         Send static .WEBP, animated .TGS, or video .WEBM stickers.
         On success, the sent Message is returned.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param sticker: Sticker to send. Can be a file_id (str), URL (str), or raw bytes.
-                        - For static stickers: .WEBP or .PNG
-                        - For animated stickers: .TGS
-                        - For video stickers: .WEBM
-                        Note: Video and animated stickers cannot be sent via HTTP URL.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param emoji: Emoji associated with the sticker (only for newly uploaded stickers).
-        :param disable_notification: Send message silently without notification sound.
-        :param protect_content: Protect message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline or reply keyboard.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            sticker: Sticker to send. Can be a file_id (str), URL (str), or raw bytes.
+
+                For static stickers: .WEBP or .PNG
+                For animated stickers: .TGS
+                For video stickers: .WEBM
+                Note: Video and animated stickers cannot be sent via HTTP URL.
+
+            - See full parameters here: [sendSticker](https://core.telegram.org/bots/api#sendsticker)
         """
         payload = {
             "chat_id": chat_id,
@@ -4292,8 +4121,8 @@ class Telegram:
         """
         Get information about a sticker set.
 
-        :param name: Name of the sticker set (e.g., 'my_stickers_by_botname').
-        :return: A StickerSet object on success.
+        Args:
+            name: Name of the sticker set.
         """
         payload = {"name": name}
         response = self._make_request("getStickerSet", method="GET", params=payload)
@@ -4303,8 +4132,9 @@ class Telegram:
         """
         Get information about custom emoji stickers by their identifiers.
 
-        :param custom_emoji_ids: A list of up to 200 unique identifiers of custom emoji stickers.
-        :return: An Array of Sticker objects on success.
+        Args:
+            custom_emoji_ids: A list of custom emoji identifiers.
+                At most 200 custom emoji identifiers can be specified.
         """
         payload = {"custom_emoji_ids": custom_emoji_ids}
         response = self._make_request(
@@ -4319,11 +4149,15 @@ class Telegram:
         Upload a sticker file for later use in creating or editing sticker sets.
         The file can be reused multiple times.
 
-        :param user_id: User identifier of the sticker file owner.
-        :param sticker: File with the sticker in .WEBP (static), .PNG (static), .TGS (animated), or .WEBM (video) format.
-                        See https://core.telegram.org/stickers for technical requirements.
-        :param sticker_format: Format of the sticker: 'static', 'animated', or 'video'.
-        :return: The uploaded File object on success.
+        Args:
+            user_id: User identifier of sticker file owner.
+            sticker: File with the sticker in
+                .WEBP (static)
+                .PNG (static)
+                .TGS (animated)
+                .WEBM (video) format.
+                See [stickers](https://core.telegram.org/stickers) for technical requirements.
+            sticker_format: Format of the sticker, must be one of `static`, `animated`, `video`.
         """
         files = {"sticker": sticker}
         payload = {
@@ -4347,13 +4181,20 @@ class Telegram:
         """
         Create a new sticker set owned by a user. The bot will be able to edit this set.
 
-        :param user_id: User identifier of the sticker set owner.
-        :param name: Short name of the sticker set (1–64 characters). Must end with '_by_<bot_username>'.
-        :param title: Sticker set title (1–64 characters).
-        :param stickers: A list of InputSticker objects (1–50 stickers).
-        :param sticker_type: Type of stickers: 'regular', 'mask', or 'custom_emoji'. Default: 'regular'.
-        :param needs_repainting: For custom emoji sets: True if stickers should adapt to context color (text, status, etc.).
-        :return: True on success.
+        Args:
+            user_id: User identifier of created sticker set owner.
+            name: Short name of sticker set, to be used in t.me/addstickers/ URLs (e.g., animals).
+                Can contain only English letters, digits and underscores.
+                Must begin with a letter.
+                Can't contain consecutive underscores.
+                Must end in `_by_<bot_username>` (bot username is case insensitive).
+                Length: 1-64 characters.
+            title: Sticker set title, 1-64 characters.
+            stickers: A list of InputSticker, 1-50 initial stickers to be added to the sticker set.
+            sticker_type: Type of stickers in the set, pass `regular`, `mask`, or `custom_emoji`.
+            needs_repainting: Pass True if stickers in the sticker set must be repainted to the color of text
+                when used in messages, the accent color if used as emoji status, white on chat photos,
+                or another appropriate color based on context; for custom emoji sticker sets only.
         """
         payload = {
             "user_id": user_id,
@@ -4376,11 +4217,11 @@ class Telegram:
         - Regular/mask sets: up to 120 stickers.
         - Custom emoji sets: up to 200 stickers.
 
-        :param user_id: User identifier of the sticker set owner.
-        :param name: Name of the sticker set.
-        :param sticker: An InputSticker object describing the sticker to add.
-                        If the same sticker exists, the set is not changed.
-        :return: True on success.
+        Args:
+            user_id: User identifier of the sticker set owner.
+            name: Sticker set name.
+            sticker: A InputSticker object with information about the added sticker.
+                If exactly the same sticker had already been added to the set, then the set isn't changed.
         """
         payload = {"user_id": user_id, "name": name, "sticker": sticker}
         response = self._make_request("addStickerToSet", method="POST", data=payload)
@@ -4390,9 +4231,9 @@ class Telegram:
         """
         Move a sticker in a bot-created set to a specific position (zero-based index).
 
-        :param sticker: File identifier of the sticker.
-        :param position: New position of the sticker in the set.
-        :return: True on success.
+        Args:
+            sticker: File identifier of the sticker.
+            position: New sticker position in the set, zero-based
         """
         payload = {
             "sticker": sticker,
@@ -4407,8 +4248,8 @@ class Telegram:
         """
         Delete a sticker from a set created by the bot.
 
-        :param sticker: File identifier of the sticker to delete.
-        :return: True on success.
+        Args:
+            sticker: File identifier of the sticker to delete.
         """
         payload = {"sticker": sticker}
         response = self._make_request(
@@ -4423,11 +4264,12 @@ class Telegram:
         Replace an existing sticker in a set with a new one.
         Equivalent to: delete → add → set position.
 
-        :param user_id: User identifier of the sticker set owner.
-        :param name: Name of the sticker set.
-        :param old_sticker: File identifier of the sticker to replace.
-        :param sticker: An InputSticker object with the new sticker data.
-        :return: True on success.
+        Args:
+            user_id: User identifier of the sticker set owner.
+            name: NSticker set name.
+            old_sticker: File identifier of the replaced sticker.
+            sticker:A InputSticker object with information about the added sticker.
+                If exactly the same sticker had already been added to the set, then the set remains unchanged.
         """
         payload = {
             "user_id": user_id,
@@ -4445,9 +4287,9 @@ class Telegram:
         Change the list of emoji associated with a regular or custom emoji sticker.
         The sticker must belong to a bot-created set.
 
-        :param sticker: File identifier of the sticker.
-        :param emoji_list: List of 1–20 emoji to associate with the sticker.
-        :return: True on success.
+        Args:
+            sticker: File identifier of the sticker.
+            emoji_list: A list of 1-20 emoji associated with the sticker.
         """
         payload = {"sticker": sticker, "emoji_list": emoji_list}
         response = self._make_request(
@@ -4463,9 +4305,9 @@ class Telegram:
         Total length of all keywords must not exceed 64 characters.
         The sticker must belong to a bot-created set.
 
-        :param sticker: File identifier of the sticker.
-        :param keywords: List of 0–20 search keywords. Pass empty list or omit to remove.
-        :return: True on success.
+        Args:
+            sticker: File identifier of the sticker.
+            keywords: A list of 0-20 search keywords for the sticker with total length of up to 64 characters
         """
         payload = {"sticker": sticker, "keywords": keywords}
         response = self._make_request("setStickerKeywords", method="POST", data=payload)
@@ -4479,10 +4321,10 @@ class Telegram:
         The sticker must belong to a sticker set created by the bot.
         Omit the mask_position parameter to remove the current mask position.
 
-        :param sticker: File identifier of the mask sticker.
-        :param mask_position: A JSON-serialized MaskPosition object describing the new position
-                            where the mask should be placed on the face. Pass None to remove.
-        :return: True on success.
+        Args:
+            sticker: File identifier of the mask sticker.
+            mask_position: A object with the position where the mask should be placed on faces.
+                Omit the parameter to remove the mask position.
         """
         payload = {"sticker": sticker, "mask_position": mask_position}
         response = self._make_request(
@@ -4494,9 +4336,9 @@ class Telegram:
         """
         Set the title of a sticker set created by the bot.
 
-        :param name: Name of the sticker set.
-        :param title: New title for the sticker set (1–64 characters).
-        :return: True on success.
+        Args:
+            name: Sticker set name.
+            title: Sticker set title, 1-64 characters.
         """
         payload = {
             "name": name,
@@ -4521,15 +4363,14 @@ class Telegram:
         - For 'video' sets: a .WEBM video, up to 32 KB.
 
         Animated and video thumbnails cannot be uploaded via HTTP URL.
-
         If thumbnail is omitted, the thumbnail is removed and the first sticker becomes the thumbnail.
 
-        :param name: Name of the sticker set.
-        :param user_id: User identifier of the sticker set owner.
-        :param thumbnail: Thumbnail file to upload (bytes), file_id (str), or HTTP URL (str).
-                        If None, removes the current thumbnail.
-        :param format: Format of the thumbnail: 'static', 'animated', or 'video'.
-        :return: True on success.
+        Args:
+            name: Sticker set name.
+            user_id: User identifier of the sticker set owner.
+            thumbnail: Thumbnail file to upload (bytes), file_id (str), or HTTP URL (str).
+                If None, removes the current thumbnail.
+            format: Format of the thumbnail: 'static', 'animated', or 'video'.
         """
         payload = {
             "name": name,
@@ -4556,10 +4397,10 @@ class Telegram:
         """
         Set the thumbnail of a custom emoji sticker set.
 
-        :param name: Name of the custom emoji sticker set.
-        :param custom_emoji_id: Custom emoji identifier of a sticker in the set to use as the thumbnail.
-                                Pass an empty string or None to remove the thumbnail and use the first sticker instead.
-        :return: True on success.
+        Args:
+            name: Sticker set name.
+            custom_emoji_id: Custom emoji identifier of a sticker from the sticker set; pass an empty string
+                to drop the thumbnail and use the first sticker as the thumbnail
         """
         payload = {
             "name": name,
@@ -4575,8 +4416,8 @@ class Telegram:
         """
         Delete a sticker set that was created by the bot.
 
-        :param name: Name of the sticker set to delete.
-        :return: True on success.
+        Args:
+            name: Sticker set name.
         """
         payload = {"name": name}
         response = self._make_request("deleteStickerSet", method="POST", data=payload)
@@ -4601,19 +4442,11 @@ class Telegram:
         Use this method to send rich messages. If the message contains a block with a media element,
         then the bot must have the right to send the media to the chat.
 
-        :param chat_id: Unique identifier for the target chat or username of the target bot, supergroup or channel in the format @username.
-        :param rich_message: The message to be sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) of a forum; for forum supergroups and private chats of bots with forum topic mode enabled only.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message will be sent.
-        :param direct_messages_topic_id: Identifier of the direct messages topic to which the message will be sent; required if the message is sent to a direct messages chat.
-        :param disable_notification: Sends the message silently. Users will receive a notification with no sound.
-        :param protect_content: Protects the contents of the sent message from forwarding and saving.
-        :param allow_paid_broadcast: Pass True to allow up to 1000 messages per second, ignoring broadcasting limits for a fee of 0.1 Telegram Stars per message. The relevant Stars will be withdrawn from the bot's balance.
-        :param message_effect_id: Unique identifier of the message effect to be added to the message; for private chats only.
-        :param suggested_post_parameters: A JSON-serialized object containing the parameters of the suggested post to send; for direct messages chats only. If the message is sent as a reply to another suggested post, then that suggested post is automatically declined.
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Additional interface options. A JSON-serialized object for an inline keyboard, custom reply keyboard, instructions to remove a reply keyboard or to force a reply from the user.
-        :return: The sent Message object on success.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            rich_message: The message to be sent.
+
+            See full parameters here: [sendRichMessage](https://core.telegram.org/bots/api#sendrichmessage)
         """
         payload = {
             "chat_id": chat_id,
@@ -4642,13 +4475,14 @@ class Telegram:
         """
         Use this method to stream a partial rich message to a user while the message is being generated.
         Note that the streamed draft is ephemeral and acts as a temporary 30-second preview - once the output is finalized,
-        you must call sendRichMessage with the complete message to persist it in the user's chat.
+        you must call `send_rich_message()` with the complete message to persist it in the user's chat.
 
-        :param chat_id: Unique identifier for the target private chat.
-        :param draft_id: Unique identifier of the message draft; must be non-zero. Changes to drafts with the same identifier are animated.
-        :param rich_message: The partial message to be streamed.
-        :param message_thread_id: Unique identifier for the target message thread.
-        :return: True on success.
+        Args:
+            chat_id: Unique identifier for the target private chat.
+            draft_id: Unique identifier of the message draft; must be non-zero.
+                Changes to drafts with the same identifier are animated.
+            rich_message: The partial message to be streamed.
+            message_thread_id: Unique identifier for the target message thread.
         """
         payload = {
             "chat_id": chat_id,
@@ -4675,13 +4509,16 @@ class Telegram:
         On success, True is returned.
         No more than 50 results per query are allowed.
 
-        :param inline_query_id: Unique identifier for the answered query.
-        :param results: A JSON-serialized array of results for the inline query.
-        :param cache_time: The maximum amount of time in seconds that the result of the query may be cached on the server. Defaults to 300.
-        :param is_personal: Pass True if results are meant only for the user that sent the query. Otherwise, results may be cached for all users.
-        :param next_offset: Pass the offset that clients should send in the next query to receive more results. Pass empty string if no more results.
-        :param button: A JSON-serialized object describing a button to be shown above the results.
-        :return: True on success.
+        Args:
+            inline_query_id: Unique identifier for the answered query.
+            results: A InlineQueryResult array of results for the inline query.
+            cache_time: The maximum amount of time in seconds that the result of
+                the query may be cached on the server. Defaults to 300.
+            is_personal: Pass True if results are meant only for the user that sent the query.
+                Otherwise, results may be cached for all users.
+            next_offset: Pass the offset that clients should send in the next query to receive more results.
+                Pass empty string if no more results.
+            button: A InlineQueryResultsButton object describing a button to be shown above the results.
         """
         payload = {
             "inline_query_id": inline_query_id,
@@ -4693,111 +4530,6 @@ class Telegram:
         }
         response = self._make_request("answerInlineQuery", method="POST", data=payload)
         return bool(response)
-
-    def answer_web_app_query(
-        self, web_app_query_id: str, result: InlineQueryResult
-    ) -> SentWebAppMessage:
-        """
-        Set the result of an interaction with a Web App and send a corresponding message on behalf of the user
-        to the chat from which the query originated.
-
-        On success, a SentWebAppMessage object is returned.
-
-        :param web_app_query_id: Unique identifier for the query to be answered.
-        :param result: A JSON-serialized InlineQueryResult object describing the message to be sent.
-                    Must be one of the supported result types (e.g., article, photo, video, etc.).
-        :return: A SentWebAppMessage object on success.
-        """
-        payload = {"web_app_query_id": web_app_query_id, "result": result}
-        response = self._make_request("answerWebAppQuery", method="POST", data=payload)
-        return SentWebAppMessage.model_validate(response)
-
-    def create_sent_web_app_message(
-        self,
-        inline_message_id: str | None = None,
-    ) -> SentWebAppMessage:
-        """
-        Create a SentWebAppMessage object (typically returned by answerWebAppQuery).
-
-        Describes an inline message sent by a Web App on behalf of a user.
-
-        :param inline_message_id: Optional. Identifier of the sent inline message. Available only if there is an inline keyboard attached.
-        :return: A dictionary representing a SentWebAppMessage object.
-        """
-        result = {
-            "inline_message_id": inline_message_id,
-        }
-        return SentWebAppMessage.model_validate(result)
-
-    def save_prepared_inline_message(
-        self,
-        user_id: int,
-        result: Dict[str, Any],
-        allow_user_chats: bool | None = None,
-        allow_bot_chats: bool | None = None,
-        allow_group_chats: bool | None = None,
-        allow_channel_chats: bool | None = None,
-    ) -> PreparedInlineMessage:
-        """
-        Store a message that can be sent by a user of a Mini App.
-        This allows the Mini App to prepare a message in advance, which the user can send later with a single tap.
-
-        Returns a PreparedInlineMessage object on success.
-
-        :param user_id: Unique identifier of the target user that can use the prepared message.
-        :param result: A JSON-serialized InlineQueryResult object describing the message to be sent.
-        :param allow_user_chats: Pass True if the message can be sent to private chats with users.
-        :param allow_bot_chats: Pass True if the message can be sent to private chats with bots.
-        :param allow_group_chats: Pass True if the message can be sent to group and supergroup chats.
-        :param allow_channel_chats: Pass True if the message can be sent to channel chats.
-        :return: A PreparedInlineMessage object on success.
-        """
-        payload = {
-            "user_id": user_id,
-            "result": result,
-            "allow_user_chats": allow_user_chats,
-            "allow_bot_chats": allow_bot_chats,
-            "allow_group_chats": allow_group_chats,
-            "allow_channel_chats": allow_channel_chats,
-        }
-        response = self._make_request(
-            "savePreparedInlineMessage", method="POST", data=payload
-        )
-        return PreparedInlineMessage.model_validate(response)
-
-    def save_prepared_keyboard_button(
-        self, user_id: int, button: KeyboardButton
-    ) -> PreparedKeyboardButton:
-        """
-        Stores a keyboard button that can be used by a user within a Mini App.
-
-        :param user_id: Unique identifier of the target user that can use the prepared message.
-        :param button: A JSON-serialized object describing the button to be saved. The button must be of the type request_users, request_chat, or request_managed_bot.
-        :return: PreparedKeyboardButton object
-        """
-        payload = {"user_id": user_id, "button": button}
-        response = self._make_request(
-            "savePreparedKeyboardButton", method="POST", data=payload
-        )
-        return PreparedKeyboardButton.model_validate(response)
-
-    def create_prepared_inline_message(
-        self, _id: str, expiration_date: int
-    ) -> PreparedInlineMessage:
-        """
-        Create a PreparedInlineMessage object (returned by savePreparedInlineMessage).
-
-        Describes an inline message that can be sent by a user of a Mini App.
-
-        :param id: Unique identifier of the prepared message.
-        :param expiration_date: Expiration date of the prepared message, in Unix time. Expired messages cannot be used.
-        :return: A dictionary representing a PreparedInlineMessage object.
-        """
-        result = {
-            "id": _id,
-            "expiration_date": expiration_date,
-        }
-        return PreparedInlineMessage.model_validate(result)
 
     def send_invoice(
         self,
@@ -4836,44 +4568,19 @@ class Telegram:
         """
         Send an invoice for payment.
 
-        On success, the sent Message is returned.
+        Args:
+            chat_id: Chat ID or @username of the target chat, supergroup or channel.
+            title: Product name, 1-32 characters.
+            description: Product description, 1-255 characters.
+            payload: Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user,
+                use it for your internal processes.
+            currency: Three-letter ISO 4217 currency code, see more on currencies.
+                Pass “XTR” for payments in Telegram Stars.
+            prices: Price breakdown, a LabeledPrice list of components (e.g. product price, tax, discount,
+                delivery cost, delivery tax, bonus, etc.).
+                Must contain exactly one item for payments in Telegram Stars.
 
-        :param chat_id: Unique identifier for the target chat or username of the target channel (e.g. @channelusername).
-        :param title: Product name (1–32 characters).
-        :param description: Product description (1–255 characters).
-        :param payload: Bot-defined payload (1–128 bytes). Not shown to the user. Use for internal tracking.
-        :param currency: Three-letter ISO 4217 currency code (e.g., 'USD', 'EUR') or 'XTR' for Telegram Stars.
-                        For payments in Telegram Stars, provider_token must be empty.
-        :param prices: A JSON-serialized list of LabeledPrice objects representing the price breakdown.
-                    Must contain exactly one item if currency is 'XTR'.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param direct_messages_topic_id: Identifier of the direct messages topic; required if sending to a direct messages chat.
-        :param provider_token: Payment provider token (from @BotFather). Pass empty string for payments in Telegram Stars.
-        :param max_tip_amount: Maximum tip amount in the smallest currency units (e.g., 145 for $1.45). Defaults to 0.
-        :param suggested_tip_amounts: List of suggested tip amounts (positive, increasing, <= max_tip_amount). Max 4 items.
-        :param start_parameter: Unique deep-linking parameter. If empty, forwarded messages have a Pay button.
-                                If non-empty, forwarded messages have a URL button with a deep link to the bot.
-        :param provider_data: JSON-serialized data about the invoice to share with the payment provider.
-        :param photo_url: URL of the product photo for the invoice (recommended).
-        :param photo_size: Photo size in bytes.
-        :param photo_width: Photo width.
-        :param photo_height: Photo height.
-        :param need_name: Pass True if user's full name is required to complete the order.
-        :param need_phone_number: Pass True if user's phone number is required.
-        :param need_email: Pass True if user's email address is required.
-        :param need_shipping_address: Pass True if shipping address is required (for physical goods).
-        :param send_phone_number_to_provider: Pass True to send user's phone number to the provider.
-        :param send_email_to_provider: Pass True to send user's email address to the provider.
-        :param is_flexible: Pass True if the final price depends on the shipping method (e.g., delivery cost varies).
-        :param disable_notification: Send the message silently (no notification sound).
-        :param protect_content: Protect the message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param suggested_post_parameters: Parameters for sending a suggested post (direct messages chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline keyboard. If empty, a default 'Pay total price' button is shown.
-                            The first button must be a Pay button if reply_markup is provided.
-        :return: The sent Message object on success.
+            See full parameters here: [sendInvoice](https://core.telegram.org/bots/api#sendinvoice)
         """
         if currency == "XTR" and (provider_token is not None and provider_token != ""):
             raise ValueError(
@@ -4944,34 +4651,18 @@ class Telegram:
         """
         Create a direct link for an invoice. This link can be used to open the payment interface directly.
 
-        On success, returns the created invoice link as a string.
+        Args:
+            title: Product name, 1-32 characters.
+            description: Product description, 1-255 characters.
+            payload: Bot-defined invoice payload, 1-128 bytes. This will not be displayed to the user,
+                use it for your internal processes.
+            currency: Three-letter ISO 4217 currency code, see more on currencies.
+                Pass “XTR” for payments in Telegram Stars.
+            prices: Price breakdown, a LabeledPrice list of components (e.g. product price, tax, discount,
+                delivery cost, delivery tax, bonus, etc.).
+                Must contain exactly one item for payments in Telegram Stars.
 
-        :param title: Product name (1–32 characters).
-        :param description: Product description (1–255 characters).
-        :param payload: Bot-defined payload (1–128 bytes). Not shown to the user. Use for internal tracking.
-        :param currency: Three-letter ISO 4217 currency code (e.g., 'USD', 'EUR') or 'XTR' for Telegram Stars.
-        :param prices: A JSON-serialized list of LabeledPrice objects representing the price breakdown.
-                    Must contain exactly one item if currency is 'XTR'.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the link is created.
-                                    Required only for payments in Telegram Stars.
-        :param provider_token: Payment provider token (from @BotFather). Pass empty string for payments in Telegram Stars.
-        :param subscription_period: Number of seconds the subscription will be active before the next payment.
-                                    Must be 2592000 (30 days) if specified. Only valid if currency is 'XTR'.
-        :param max_tip_amount: Maximum tip amount in the smallest currency units (e.g., 145 for $1.45). Defaults to 0.
-        :param suggested_tip_amounts: List of suggested tip amounts (positive, increasing, <= max_tip_amount). Max 4 items.
-        :param provider_data: JSON-serialized data about the invoice to share with the payment provider.
-        :param photo_url: URL of the product photo for the invoice (recommended).
-        :param photo_size: Photo size in bytes.
-        :param photo_width: Photo width.
-        :param photo_height: Photo height.
-        :param need_name: Pass True if user's full name is required to complete the order.
-        :param need_phone_number: Pass True if user's phone number is required.
-        :param need_email: Pass True if user's email address is required.
-        :param need_shipping_address: Pass True if shipping address is required (for physical goods).
-        :param send_phone_number_to_provider: Pass True to send user's phone number to the provider.
-        :param send_email_to_provider: Pass True to send user's email address to the provider.
-        :param is_flexible: Pass True if the final price depends on the shipping method (e.g., delivery cost varies).
-        :return: The created invoice link as a string on success.
+            See full parameters here: [createInvoiceLink](https://core.telegram.org/bots/api#createInvoiceLink)
         """
         # Validate currency and provider_token for Stars
         if currency == "XTR":
@@ -5022,17 +4713,19 @@ class Telegram:
     ) -> bool:
         """
         Reply to a shipping query.
+        If an invoice was sent with `is_flexible=True` and requested a shipping address,
+        the Bot API will send an Update with a `shipping_query` field.
+        Use this method to respond.
 
-        If an invoice was sent with `is_flexible=True` and requested a shipping address, the Bot API will send an Update
-        with a `shipping_query` field. Use this method to respond.
-
-        On success, True is returned.
-
-        :param shipping_query_id: Unique identifier for the shipping query to be answered.
-        :param ok: Pass True if delivery to the specified address is possible, False otherwise.
-        :param shipping_options: Required if `ok` is True. A list of available shipping options (ShippingOption objects).
-        :param error_message: Required if `ok` is False. Error message to show to the user explaining why delivery is impossible.
-        :return: True on success.
+        Args:
+            shipping_query_id: Unique identifier for the query to be answered.
+            ok: Pass True if delivery to the specified address is possible and False if there are any
+                problems (for example, if delivery to the specified address is not possible).
+            shipping_options: Required if ok is True. A ShippingOption array of available shipping options.
+            error_message: Required if ok is False. Error message in human readable form that
+                explains why it is impossible to complete the order
+                (e.g. “Sorry, delivery to your desired address is unavailable”).
+                Telegram will display this message to the user.
         """
         if ok and not shipping_options:
             raise ValueError("shipping_options are required when ok is True.")
@@ -5056,17 +4749,17 @@ class Telegram:
     ) -> bool:
         """
         Respond to a pre-checkout query.
-
         After the user confirms payment and shipping details, the Bot API sends a `pre_checkout_query`.
         You must respond within 10 seconds.
 
-        On success, True is returned.
-
-        :param pre_checkout_query_id: Unique identifier for the pre-checkout query to be answered.
-        :param ok: Pass True if the bot is ready to proceed with the order (e.g., goods are available). Use False if there are problems.
-        :param error_message: Required if `ok` is False. Human-readable explanation for why the checkout cannot proceed.
-                            Telegram will display this message to the user.
-        :return: True on success.
+        Args:
+            pre_checkout_query_id: Unique identifier for the query to be answered.
+            ok: Specify True if everything is alright (goods are available, etc.) and the bot is ready
+                to proceed with the order. Use False if there are any problems.
+            error_message: Required if ok is False. Error message in human readable form that explains the reason
+                for failure to proceed with the checkout (e.g. "Sorry, somebody just bought the last of our
+                amazing black T-shirts while you were busy filling out your payment details. Please choose a
+                different color or garment!"). Telegram will display this message to the user.
         """
         if not ok and not error_message:
             raise ValueError("error_message is required when ok is False.")
@@ -5084,12 +4777,6 @@ class Telegram:
     def get_my_star_balance(self) -> StarAmount:
         """
         Get the current Telegram Stars balance of the bot.
-
-        Requires no parameters.
-
-        On success, returns a StarAmount object.
-
-        :return: A StarAmount object containing the bot's current Telegram Stars balance.
         """
         response = self._make_request("getMyStarBalance", method="GET")
         return StarAmount.model_validate(response)
@@ -5100,11 +4787,10 @@ class Telegram:
         """
         Get the bot's Telegram Star transactions in chronological order.
 
-        On success, returns a StarTransactions object.
-
-        :param offset: Number of transactions to skip in the response.
-        :param limit: Maximum number of transactions to retrieve (1–100). Defaults to 100.
-        :return: A StarTransactions object on success.
+        Args:
+            offset: Number of transactions to skip in the response.
+            limit: The maximum number of transactions to be retrieved.
+                Values between 1-100 are accepted. Defaults to 100.
         """
         payload = {"offset": offset, "limit": limit}
         response = self._make_request(
@@ -5118,11 +4804,9 @@ class Telegram:
         """
         Refund a successful payment made in Telegram Stars.
 
-        Returns True on success.
-
-        :param user_id: Identifier of the user whose payment will be refunded.
-        :param telegram_payment_charge_id: Telegram payment identifier (from SuccessfulPayment.telegram_payment_charge_id).
-        :return: True on success.
+        Args:
+            user_id: Identifier of the user whose payment will be refunded.
+            telegram_payment_charge_id: Telegram payment identifier.
         """
         payload = {
             "user_id": user_id,
@@ -5137,14 +4821,12 @@ class Telegram:
         """
         Cancel or re-enable the extension of a subscription paid in Telegram Stars.
 
-        Returns True on success.
-
-        :param user_id: Identifier of the user whose subscription will be edited.
-        :param telegram_payment_charge_id: Telegram payment identifier for the subscription.
-        :param is_canceled: Pass True to cancel the extension of the user's subscription.
-                            The subscription must be active up to the end of the current period.
-                            Pass False to allow the user to re-enable a subscription previously canceled by the bot.
-        :return: True on success.
+        Args:
+            user_id: Identifier of the user whose subscription will be edited.
+            telegram_payment_charge_id: Telegram payment identifier for the subscription.
+            is_canceled: Pass True to cancel extension of the user subscription;
+                the subscription must be active up to the end of the current subscription period.
+                Pass False to allow the user to re-enable a subscription that was previously canceled by the bot.
         """
         payload = {
             "user_id": user_id,
@@ -5166,11 +4848,9 @@ class Telegram:
         Use this method if the submitted data doesn't meet your service's requirements
         (e.g., invalid date, blurry document, evidence of tampering).
 
-        Returns True on success.
-
-        :param user_id: Unique identifier of the target user.
-        :param errors: A list of PassportElementError objects describing the errors.
-        :return: True on success.
+        Args:
+            user_id: Unique identifier of the target user.
+            errors: A PassportElementError array describing the errors.
         """
         payload = {"user_id": user_id, "errors": errors}
         response = self._make_request(
@@ -5194,22 +4874,13 @@ class Telegram:
         """
         Send a game to a user.
 
-        On success, the sent Message is returned.
+        Args:
+            chat_id: Chat ID or @username of the target chat/bot.
+                Games can't be sent to channel direct messages chats and channel chats.
+            game_short_name: Short name of the game, serves as the unique identifier for the game.
+                Games must be created and configured via @BotFather.
 
-        :param chat_id: Unique identifier for the target chat.
-                        Games cannot be sent to channel direct messages or channel chats.
-        :param game_short_name: Short name of the game, serves as the unique identifier.
-                                Games must be created and configured via @BotFather.
-        :param business_connection_id: Unique identifier of the business connection on behalf of which the message is sent.
-        :param message_thread_id: Unique identifier for the target message thread (topic) in a forum; for forum supergroups only.
-        :param disable_notification: Send the message silently (no notification sound).
-        :param protect_content: Protect the message from forwarding and saving.
-        :param allow_paid_broadcast: Allow up to 1000 messages/sec for 0.1 Stars per message.
-        :param message_effect_id: Unique identifier of a message effect to be added (private chats only).
-        :param reply_parameters: Description of the message to reply to.
-        :param reply_markup: Inline keyboard. If empty, a default 'Play [game_title]' button is shown.
-                            The first button must be a game launch button if reply_markup is provided.
-        :return: The sent Message object on success.
+            See full parameters here: [sendGame](https://core.telegram.org/bots/api#sendgame)
         """
         payload = {
             "chat_id": chat_id,
@@ -5239,19 +4910,16 @@ class Telegram:
         """
         Set the score of a specified user in a game message.
 
-        On success, if the message is not an inline message, the Message is returned; otherwise, True is returned.
-
-        Returns an error if the new score is not greater than the user's current score in the chat and `force` is False.
-
-        :param user_id: User identifier.
-        :param score: New score for the user. Must be non-negative.
-        :param force: Pass True if the high score is allowed to decrease.
-                    Useful for fixing mistakes or banning cheaters.
-        :param disable_edit_message: Pass True if the game message should not be automatically edited to include the current scoreboard.
-        :param chat_id: Required if inline_message_id is not specified. Unique identifier for the target chat.
-        :param message_id: Required if inline_message_id is not specified. Identifier of the sent message.
-        :param inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
-        :return: The edited Message object if not an inline message, otherwise True on success.
+        Args:
+            user_id: User identifier.
+            score: New score, must be non-negative.
+            force: Pass True if the high score is allowed to decrease.
+                This can be useful when fixing mistakes or banning cheaters.
+            disable_edit_message: Pass True if the game message should not be automatically
+                edited to include the current scoreboard
+            chat_id: Required if inline_message_id is not specified. Unique identifier for the target chat.
+            message_id: Required if inline_message_id is not specified. Identifier of the sent message.
+            inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
@@ -5283,18 +4951,17 @@ class Telegram:
         """
         Get data for high score tables.
 
-        Returns an array of GameHighScore objects.
-
         This method returns the score of the specified user and several of their neighbors in the game.
         Currently, it returns the target user's score plus two closest neighbors on each side.
         It also returns the top three users if the user and their neighbors are not among them.
         Note: This behavior is subject to change.
 
-        :param user_id: Target user's unique identifier.
-        :param chat_id: Required if inline_message_id is not specified. Unique identifier for the target chat.
-        :param message_id: Required if inline_message_id is not specified. Identifier of the sent message.
-        :param inline_message_id: Required if chat_id and message_id are not specified. Identifier of the inline message.
-        :return: An Array of GameHighScore objects on success.
+        Args:
+            user_id: Target user id.
+            chat_id: Required if inline_message_id is not specified. Unique identifier for the target chat.
+            message_id: Required if inline_message_id is not specified. Identifier of the sent message.
+            inline_message_id: Required if chat_id and message_id are not specified.
+                Identifier of the inline message.
         """
         if not (chat_id and message_id) and not inline_message_id:
             raise ValueError(
