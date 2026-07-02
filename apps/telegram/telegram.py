@@ -1,6 +1,6 @@
 import json
 from io import BufferedReader
-from typing import Any, Dict, List, Optional, cast
+from typing import Any, Dict, List, cast
 
 import requests
 
@@ -41,6 +41,7 @@ from apps.telegram.telegram_models import (
     KeyboardButton,
     LabeledPrice,
     LinkPreviewOptions,
+    MaskPosition,
     MenuButton,
     MenuButtonAdapter,
     MenuButtonDefault,
